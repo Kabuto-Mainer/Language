@@ -65,15 +65,15 @@ size_t nameTableFind (NameTable_t* table,
     assert (table);
     assertNameTableName (name);
 
-    NameTableVar_t var = {
-        .hash = getHash (name),
-        .name = name,
-    };
-    NameTableVar_t* new_adr = ((NameTableVar_t*) bsearch (&var, table->data, table->size, sizeof (NameTableVar_t), compareVar);
+    size_t hash = getHash (name);
+    NameTableVar_t* data = table->data;
 
-    if (new_adr == NULL)
-        return (size_t) -1;
-    return ((size_t) new_adr - (size_t) table->data) / sizeof (NameTableVar_t);
+    for (size_t i = 0; i < table->size; i++)
+    {
+        if (hash == data[i].hash && strcmp (name, data[i].name))
+            return i;
+    }
+    return (size_t) -1;
 }
 // ---------------------------------------------------------------------------------------------------
 
@@ -162,7 +162,7 @@ size_t nameTableAdd (NameTable_t* table,
     table->data[table->size].value = value;
     table->data[table->size].hash = getHash (table->data[table->size].name);
     table->size++;
-    qsort (table->data, table->size, sizeof (NameTableVar_t), compareVar);
+    // qsort (table->data, table->size, sizeof (NameTableVar_t), compareVar);
     return nameTableFind (table, name);
 }
 // ---------------------------------------------------------------------------------------------------

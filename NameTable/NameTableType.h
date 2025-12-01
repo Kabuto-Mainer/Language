@@ -3,13 +3,14 @@
 
 #include "../Support/SupportFunc.h"
 #include "../AllTypes.h"
+#include "../CompilerType.h"
 
 // ---------------------------------------------------------------------------------------------------
 /// @brief
 union NameTableValue_t
 {
     CompilerVar_t* var;
-    CompilerFunc_t*
+    CompilerFunc_t* func;
 };
 
 /// @brief
