@@ -157,7 +157,8 @@ ParserStatus_t tokenProgSyntax (ParserPlaceInf_t* inf,
     Token_t token = {
         .start = *str};
 
-    if      (strcmp ("alloc", *str) == 0)   token.type = TOKEN_EXTERN;
+    if      (strcmp ("alloc", *str) == 0)   token.type = TOKEN_EXTERN_VAR;
+    else if (strcmp ("server", *str) == 0)  token.type = TOKEN_EXTERN_FUNC;
     else if (strcmp ("trig", *str) == 0)    token.type = TOKEN_IF;
     else if (strcmp ("nexttrig", *str) == 0)token.type = TOKEN_ELIF;
     else if (strcmp ("default", *str) == 0) token.type = TOKEN_ELSE;
