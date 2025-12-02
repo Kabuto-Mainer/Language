@@ -11,7 +11,7 @@
 
 
 // ---------------------------------------------------------------------------------------------------
-int skipVoid (ContextInf_t* inf)
+int skipVoid (TokenContextInf_t* inf)
 {
     assert (inf);
     assert (inf->pose);
@@ -36,7 +36,7 @@ int tokenGlobal (char* buffer,
     assert (vector);
 
     char** str = &buffer;
-    ContextInf_t inf = {
+    TokenContextInf_t inf = {
         .pose = str,
         .line = 0,
         .table_func = table_func};
@@ -66,7 +66,7 @@ int tokenGlobal (char* buffer,
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-Status_t tokenPunct (ContextInf_t* inf,
+Status_t tokenPunct (TokenContextInf_t* inf,
                      TokenVector_t* vector)
 {
     assert (inf);
@@ -97,7 +97,7 @@ Status_t tokenPunct (ContextInf_t* inf,
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-Status_t tokenNum (ContextInf_t* inf,
+Status_t tokenNum (TokenContextInf_t* inf,
                    TokenVector_t* vector)
 {
     assert (inf);
@@ -125,7 +125,7 @@ Status_t tokenNum (ContextInf_t* inf,
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-Status_t tokenIndent (ContextInf_t* inf,
+Status_t tokenIndent (TokenContextInf_t* inf,
                       TokenVector_t* vector)
 {
     assert (inf);
@@ -146,16 +146,12 @@ Status_t tokenIndent (ContextInf_t* inf,
     *str[len] = buffer_char;
 
     Node_t node = {
-        .type = NODE_TYPE_VAR,
+        .type = NODE_TYPE_INDENT,
         .parent = NULL,
         .amount_children = 0,
         .children = NULL,
         .value = {.name = name }
     };
-
-    if (nameTableFind (inf->table_func, name) != (size_t) -1)
-        node.type = NODE_TYPE_FUNC;
-
     vectorAdd (vector, node);
 
     *str += len;
@@ -164,7 +160,7 @@ Status_t tokenIndent (ContextInf_t* inf,
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-Status_t tokenKeyWord (ContextInf_t* inf,
+Status_t tokenKeyWord (TokenContextInf_t* inf,
                        TokenVector_t* vector)
 {
     assert (inf);
@@ -207,7 +203,7 @@ Status_t tokenKeyWord (ContextInf_t* inf,
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-Status_t tokenMathOper (ContextInf_t* inf,
+Status_t tokenMathOper (TokenContextInf_t* inf,
                         TokenVector_t* vector)
 {
     assert (inf);
@@ -244,6 +240,12 @@ Status_t tokenMathOper (ContextInf_t* inf,
             case ('/'):    { node.value.oper = OPER_DIV; break; }
             case ('<'):    { node.value.oper = OPER_COMP_ONLY_LIT; break; }
             case ('>'):    { node.value.oper = OPER_COMP_ONLY_BIG; break; }
+            case ('='):
+            {
+                node.type = NODE_TYPE_KEY_WORD;
+                node.value.key = KEY_ASSIGN;
+                break;
+            }
             default:
             {
                 (*str)[len] = buffer_char;

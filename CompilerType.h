@@ -16,24 +16,14 @@ enum Status_t
 // ---------------------------------------------------------------------------------------------------
 enum NodeType_t
 {
+    NODE_TYPE_INDENT,
     NODE_TYPE_FUNC,
     NODE_TYPE_VAR,
     NODE_TYPE_OPER,
     NODE_TYPE_KEY_WORD,
     NODE_TYPE_PUNCT,
     NODE_TYPE_NUM,
-};
-// ---------------------------------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------------------------------
-enum CompilerTypeBlock_t
-{
-    BLOCK_TYPE_GLOBAL   = 0,
-    BLOCK_TYPE_IF       = 1,
-    BLOCK_TYPE_ELIF     = 2,
-    BLOCK_TYPE_ELSE     = 3,
-    BLOCK_TYPE_WHILE    = 4,
-    BLOCK_TYPE_FUNC     = 5
+    NODE_TYPE_BLOCK
 };
 // ---------------------------------------------------------------------------------------------------
 
@@ -64,7 +54,8 @@ enum KeyWord_t
     KEY_WHILE           = 3,
     KEY_EXTERN_VAR      = 4,
     KEY_EXTERN_FUNC     = 5,
-    KEY_RETURN          = 6
+    KEY_RETURN          = 6,
+    KEY_ASSIGN          = 7
 };
 // ---------------------------------------------------------------------------------------------------
 
@@ -82,25 +73,10 @@ enum Punct_t
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-struct CompilerBlock_t
-{
-    CompilerTypeBlock_t type;
-    CompilerBlock_t* parent;
-    size_t number;
-
-    size_t amount_children;
-    CompilerBlock_t** children;
-
-    NameTable_t* table_var;
-    size_t free_memory;
-};
-// ---------------------------------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------------------------------
 /// @brief
 struct CompilerVar_t
 {
-    CompilerBlock_t* block;
+    NameTable_t* table;
     size_t address;
     double value;
 };
@@ -150,7 +126,7 @@ struct Node_t
 
 // ---------------------------------------------------------------------------------------------------
 /// @brief
-struct ContextInf_t
+struct TokenContextInf_t
 {
     char** pose;
     int line;
@@ -158,7 +134,16 @@ struct ContextInf_t
 };
 // ---------------------------------------------------------------------------------------------------
 
-
+// ---------------------------------------------------------------------------------------------------
+/// @brief
+struct ParserContextInf_t
+{
+    Node_t* node;
+    int line;
+    size_t cur_index;
+    size_t capacity;
+};
+// ---------------------------------------------------------------------------------------------------
 
 
 
