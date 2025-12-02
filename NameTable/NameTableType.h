@@ -1,16 +1,15 @@
 #ifndef NAME_TABLE_TYPE_H
 #define NAME_TABLE_TYPE_H
 
-#include "../Support/SupportFunc.h"
+// #include "../Support/SupportFunc.h"
 #include "../AllTypes.h"
-#include "../CompilerType.h"
+// #include "../CompilerType.h"
 
 // ---------------------------------------------------------------------------------------------------
 /// @brief
 union NameTableValue_t
 {
-    CompilerVar_t* var;
-    CompilerFunc_t* func;
+    int i;
 };
 
 /// @brief
@@ -43,6 +42,15 @@ struct NameTable_t
     NameTableVar_t* data;
     size_t size;
     size_t capacity;
+};
+// ---------------------------------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------------------------------
+struct NameTableStack_t
+{
+    size_t size;
+    size_t capacity;
+    NameTable_t** data;
 };
 // ---------------------------------------------------------------------------------------------------
 

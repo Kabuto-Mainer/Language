@@ -3,7 +3,7 @@
 #include <assert.h>
 #include "string.h"
 
-#include "NameTableType.h"
+// #include "NameTableType.h"
 #include "NameTableConfig.h"
 #include "NameTableFunc.h"
 
@@ -91,8 +91,8 @@ int compareVar (const void* var_1,
     assert (var_1);
     assert (var_2);
 
-    NameTableVar_t* struct_var_1 = (NameTableVar_t*) var_1;
-    NameTableVar_t* struct_var_2 = (NameTableVar_t*) var_2;
+    const NameTableVar_t* struct_var_1 = (const NameTableVar_t*) var_1;
+    const NameTableVar_t* struct_var_2 = (const NameTableVar_t*) var_2;
 
     if (struct_var_1->hash > struct_var_2->hash) { return 1; }
     if (struct_var_1->hash < struct_var_2->hash) { return -1; }
@@ -152,7 +152,7 @@ size_t nameTableAdd (NameTable_t* table,
     {
         NameTableVar_t* buffer = (NameTableVar_t*) realloc (table->data, table->capacity * 2);
         if (buffer == NULL)
-            EXIT_FUNC("NULL realloc", -1);
+            EXIT_FUNC("NULL realloc", 1);
 
         table->data = buffer;
         table->capacity *= 2;
@@ -167,5 +167,79 @@ size_t nameTableAdd (NameTable_t* table,
 }
 // ---------------------------------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------------------------------
+/**
+ @brief Функция создания структуры стека
+ @param [in] stack Указатель на структуру стека
+*/
+int nameTableStackCtr (NameTableStack_t* stack)
+{
+    assert (stack);
 
+    stack->size = 0;
+    stack->capacity = START_SIZE_STACK;
+/*
+    if (START_SIZE_STACK != 0)
+    {
+    }
+*/
+    return 0;
+}
+// ---------------------------------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------------------------------
+/**
+ @brief Функция пуша таблицы имен в стек
+ @param [in] stack Указатель на структуру стека
+ @param [in] table Указатель на таблицу имен
+*/
+int nameTableStackPush (NameTableStack_t* stack,
+                        NameTable_t* table)
+{
+    assert (stack);
+    assert (table);
+
+    NameTable_t** buffer = stack->data;
+    if (stack->capacity == 0)
+    {
+        buffer = (NameTable_t**) calloc (1, sizeof (NameTable_t*));
+        if (buffer == NULL)
+            EXIT_FUNC ("NULL calloc", 1);
+    }
+    else if (stack->size >= stack->capacity)
+    {
+        buffer = (NameTable_t**) realloc (stack->data, sizeof (NameTable_t*) * stack->capacity * 2);
+        if (buffer == NULL)
+            EXIT_FUNC ("NULL calloc", 1);
+    }
+    stack->data = buffer;
+    stack->data[stack->size++] = table;
+    return 0;
+}
+// ---------------------------------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------------------------------
+NameTable_t* nameTableStackPop (NameTableStack_t* stack)
+{
+    assert (stack);
+
+    if (stack->size == 0)
+        EXIT_FUNC ("Pop with size = 0", NULL);
+
+    return stack->data[--stack->size];
+}
+// ---------------------------------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------------------------------
+int nameTableStackDtr (NameTableStack_t* stack)
+{
+    assert (stack);
+
+    for (size_t i = 0; i < stack->size; i++)
+        nameTableDtr (stack->data[i]);
+
+    free (stack->data);
+    return 0;
+}
+// ---------------------------------------------------------------------------------------------------
 

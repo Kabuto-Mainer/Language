@@ -1,5 +1,6 @@
 #include <stdlib.h>
 
+#include "NameTable/NameTableFunc.h"
 #include "Support/SupportFunc.h"
 #include "Vector/VectorFunc.h"
 #include "Token/TokenFunc.h"
@@ -11,7 +12,10 @@ int main ()
     TokenVector_t vector = {};
     vectorCtr (&vector);
 
-    tokenGlobal (buffer, &vector);
+    NameTable_t table_func = {};
+    nameTableCtr (&table_func);
+
+    tokenGlobal (buffer, &vector, &table_func);
     tokenDump (&vector);
 
     vectorDtr (&vector);

@@ -1,12 +1,12 @@
 #ifndef VECTOR_TYPE_H
 #define VECTOR_TYPE_H
 
-#include "../Token/TokenType.h"
+#include "../CompilerType.h"
 
 // ---------------------------------------------------------------------------------------------------
 struct TokenVector_t
 {
-    Token_t* data;
+    Node_t* data;
     size_t size;
     size_t capacity;
 };

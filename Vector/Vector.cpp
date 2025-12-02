@@ -11,7 +11,7 @@ int vectorCtr (TokenVector_t* vector)
 {
     assert (vector);
 
-    Token_t* data = (Token_t*) calloc (VECTOR_START_CAPACITY, sizeof (Token_t));
+    Node_t* data = (Node_t*) calloc (VECTOR_START_CAPACITY, sizeof (Node_t));
     if (data == NULL)
         EXIT_FUNC ("NULL calloc", 1);
 
@@ -25,13 +25,13 @@ int vectorCtr (TokenVector_t* vector)
 
 // ---------------------------------------------------------------------------------------------------
 int vectorAdd (TokenVector_t* vector,
-               const Token_t token)
+               const Node_t token)
 {
     assert (vector);
 
     if (vector->size == vector->capacity)
     {
-        Token_t* buffer = (Token_t*) realloc (vector->data, vector->capacity * 2 * sizeof (Token_t));
+        Node_t* buffer = (Node_t*) realloc (vector->data, vector->capacity * 2 * sizeof (Node_t));
         if (buffer == NULL)
             EXIT_FUNC ("NULL realloc", 1);
         vector->data = buffer;
@@ -50,8 +50,8 @@ size_t vectorGetSize (TokenVector_t* vector)
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-Token_t* vectorGetToken (TokenVector_t* vector,
-                         size_t index)
+Node_t* vectorGetToken (TokenVector_t* vector,
+                        size_t index)
 {
     assert (vector);
 

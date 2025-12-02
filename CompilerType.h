@@ -1,10 +1,11 @@
+#ifndef COMPILER_TYPE_H
+#define COMPILER_TYPE_H
+
 #include <stdio.h>
-#include "AllTypes.h"
-
-
+#include "NameTable/NameTableType.h"
 
 // ---------------------------------------------------------------------------------------------------
-enum ParserStatus_t
+enum Status_t
 {
     PARSER_NOT_THIS     = 0,
     PARSER_THIS_OK      = 1,
@@ -13,15 +14,14 @@ enum ParserStatus_t
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-enum CompilerNodeType_t
+enum NodeType_t
 {
-    NODE_TYPE_GLOBAL         = 0,
-    NODE_TYPE_FUNC           = 1,
-    NODE_TYPE_CALL_FUNC      = 2,
-    NODE_TYPE_OPER           = 3,
-    NODE_TYPE_VAR            = 4,
-    NODE_TYPE_INDEX_IN_TABLE = 5,
-    NODE_TYPE_CONST          = 6
+    NODE_TYPE_FUNC,
+    NODE_TYPE_VAR,
+    NODE_TYPE_OPER,
+    NODE_TYPE_KEY_WORD,
+    NODE_TYPE_PUNCT,
+    NODE_TYPE_NUM,
 };
 // ---------------------------------------------------------------------------------------------------
 
@@ -38,7 +38,7 @@ enum CompilerTypeBlock_t
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-enum CompilerOperType_t
+enum OperType_t
 {
     OPER_ADD                = 0,
     OPER_SUB                = 1,
@@ -52,21 +52,32 @@ enum CompilerOperType_t
     OPER_COMP_ONLY_LIT      = 8,
     OPER_COMP_EQUAL         = 9,
     OPER_COMP_NOT_EQUAL     = 10,
-
-    OPER_ASSIGN             = 11,
-    OPER_IF                 = 12,
-    OPER_ELIF               = 13,
-    OPER_ELSE               = 14,
-    OPER_WHILE              = 15
 };
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-struct CompilerPlaceInf_t
+enum KeyWord_t
 {
-    Token_t* token;
-    size_t cur_index;
-    size_t capacity;
+    KEY_IF              = 0,
+    KEY_ELIF            = 1,
+    KEY_ELSE            = 2,
+    KEY_WHILE           = 3,
+    KEY_EXTERN_VAR      = 4,
+    KEY_EXTERN_FUNC     = 5,
+    KEY_RETURN          = 6
+};
+// ---------------------------------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------------------------------
+enum Punct_t
+{
+    PUNCT_COMMA         = 0,
+    PUNCT_LEFT_ROUND    = 1,
+    PUNCT_RIGHT_ROUND   = 2,
+    PUNCT_DOG           = 3,
+    PUNCT_H             = 4,
+    PUNCT_QUOT          = 5,
+    PUNCT_END_STR       = 6
 };
 // ---------------------------------------------------------------------------------------------------
 
@@ -114,32 +125,36 @@ struct CompilerTree_t
 */
 // ---------------------------------------------------------------------------------------------------
 /// @brief
-union CompilerNodeValue_t
+union NodeValue_t
 {
     int oper;
-    size_t index;
-    double num;
+    int key;
+    int punct;
+    int num;
+    char* name;
 };
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
 /// @brief
-struct CompilerNode_t
+struct Node_t
 {
-    CompilerNodeType_t type;
-    CompilerNode_t* parent;
+    NodeType_t type;
+    Node_t* parent;
     int amount_children;
-    CompilerNode_t** children;
-    CompilerNodeValue_t value;
+    Node_t** children;
+    NodeValue_t value;
 };
 // ---------------------------------------------------------------------------------------------------
 
 
 // ---------------------------------------------------------------------------------------------------
 /// @brief
-struct ParserPlaceInf_t
+struct ContextInf_t
 {
     char** pose;
+    int line;
+    NameTable_t* table_func;
 };
 // ---------------------------------------------------------------------------------------------------
 
@@ -151,4 +166,4 @@ struct ParserPlaceInf_t
 
 
 
-
+#endif /* COMPILER_TYPE_H */

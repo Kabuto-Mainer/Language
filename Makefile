@@ -8,10 +8,12 @@ vector 		= Vector/Vector.cpp
 token 		= Token/TokenFunc.cpp
 
 support 	= Support/Support.cpp
+
+table		= NameTable/NameTableFunc.cpp
 # --------------------------------------------------------------------------------------------
 
 lang:
-	g++ main.cpp $(vector) $(token) $(support) $(flags) -o lang.exe
+	g++ main.cpp $(vector) $(token) $(support) $(table) $(flags) -o lang.exe
 
 run-l:
 	./lang.exe

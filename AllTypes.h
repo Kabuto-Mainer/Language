@@ -46,7 +46,7 @@ union CompilerNodeValue_t;
 
 
 // ---------------------------------------------------------------------------------------------------
-struct Token_t;
+struct Node_t;
 
 struct TokenVector_t;
 

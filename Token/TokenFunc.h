@@ -1,41 +1,42 @@
 #ifndef TOKEN_FUNC_H
 #define TOKEN_FUNC_H
 
-#include "TokenType.h"
 #include "../CompilerType.h"
+#include "../Vector/VectorType.h"
 
 // ---------------------------------------------------------------------------------------------------
-int skipVoid (char** str);
+int skipVoid (ContextInf_t* inf);
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
 int tokenGlobal (char* buffer,
-                 TokenVector_t* vector);
+                 TokenVector_t* vector,
+                 NameTable_t* table_func);
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-ParserStatus_t tokenPunct (ParserPlaceInf_t* inf,
-                           TokenVector_t* vector);
+Status_t tokenPunct (ContextInf_t* inf,
+                     TokenVector_t* vector);
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-ParserStatus_t tokenNum (ParserPlaceInf_t* inf,
-                         TokenVector_t* vector);
+Status_t tokenNum (ContextInf_t* inf,
+                   TokenVector_t* vector);
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-ParserStatus_t tokenIndent (ParserPlaceInf_t* inf,
-                            TokenVector_t* vector);
+Status_t tokenIndent (ContextInf_t* inf,
+                      TokenVector_t* vector);
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-ParserStatus_t tokenProgSyntax (ParserPlaceInf_t* inf,
-                                TokenVector_t* vector);
+Status_t tokenKeyWord (ContextInf_t* inf,
+                       TokenVector_t* vector);
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-ParserStatus_t tokenMathOper (ParserPlaceInf_t* inf,
-                              TokenVector_t* vector);
+Status_t tokenMathOper (ContextInf_t* inf,
+                        TokenVector_t* vector);
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------

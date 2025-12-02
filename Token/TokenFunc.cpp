@@ -5,36 +5,45 @@
 #include <math.h>
 
 #include "TokenFunc.h"
+#include "../NameTable/NameTableFunc.h"
 #include "../Vector/VectorFunc.h"
 #include "../Support/SupportFunc.h"
 
 
 // ---------------------------------------------------------------------------------------------------
-int skipVoid (char** str)
+int skipVoid (ContextInf_t* inf)
 {
-    assert (str);
-    assert (*str);
+    assert (inf);
+    assert (inf->pose);
 
-    while (**str == ' ' || **str == '\t' || **str == '\r')
+    char** str = inf->pose;
+    while (**str == ' ' || **str == '\t' || **str == '\r' || **str == '\n')
+    {
+        if (**str == '\n')  inf->line++;
         ++ *str;
+    }
+
     return 0;
 }
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
 int tokenGlobal (char* buffer,
-                 TokenVector_t* vector)
+                 TokenVector_t* vector,
+                 NameTable_t* table_func)
 {
     assert (buffer);
     assert (vector);
 
     char** str = &buffer;
-    ParserPlaceInf_t inf = {
-        .pose = str};
+    ContextInf_t inf = {
+        .pose = str,
+        .line = 0,
+        .table_func = table_func};
 
     while (**str != '$' && **str != '\0')
     {
-        skipVoid (str);
+        skipVoid (&inf);
         if (tokenPunct (&inf, vector) == PARSER_THIS_OK)
             continue;
 
@@ -44,7 +53,7 @@ int tokenGlobal (char* buffer,
         if (tokenNum (&inf, vector) == PARSER_THIS_OK)
             continue;
 
-        if (tokenProgSyntax (&inf, vector) == PARSER_THIS_OK)
+        if (tokenKeyWord (&inf, vector) == PARSER_THIS_OK)
             continue;
 
         if (tokenIndent (&inf, vector) == PARSER_THIS_OK)
@@ -57,52 +66,58 @@ int tokenGlobal (char* buffer,
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-ParserStatus_t tokenPunct (ParserPlaceInf_t* inf,
-                           TokenVector_t* vector)
+Status_t tokenPunct (ContextInf_t* inf,
+                     TokenVector_t* vector)
 {
     assert (inf);
     assert (vector);
 
-    // printf ("Punct\n");
-    Token_t token = {
-        .start = *inf->pose,
-        .len_name = 1};
+    Node_t node = {
+        .type = NODE_TYPE_PUNCT,
+        .parent = NULL,
+        .amount_children = 0,
+        .children = NULL,
+    };
 
     switch (**inf->pose)
     {
-        case ('('):    { token.type = TOKEN_LEFT_ROUND; break; }
-        case (')'):    { token.type = TOKEN_RIGHT_ROUND; break; }
-        case ('@'):    { token.type = TOKEN_DOG; break; }
-        case (','):    { token.type = TOKEN_COMMA; break; }
-        case ('\n'):   { token.type = TOKEN_END_STR; break; }
+        case ('('):    { node.value.punct = PUNCT_LEFT_ROUND; break; }
+        case (')'):    { node.value.punct = PUNCT_RIGHT_ROUND; break; }
+        case ('@'):    { node.value.punct = PUNCT_DOG; break; }
+        case (','):    { node.value.punct = PUNCT_COMMA; break; }
+        case ('\n'):   { node.value.punct = PUNCT_END_STR; inf->line++; break; }
+        case ('#'):    { node.value.punct = PUNCT_H; break; }
+        case ('"'):    { node.value.punct = PUNCT_QUOT; break; }
         default: return PARSER_NOT_THIS;
     }
     ++ *inf->pose;
-    vectorAdd (vector, token);
+    vectorAdd (vector, node);
     return PARSER_THIS_OK;
 }
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-ParserStatus_t tokenNum (ParserPlaceInf_t* inf,
-                         TokenVector_t* vector)
+Status_t tokenNum (ContextInf_t* inf,
+                   TokenVector_t* vector)
 {
     assert (inf);
     assert (vector);
 
-    // printf ("Num\n");
     if (!isdigit (**inf->pose) || (**inf->pose == '-' && !isdigit (*(*inf->pose + 1))))
         return PARSER_NOT_THIS;
 
-    double value = 0;
+    int value = 0;
     int len = 0;
-    sscanf (*(inf->pose), "%lf%n", &value, &len);
+    sscanf (*(inf->pose), "%d%n", &value, &len);
 
-    Token_t token = {
-        .type = TOKEN_NUMBER,
-        .start = *(inf->pose),
-        .len_name = (size_t) len};
-    vectorAdd (vector, token);
+    Node_t node = {
+        .type = NODE_TYPE_NUM,
+        .parent = NULL,
+        .amount_children = 0,
+        .children = NULL,
+        .value = {.num = value}
+    };
+    vectorAdd (vector, node);
 
     *(inf->pose) += len;
     return PARSER_THIS_OK;
@@ -110,8 +125,8 @@ ParserStatus_t tokenNum (ParserPlaceInf_t* inf,
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-ParserStatus_t tokenIndent (ParserPlaceInf_t* inf,
-                            TokenVector_t* vector)
+Status_t tokenIndent (ContextInf_t* inf,
+                      TokenVector_t* vector)
 {
     assert (inf);
     assert (vector);
@@ -125,11 +140,23 @@ ParserStatus_t tokenIndent (ParserPlaceInf_t* inf,
     while (isalpha ((*str)[len]) || isdigit ((*str)[len]) || (*str)[len] == '_')
         len++;
 
-    Token_t token = {
-        .type = TOKEN_INDENT,
-        .start = *str,
-        .len_name = len};
-    vectorAdd (vector, token);
+    char buffer_char = *str[len];
+    *str[len] = '\0';
+    char* name = strdup (*str);
+    *str[len] = buffer_char;
+
+    Node_t node = {
+        .type = NODE_TYPE_VAR,
+        .parent = NULL,
+        .amount_children = 0,
+        .children = NULL,
+        .value = {.name = name }
+    };
+
+    if (nameTableFind (inf->table_func, name) != (size_t) -1)
+        node.type = NODE_TYPE_FUNC;
+
+    vectorAdd (vector, node);
 
     *str += len;
     return PARSER_THIS_OK;
@@ -137,8 +164,8 @@ ParserStatus_t tokenIndent (ParserPlaceInf_t* inf,
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-ParserStatus_t tokenProgSyntax (ParserPlaceInf_t* inf,
-                                TokenVector_t* vector)
+Status_t tokenKeyWord (ContextInf_t* inf,
+                       TokenVector_t* vector)
 {
     assert (inf);
     assert (vector);
@@ -147,40 +174,41 @@ ParserStatus_t tokenProgSyntax (ParserPlaceInf_t* inf,
     size_t len = 0;
     char** str = inf->pose;
     while (isalpha((*str)[len]))
-    {
         len++;
-    }
 
     char buffer_char = (*str)[len];
     (*str)[len] = '\0';
 
-    Token_t token = {
-        .start = *str};
+    Node_t node = {
+        .type = NODE_TYPE_KEY_WORD,
+        .parent = NULL,
+        .amount_children = 0,
+        .children = NULL,
+    };
 
-    if      (strcmp ("alloc", *str) == 0)   token.type = TOKEN_EXTERN_VAR;
-    else if (strcmp ("server", *str) == 0)  token.type = TOKEN_EXTERN_FUNC;
-    else if (strcmp ("trig", *str) == 0)    token.type = TOKEN_IF;
-    else if (strcmp ("nexttrig", *str) == 0)token.type = TOKEN_ELIF;
-    else if (strcmp ("default", *str) == 0) token.type = TOKEN_ELSE;
-    else if (strcmp ("loop", *str) == 0)    token.type = TOKEN_WHILE;
+    if      (strcmp ("alloc", *str) == 0)    node.value.key = KEY_EXTERN_VAR;
+    else if (strcmp ("server", *str) == 0)   node.value.key = KEY_EXTERN_FUNC;
+    else if (strcmp ("trig", *str) == 0)     node.value.key = KEY_IF;
+    else if (strcmp ("nexttrig", *str) == 0) node.value.key = KEY_ELIF;
+    else if (strcmp ("default", *str) == 0)  node.value.key = KEY_ELSE;
+    else if (strcmp ("loop", *str) == 0)     node.value.key = KEY_WHILE;
+    else if (strcmp ("ret", *str) == 0)      node.value.key = KEY_RETURN;
     else
     {
         *str[len] = buffer_char;
         return PARSER_NOT_THIS;
     }
-
-    token.len_name = len;
     (*str)[len] = buffer_char;
     *str += len;
-    vectorAdd (vector, token);
+    vectorAdd (vector, node);
 
     return PARSER_THIS_OK;
 }
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-ParserStatus_t tokenMathOper (ParserPlaceInf_t* inf,
-                              TokenVector_t* vector)
+Status_t tokenMathOper (ContextInf_t* inf,
+                        TokenVector_t* vector)
 {
     assert (inf);
     assert (vector);
@@ -194,26 +222,28 @@ ParserStatus_t tokenMathOper (ParserPlaceInf_t* inf,
     char buffer_char = (*str)[len];
     (*str)[len] = '\0';
 
-    Token_t token = {
-        .start = *str,
-        .len_name = 2};
+    Node_t node = {
+        .type = NODE_TYPE_OPER,
+        .parent = NULL,
+        .amount_children = 0,
+        .children = NULL
+    };
 
-    if      (strcmp ("**", *str) == 0)  token.type = TOKEN_POW;
-    else if (strcmp ("<=", *str) == 0)  token.type = TOKEN_LIT_EQUAL;
-    else if (strcmp (">=", *str) == 0)  token.type = TOKEN_BIG_EQUAL;
-    else if (strcmp ("==", *str) == 0)  token.type = TOKEN_EQUAL;
-    else if (strcmp ("!=", *str) == 0)  token.type = TOKEN_NOT_EQUAL;
+    if      (strcmp ("**", *str) == 0)  node.value.oper = OPER_POW;
+    else if (strcmp ("<=", *str) == 0)  node.value.oper = OPER_COMP_LIT_EQUAL;
+    else if (strcmp (">=", *str) == 0)  node.value.oper = OPER_COMP_BIG_EQUAL;
+    else if (strcmp ("==", *str) == 0)  node.value.oper = OPER_COMP_EQUAL;
+    else if (strcmp ("!=", *str) == 0)  node.value.oper = OPER_COMP_NOT_EQUAL;
     else if (len == 1)
     {
-        token.len_name = 1;
         switch (**str)
         {
-            case ('+'):    { token.type = TOKEN_ADD; break; }
-            case ('-'):    { token.type = TOKEN_SUB; break; }
-            case ('*'):    { token.type = TOKEN_MUL; break; }
-            case ('/'):    { token.type = TOKEN_DIV; break; }
-            case ('<'):    { token.type = TOKEN_ONLY_LIT; break; }
-            case ('>'):    { token.type = TOKEN_ONLY_BIG; break; }
+            case ('+'):    { node.value.oper = OPER_ADD; break; }
+            case ('-'):    { node.value.oper = OPER_SUB; break; }
+            case ('*'):    { node.value.oper = OPER_MUL; break; }
+            case ('/'):    { node.value.oper = OPER_DIV; break; }
+            case ('<'):    { node.value.oper = OPER_COMP_ONLY_LIT; break; }
+            case ('>'):    { node.value.oper = OPER_COMP_ONLY_BIG; break; }
             default:
             {
                 (*str)[len] = buffer_char;
@@ -228,8 +258,7 @@ ParserStatus_t tokenMathOper (ParserPlaceInf_t* inf,
     }
 
     (*str)[len] = buffer_char;
-    *str += token.len_name;
-    vectorAdd (vector, token);
+    vectorAdd (vector, node);
     return PARSER_THIS_OK;
 }
 // ---------------------------------------------------------------------------------------------------
@@ -238,12 +267,11 @@ ParserStatus_t tokenMathOper (ParserPlaceInf_t* inf,
 int tokenDump (TokenVector_t* vector)
 {
     assert (vector);
-
-    for (size_t i = 0; i < vectorGetSize (vector); i++)
-    {
-        Token_t* token = vectorGetToken (vector, i);
-        printf ("[%zu]<%.*s>[%d]\n", i, (int) token->len_name, token->start, token->type);
-    }
+//
+//     for (size_t i = 0; i < vectorGetSize (vector); i++)
+//     {
+//         Node_t* node = vectorGetToken (vector, i);
+//     }
     return 0;
 }
 // ---------------------------------------------------------------------------------------------------
