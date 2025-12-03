@@ -1,16 +1,14 @@
-#ifndef VECTOR_TYPE_H
-#define VECTOR_TYPE_H
-
-#include "NodeType.h"
+#ifndef TOKEN_TYPE_H
+#define TOKEN_TYPE_H
 
 // ---------------------------------------------------------------------------------------------------
-struct TokenVector_t
+/// @brief Контекстная информация при токенизации
+struct TokenContextInf_t
 {
-    Node_t* data;
-    size_t size;
-    size_t capacity;
+    char** pose;
+    int line;
 };
 // ---------------------------------------------------------------------------------------------------
 
 
-#endif /* VECTOR_TYPE_H */
+#endif /* TOKEN_TYPE_H */

@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-#include "../Support/SupportFunc.h"
+#include "SupportFunc.h"
 #include "VectorFunc.h"
 #include "VectorConfig.h"
 

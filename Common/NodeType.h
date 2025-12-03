@@ -1,55 +1,61 @@
-#ifndef NAME_TABLE_TYPE_H
-#define NAME_TABLE_TYPE_H
+#ifndef COMPILER_TYPE_H
+#define COMPILER_TYPE_H
+
+#include <stdio.h>
+#include "NameTableType.h"
+#include "TypesOfType.h"
 
 
 // ---------------------------------------------------------------------------------------------------
 /// @brief
-union NameTableValue_t
+struct ParserVar_t
 {
-    int i;
+    NameTable_t* table;
+    size_t address;
+    double value;
 };
+// ---------------------------------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------------------------------
 /// @brief
-typedef char* NameTableName_t;
-// ---------------------------------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------------------------------
-#define assertNameTableName(__name__)   \
-    do {                                \
-        if (__name__ == NULL)           \
-        {                               \
-            Log_Error ("Bad name");     \
-            assert (__name__);          \
-        }                               \
-    } while (0)
-// ---------------------------------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------------------------------
-struct NameTableVar_t
+struct ParserFunc_t
 {
-    size_t hash;
-    NameTableName_t name;
-    NameTableValue_t value;
+    size_t amount_args;
 };
 // ---------------------------------------------------------------------------------------------------
-
+/*
 // ---------------------------------------------------------------------------------------------------
-struct NameTable_t
+/// @brief
+struct CompilerTree_t
 {
-    NameTableVar_t* data;
+    CompilerNode_t* root;
     size_t size;
-    size_t capacity;
 };
 // ---------------------------------------------------------------------------------------------------
-
+*/
 // ---------------------------------------------------------------------------------------------------
-struct NameTableStack_t
+/// @brief Возможные значения узлов
+union NodeValue_t
 {
-    size_t size;
-    size_t capacity;
-    NameTable_t** data;
+    int oper;
+    int key;
+    int punct;
+    int num;
+    char* name;
+};
+// ---------------------------------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------------------------------
+/// @brief Структура узла дерева
+struct Node_t
+{
+    NodeType_t type;
+    Node_t* parent;
+    int amount_children;
+    Node_t** children;
+    NodeValue_t value;
 };
 // ---------------------------------------------------------------------------------------------------
 
 
-#endif // NAME_TABLE_TYPE_H
+#endif /* COMPILER_TYPE_H */

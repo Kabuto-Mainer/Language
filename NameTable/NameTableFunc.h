@@ -1,7 +1,6 @@
 #ifndef NAME_TABLE_FUNC_H
 #define NAME_TABLE_FUNC_H
 
-
 #include "NameTableType.h"
 
 

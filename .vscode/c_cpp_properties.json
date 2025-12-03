@@ -1,14 +1,21 @@
 {
   "configurations": [
     {
-      "name": "linux-gcc-x64",
+      "name": "linux-g++-x64",
       "includePath": [
-        "${workspaceFolder}/**"
+        "${workspaceFolder}/",
+        "${workspaceFolder}/Common",
+        "${workspaceFolder}/DumpCode",
+        "${workspaceFolder}/NameTable",
+        "${workspaceFolder}/Parser",
+        "${workspaceFolder}/Support",
+        "${workspaceFolder}/Token",
+        "${workspaceFolder}/Vector"
       ],
-      "compilerPath": "/usr/bin/gcc",
+      "compilerPath": "/usr/bin/g++",
       "cStandard": "${default}",
       "cppStandard": "${default}",
-      "intelliSenseMode": "linux-gcc-x64",
+      "intelliSenseMode": "linux-g++-x64",
       "compilerArgs": [
         ""
       ]

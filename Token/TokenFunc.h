@@ -1,8 +1,10 @@
 #ifndef TOKEN_FUNC_H
 #define TOKEN_FUNC_H
 
-#include "../CompilerType.h"
-#include "../Vector/VectorType.h"
+#include "TokenType.h"
+#include "VectorType.h"
+#include "ErrorType.h"
+
 
 // ---------------------------------------------------------------------------------------------------
 int skipVoid (TokenContextInf_t* inf);
@@ -10,8 +12,7 @@ int skipVoid (TokenContextInf_t* inf);
 
 // ---------------------------------------------------------------------------------------------------
 int tokenGlobal (char* buffer,
-                 TokenVector_t* vector,
-                 NameTable_t* table_func);
+                 TokenVector_t* vector);
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------

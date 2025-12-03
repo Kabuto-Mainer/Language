@@ -3,11 +3,10 @@
 #include <assert.h>
 #include "string.h"
 
-// #include "NameTableType.h"
 #include "NameTableConfig.h"
 #include "NameTableFunc.h"
+#include "SupportFunc.h"
 
-#include "../Support/SupportFunc.h"
 
 // ---------------------------------------------------------------------------------------------------
 /**

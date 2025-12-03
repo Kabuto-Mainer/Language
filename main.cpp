@@ -1,10 +1,10 @@
 #include <stdlib.h>
 
-#include "NameTable/NameTableFunc.h"
-#include "Support/SupportFunc.h"
-#include "Vector/VectorFunc.h"
-#include "Token/TokenFunc.h"
-
+#include "NameTableFunc.h"
+#include "SupportFunc.h"
+#include "VectorFunc.h"
+#include "TokenFunc.h"
+#include "ParserFunc.h"
 
 int main ()
 {
@@ -12,11 +12,11 @@ int main ()
     TokenVector_t vector = {};
     vectorCtr (&vector);
 
-    NameTable_t table_func = {};
-    nameTableCtr (&table_func);
-
-    tokenGlobal (buffer, &vector, &table_func);
+    tokenGlobal (buffer, &vector);
     tokenDump (&vector);
+
+    Node_t* root = newNode ();
+    parserGlobal (vector.  root, )
 
     vectorDtr (&vector);
     free (buffer);

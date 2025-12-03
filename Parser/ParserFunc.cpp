@@ -1,9 +1,10 @@
 #include <string.h>
+#include <stdlib.h>
 #include <assert.h>
 
-#include "Support/SupportFunc.h"
-#include "CompilerType.h"
+#include "SupportFunc.h"
 #include "ParserFunc.h"
+#include "TypesOfType.h"
 
 
 // ---------------------------------------------------------------------------------------------------
@@ -12,17 +13,22 @@
  @param [in] start_node Начальный узел массива
  @param [in] amount Количество элементов в массива узлов
  @param [in] global_node Корень всего дерева
+ @param [in] name_file Файл с кодом
 */
 Status_t parserGlobal (Node_t* start_node,
                        size_t amount,
-                       Node_t* global_node)
+                       Node_t* global_node,
+                       const char* name_file)
 {
     assert (start_node);
     assert (global_node);
+    assert (name_file);
 
     ParserContextInf_t inf = {
         .node = start_node,
         .line = 0,
+        .error = PE_NOT_ERROR,
+        .name_file = name_file,
         .cur_index = 0,
         .capacity = amount,
     };
@@ -41,7 +47,7 @@ Status_t parserGlobal (Node_t* start_node,
             nextNode (&inf);
             continue;
         }
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (&inf, PE_UNKNOWN_VALUE);
     }
     return PARSER_THIS_OK;
 }
@@ -59,20 +65,20 @@ Status_t parserGlobal (Node_t* start_node,
 Status_t parserUnion (ParserContextInf_t* inf,
                       Node_t* node)
 {
-    assert (node);
     assert (inf);
+    assert (node);
 
     if (inf->node->type != NODE_TYPE_PUNCT &&
         inf->node->value.punct != PUNCT_LEFT_ROUND)
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_NOT_RIGHT_ROUND);
 
     Node_t* block = inf->node;
     block->type = NODE_TYPE_BLOCK;
-    nextNode (node);
+    nextNode (inf);
 
     while (true)
     {
-        if (compilerExternVar (inf, block) == PARSER_THIS_OK)
+        if (parserDeclarationVar (inf, block) == PARSER_THIS_OK)
             continue;
         if (parserAssignCall (inf, block) == PARSER_THIS_OK)
             continue;
@@ -84,11 +90,11 @@ Status_t parserUnion (ParserContextInf_t* inf,
             nextNode (inf);
             continue;
         }
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_UNKNOWN_VALUE);
     }
     if (inf->node->type != NODE_TYPE_PUNCT &&
         inf->node->value.punct != PUNCT_RIGHT_ROUND)
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_NOT_RIGHT_ROUND);
 
     nextNode (inf);
     return PARSER_THIS_OK;
@@ -118,19 +124,19 @@ Status_t parserIfOper (ParserContextInf_t* inf,
     nextNode (inf);
     if (inf->node->type != NODE_TYPE_PUNCT &&
         inf->node->value.key != PUNCT_LEFT_ROUND)
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_NOT_LEFT_ROUND);
 
     nextNode (inf);
     if (parserExpresion (inf, if_node) != PARSER_THIS_OK)
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_NOT_EXPRESION);
 
     if (inf->node->type != NODE_TYPE_PUNCT &&
         inf->node->value.punct != PUNCT_RIGHT_ROUND)
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_NOT_RIGHT_ROUND);
 
     nextNode (inf);
     if (parserUnion (inf, if_node) != PARSER_THIS_OK)
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_NOT_UNION);
 
     return PARSER_THIS_OK;
 }
@@ -164,7 +170,7 @@ Status_t parserAssignCall (ParserContextInf_t* inf,
         Node_t* assign = inf->node;
 
         if (parserExpresion (inf, assign) != PARSER_THIS_OK)
-            SYNTAX_ERROR ();
+            SYNTAX_ERROR (inf, PE_NOT_EXPRESION_IN_ASSIGN);
     }
     else if (inf->node->type == NODE_TYPE_PUNCT &&
              inf->node->value.punct == PUNCT_LEFT_ROUND)
@@ -177,7 +183,7 @@ Status_t parserAssignCall (ParserContextInf_t* inf,
             while (true)
             {
                 if (parserExpresion (inf, indent) != PARSER_THIS_OK)
-                    SYNTAX_ERROR ();
+                    SYNTAX_ERROR (inf, PE_NOT_EXPRESION);
                 if (inf->node->type == NODE_TYPE_PUNCT &&
                     inf->node->value.punct == PUNCT_COMMA)
                 {
@@ -188,8 +194,8 @@ Status_t parserAssignCall (ParserContextInf_t* inf,
             }
         }
         if (inf->node->type != NODE_TYPE_PUNCT &&
-            inf->node->value.punct != PUCNT_LEFT_ROUND)
-            SYNTAX_ERROR ();
+            inf->node->value.punct != PUNCT_RIGHT_ROUND)
+            SYNTAX_ERROR (inf, PE_NOT_RIGHT_ROUND);
         nextNode (inf);
     }
     if (inf->node->type == NODE_TYPE_PUNCT &&
@@ -199,7 +205,7 @@ Status_t parserAssignCall (ParserContextInf_t* inf,
         return PARSER_THIS_OK;
     }
     else
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_NOT_EXPRESION);
 }
 // ---------------------------------------------------------------------------------------------------
 /*
@@ -286,27 +292,26 @@ Status_t compilerExtern (ParserContextInf_t* inf,
          PARSER_ERROR - если произошла ошибка
 */
 Status_t parserDeclarationFunc (ParserContextInf_t* inf,
-                                Node_t* node)
+                                Node_t* parent)
 {
     assert (inf);
-    assert (node);
+    assert (parent);
 
     if (inf->node->type != NODE_TYPE_KEY_WORD &&
         inf->node->value.key != KEY_EXTERN_FUNC)
         return PARSER_NOT_THIS;
 
-    addNode (node, inf->node);
+    addNode (parent, inf->node);
     Node_t* ext = inf->node;
     nextNode (inf);
 
     if (inf->node->type != NODE_TYPE_INDENT)
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_NOT_INDENT_AFTER_DECLARATION);
 
-    Node_t* indent = inf->node;
     nextNode (inf);
     if (inf->node->type != NODE_TYPE_PUNCT &&
         inf->node->value.punct != PUNCT_LEFT_ROUND)
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_NOT_LEFT_ROUND);
 
     addNode (parent, ext);
     nextNode (inf);
@@ -328,12 +333,12 @@ Status_t parserDeclarationFunc (ParserContextInf_t* inf,
     }
     if (inf->node->type != NODE_TYPE_PUNCT &&
         inf->node->value.punct != PUNCT_RIGHT_ROUND)
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_NOT_RIGHT_ROUND);
 
     nextNode (inf);
-    if (inf->node->type != NODE_TYPE_KEY_WORD &&
-        inf->node->value.key != KEY_END_STR)
-        SYNTAX_ERROR ();
+    if (inf->node->type != NODE_TYPE_PUNCT &&
+        inf->node->value.key != PUNCT_END_STR)
+        SYNTAX_ERROR (inf, PE_NOT_END_CHAR);
 
     nextNode (inf);
     return PARSER_THIS_OK;
@@ -364,7 +369,7 @@ Status_t parserDeclarationVar (ParserContextInf_t* inf,
     nextNode (inf);
 
     if (inf->node->type != NODE_TYPE_INDENT)
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_NOT_INDENT_AFTER_DECLARATION);
 
     Node_t* indent = inf->node;
     nextNode (inf);
@@ -375,13 +380,13 @@ Status_t parserDeclarationVar (ParserContextInf_t* inf,
         addNode (inf->node, indent);
         nextNode (inf);
         if (parserExpresion (inf, inf->node - 1) != PARSER_THIS_OK)
-            SYNTAX_ERROR ();
+            SYNTAX_ERROR (inf, PE_NOT_EXPRESION_IN_ASSIGN);
     }
     else    { addNode (ext, indent); }
 
     if (inf->node->type != NODE_TYPE_PUNCT &&
         inf->node->value.punct != PUNCT_END_STR)
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_NOT_END_CHAR);
 
     nextNode (inf);
     return PARSER_THIS_OK;
@@ -407,7 +412,7 @@ Status_t parserExpresion (ParserContextInf_t* inf,
     if (parserAddSub (inf, buffer_node) != PARSER_THIS_OK)
     {
         deleteOneNode (buffer_node);
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_UNKNOWN_VALUE);
     }
 
     if (inf->node->type != NODE_TYPE_OPER &&
@@ -429,7 +434,7 @@ Status_t parserExpresion (ParserContextInf_t* inf,
     nextNode (inf);
 
     if (parserAddSub (inf, inf->node - 1) != PARSER_THIS_OK)
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_UNKNOWN_VALUE);
 
     return PARSER_THIS_OK;
 }
@@ -454,7 +459,7 @@ Status_t parserAddSub (ParserContextInf_t* inf,
     if (parserMulDiv (inf, buffer_node) != PARSER_THIS_OK)
     {
         deleteOneNode (buffer_node);
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_UNKNOWN_VALUE);
     }
 
     if (inf->node->type != NODE_TYPE_OPER &&
@@ -471,8 +476,8 @@ Status_t parserAddSub (ParserContextInf_t* inf,
     addNode (node, inf->node);
     nextNode (inf);
 
-    if (parserMulDiv (inf, inf->node - 1) != PARSER_THIS_OK)
-        SYNTAX_ERROR ();
+    if (parserAddSub (inf, inf->node - 1) != PARSER_THIS_OK)
+        SYNTAX_ERROR (inf, PE_UNKNOWN_VALUE);
 
     return PARSER_THIS_OK;
 }
@@ -497,7 +502,7 @@ Status_t parserMulDiv (ParserContextInf_t* inf,
     if (parserPower (inf, buffer_node) != PARSER_THIS_OK)
     {
         deleteOneNode (buffer_node);
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_UNKNOWN_VALUE);
     }
 
     if (inf->node->type != NODE_TYPE_OPER &&
@@ -515,7 +520,7 @@ Status_t parserMulDiv (ParserContextInf_t* inf,
     nextNode (inf);
 
     if (parserMulDiv (inf, inf->node - 1) != PARSER_THIS_OK)
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_UNKNOWN_VALUE);
 
     return PARSER_THIS_OK;
 }
@@ -540,7 +545,7 @@ Status_t parserPower (ParserContextInf_t* inf,
     if (parserValue (inf, buffer_node) != PARSER_THIS_OK)
     {
         deleteOneNode (buffer_node);
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_UNKNOWN_VALUE);
     }
 
     if (inf->node->type != NODE_TYPE_OPER &&
@@ -554,7 +559,7 @@ Status_t parserPower (ParserContextInf_t* inf,
     addChildren (inf->node, buffer_node);
     nextNode (inf);
     if (parserValue (inf, inf->node - 1) != PARSER_THIS_OK)
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_UNKNOWN_VALUE);
 
     return PARSER_THIS_OK;
 }
@@ -578,13 +583,13 @@ Status_t parserValue (ParserContextInf_t* inf,
     if (inf->node->type == NODE_TYPE_PUNCT &&
         inf->node->value.punct == PUNCT_LEFT_ROUND)
     {
-        nextNode (node);
+        nextNode (inf);
         if (parserExpresion (inf, node) != PARSER_THIS_OK)
-            SYNTAX_ERROR ();
+            SYNTAX_ERROR (inf, PE_NOT_EXPRESION);
 
         if (inf->node->type == NODE_TYPE_PUNCT &&
             inf->node->value.punct == PUNCT_RIGHT_ROUND)
-            SYNTAX_ERROR ();
+            SYNTAX_ERROR (inf, PE_NOT_RIGHT_ROUND);
 
         nextNode (inf);
         return PARSER_THIS_OK;
@@ -595,7 +600,7 @@ Status_t parserValue (ParserContextInf_t* inf,
     if (parserIndent (inf, node) == PARSER_THIS_OK)
         return PARSER_THIS_OK;
 
-    SYNTAX_ERROR ();
+    SYNTAX_ERROR (inf, PE_UNKNOWN_VALUE);
 }
 // ---------------------------------------------------------------------------------------------------
 
@@ -638,7 +643,7 @@ Status_t parserIndent (ParserContextInf_t* inf,
     while (true)
     {
         if (parserExpresion (inf, inf->node) != PARSER_THIS_OK)
-            SYNTAX_ERROR ();
+            SYNTAX_ERROR (inf, PE_NOT_EXPRESION_IN_FUNC);
 
         if (inf->node->type == NODE_TYPE_PUNCT &&
             inf->node->value.punct == PUNCT_COMMA)
@@ -650,7 +655,7 @@ Status_t parserIndent (ParserContextInf_t* inf,
     }
     if (inf->node->type != NODE_TYPE_PUNCT &&
         inf->node->value.punct != PUNCT_RIGHT_ROUND)
-        SYNTAX_ERROR ();
+        SYNTAX_ERROR (inf, PE_NOT_RIGHT_ROUND);
 
     nextNode (inf);
     return PARSER_THIS_OK;
@@ -730,18 +735,18 @@ int addNode (Node_t* parent,
     assert (parent);
     assert (child);
 
-    CompilerNode_t** buffer = NULL;
+    Node_t** buffer = NULL;
     if (parent->children == NULL)
     {
-        buffer = (CompilerNode_t**) calloc (1, sizeof (CompilerNode_t*));
+        buffer = (Node_t**) calloc (1, sizeof (Node_t*));
         if (buffer == NULL)
             EXIT_FUNC("NULL calloc", 1);
         parent->amount_children = 0;
     }
     else
     {
-        buffer = (CompilerNode_t**) realloc (parent->children,
-                  (parent->amount_children + 1) * sizeof (CompilerNode_t*));
+        buffer = (Node_t**) realloc (parent->children,
+                  (size_t) (parent->amount_children + 1) * sizeof (Node_t*));
         if (buffer == NULL)
             EXIT_FUNC("NULL realloc", 1);
     }
@@ -788,3 +793,88 @@ int deleteOneNode (Node_t* node)
 }
 // ---------------------------------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------------------------------
+/**
+ @brief Функция вывода ошибки по её номеру
+ @param [in] error Номер ошибки
+ @param [in] inf Указатель на структуру контекста
+*/
+int parserError (ParserError_t error,
+                 ParserContextInf_t* inf)
+{
+    assert (inf);
+
+    if (inf->error != PE_NOT_ERROR)
+        return 0;
+
+    inf->error = error;
+    printf ("Syntax Error in %s:%d: ",
+    inf->name_file, inf->line);
+
+    switch (error)
+    {
+        case (PE_NOT_INDENT_IN_FUNC):
+        {
+            printf ("Too few arguments in function");
+            break;
+        }
+        case (PE_NOT_RIGHT_ROUND):
+        {
+            printf ("Absence '(')");
+            break;
+        }
+        case (PE_NOT_LEFT_ROUND):
+        {
+            printf ("Absence '('");
+            break;
+        }
+        case (PE_UNKNOWN_VALUE):
+        {
+            printf ("Unknown value");
+            break;
+        }
+        case (PE_NOT_EXPRESION_AFTER_OPER):
+        {
+            printf ("No expresion");
+            break;
+        }
+        case (PE_NOT_EXPRESION_IN_FUNC):
+        {
+            printf ("No expresion in function");
+            break;
+        }
+        case (PE_NOT_INDENT_AFTER_DECLARATION):
+        {
+            printf ("No indent after declaration");
+            break;
+        }
+        case (PE_NOT_EXPRESION_IN_ASSIGN):
+        {
+            printf ("No expresion after = ");
+            break;
+        }
+        case (PE_NOT_END_CHAR):
+        {
+            printf ("No end char");
+            break;
+        }
+        case (PE_NOT_ERROR): break;
+        case (PE_NOT_EXPRESION):
+        {
+            printf ("No expresion");
+            break;
+        }
+        case (PE_NOT_UNION):
+        {
+            printf ("No union");
+            break;
+        }
+        default:
+        {
+            printf ("Unknown error");
+        }
+    }
+    printf ("\n");
+    return 0;
+}
+// ---------------------------------------------------------------------------------------------------
