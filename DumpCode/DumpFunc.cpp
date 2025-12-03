@@ -7,6 +7,8 @@
 #include "TypesOfType.h"
 #include "SupportFunc.h"
 #include "DumpConfig.h"
+#include "TypesConst.h"
+#include "TokenFunc.h"
 
 
 // -------------------------------------------------------------------------------------------------------
@@ -127,25 +129,27 @@ int printFullBlock (Node_t* node,
     char color[10] = "";
     char label[40] = "";
 
+    // dumpNode (node);
+    // printf ("%d\n", node->type);
     if (node->type == NODE_TYPE_FUNC)
     {
         strcpy (color, "#4fdc36ff");
-        sprintf (label, "\"%s\"", node->value.name);
+        sprintf (label, "%s", node->value.name);
     }
-    else if (node->type == NODE_TYPE_VAR)
+    else if (node->type == NODE_TYPE_INDENT)
     {
         strcpy (color, "#1bc3a7ff");
-        sprintf (label, "\"%s\"", node->value.name);
+        // sprintf (label, "%s", node->value.name);`
     }
     else if (node->type == NODE_TYPE_KEY_WORD)
     {
         strcpy (color, "#0f32e0ff");
-        sprintf (label, "%d", node->value.key);
+        sprintf (label, "%s", CHAR_KEY_WORD[node->value.key]);
     }
     else if (node->type == NODE_TYPE_PUNCT)
     {
         strcpy (color, "#ddf331ff");
-        sprintf (label, "%d", node->value.punct);
+        sprintf (label, "%s", CHAR_PUNCT[node->value.punct]);
     }
     else if (node->type == NODE_TYPE_NUM)
     {
@@ -204,7 +208,6 @@ int createLine (Node_t* node,
     assert (node);
     assert (stream);
 
-
     for (int i = 0; i < node->amount_children; i++)
         createLine (node->children[i], stream);
 
@@ -221,6 +224,21 @@ int createLine (Node_t* node,
             "penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];\n",
                      node, child);
     }
+    return 0;
+}
+// -------------------------------------------------------------------------------------------------------
+
+// -------------------------------------------------------------------------------------------------------
+int dumpNode (Node_t* node)
+{
+    assert (node);
+
+    printf ("[%p]\nAM: %d\n", node, node->amount_children);
+    for (int i = 0; i < node->amount_children; i++)
+    {
+        printf ("    %p\n", node->children[i]);
+    }
+    printf ("Type: %d\nValue: %d\n", node->type, node->value.num);
     return 0;
 }
 // -------------------------------------------------------------------------------------------------------

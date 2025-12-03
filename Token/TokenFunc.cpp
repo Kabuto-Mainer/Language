@@ -8,6 +8,7 @@
 #include "VectorFunc.h"
 #include "SupportFunc.h"
 #include "TypesOfType.h"
+#include "TypesConst.h"
 
 
 // ---------------------------------------------------------------------------------------------------
@@ -17,11 +18,8 @@ int skipVoid (TokenContextInf_t* inf)
     assert (inf->pose);
 
     char** str = inf->pose;
-    while (**str == ' ' || **str == '\t' || **str == '\r' || **str == '\n')
-    {
-        if (**str == '\n')  inf->line++;
+    while (**str == ' ' || **str == '\t' || **str == '\r')
         ++ *str;
-    }
 
     return 0;
 }
@@ -62,6 +60,7 @@ int tokenGlobal (char* buffer,
 
         EXIT_FUNC ("UNKNOWN SYNTAX", 1);
     }
+    // token
     return 0;
 }
 // ---------------------------------------------------------------------------------------------------
@@ -282,11 +281,50 @@ Status_t tokenMathOper (TokenContextInf_t* inf,
 int tokenDump (TokenVector_t* vector)
 {
     assert (vector);
-//
-//     for (size_t i = 0; i < vectorGetSize (vector); i++)
-//     {
-//         Node_t* node = vectorGetToken (vector, i);
-//     }
+
+    for (size_t i = 0; i < vectorGetSize (vector); i++)
+    {
+        Node_t* node = vectorGetToken (vector, i);
+        printf ("[%zu][%d]<", i, node->type);
+        if (node->type == NODE_TYPE_INDENT)
+            printf ("%s", node->value.name);
+        else if (node->type == NODE_TYPE_OPER)
+            printf ("%s", CHAR_OPER_TYPE[node->value.oper]);
+        else if (node->type == NODE_TYPE_KEY_WORD)
+            printf ("%s", CHAR_KEY_WORD[node->value.key]);
+        else if (node->type == NODE_TYPE_PUNCT)
+            printf ("%s", CHAR_PUNCT[node->value.punct]);
+        else if (node->type == NODE_TYPE_NUM)
+            printf ("%d", node->value.num);
+        else
+            printf ("block");
+        printf (">\n");
+    }
+    return 0;
+}
+// ---------------------------------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------------------------------
+int tokenOneDump (Node_t* node)
+{
+    assert (node);
+
+
+    printf ("[%d]<", node->type);
+    if (node->type == NODE_TYPE_INDENT)
+        printf ("%s", node->value.name);
+    else if (node->type == NODE_TYPE_OPER)
+        printf ("%s", CHAR_OPER_TYPE[node->value.oper]);
+    else if (node->type == NODE_TYPE_KEY_WORD)
+        printf ("%s", CHAR_KEY_WORD[node->value.key]);
+    else if (node->type == NODE_TYPE_PUNCT)
+        printf ("%s", CHAR_PUNCT[node->value.punct]);
+    else if (node->type == NODE_TYPE_NUM)
+        printf ("%d", node->value.num);
+    else
+        printf ("block");
+    printf (">\n");
+
     return 0;
 }
 // ---------------------------------------------------------------------------------------------------

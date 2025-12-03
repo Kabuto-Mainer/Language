@@ -104,7 +104,7 @@ int pushLogFile (const char* text,
         return 1;
     }
 
-    fprintf (stream, "[%ld][%15s:3%d]: %s\n",
+    fprintf (stream, "[%ld][%s:%d]: %s\n",
              clock (), file, line, text);
     // fprintf (stream, "%s\n", text);
     // fprintf (stream, "[%s:%d]\nTime start = %ld\nTime call = %ld\nTime work = %ld\n",

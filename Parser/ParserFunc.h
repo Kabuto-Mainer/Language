@@ -9,7 +9,7 @@
 #define SYNTAX_ERROR(__context__, __number_error__)     \
     do {                                                \
         parserError (__number_error__, __context__);    \
-        return PARSER_SYNTAX_ERROR;                     \
+        EXIT_FUNC ("Syntax Error", PARSER_SYNTAX_ERROR);\
     } while (0)
 // ---------------------------------------------------------------------------------------------------
 

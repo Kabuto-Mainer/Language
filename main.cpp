@@ -18,6 +18,7 @@ int main ()
 
     Node_t* root = newNode ();
     parserGlobal (vector.data, vector.size, root,"test.txt");
+    // dumpNode (*((*(root->children))->children));
     treeDump (root, "text");
 
     vectorDtr (&vector);
