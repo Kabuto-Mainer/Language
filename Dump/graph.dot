@@ -1,0 +1,15 @@
+digraph {
+  rankdir=UD;
+  bgcolor="#1e1e1e"
+  nodesep=0.4;
+  ranksep=0.6;
+  node [shape=plaintext, style=filled, fontname="Helvetica"];
+  edge [arrowhead=vee, arrowsize=0.6, penwidth=1.2];
+
+block_0x7d27627e0040 [shape=box, style=filled, fillcolor="#0f32e0ff", label="4"];
+block_0x7d27627e0090 [shape=box, style=filled, fillcolor="#0f32e0ff", label="7"];
+block_0x7c27627e0090 [shape=box, style=filled, fillcolor="#d119ffff", label="block"];
+block_0x7c27627e0090 -> block_0x7d27627e0040 [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7c27627e0090 -> block_0x7d27627e0090 [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+
+}

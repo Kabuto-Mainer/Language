@@ -5,6 +5,7 @@
 #include "VectorFunc.h"
 #include "TokenFunc.h"
 #include "ParserFunc.h"
+#include "DumpFunc.h"
 
 int main ()
 {
@@ -16,7 +17,8 @@ int main ()
     tokenDump (&vector);
 
     Node_t* root = newNode ();
-    parserGlobal (vector.  root, )
+    parserGlobal (vector.data, vector.size, root,"test.txt");
+    treeDump (root, "text");
 
     vectorDtr (&vector);
     free (buffer);

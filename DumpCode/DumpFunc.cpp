@@ -19,8 +19,8 @@ static int AMOUNT_IMAGES = 0;
  @param [in] root Корень дерева
  @param [in] reason Причина дампа
 */
-int binTreeDumpHTML (Node_t* root,
-                     const char* reason)
+int treeDump (Node_t* root,
+              const char* reason)
 {
     assert (root);
 

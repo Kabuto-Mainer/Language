@@ -39,9 +39,12 @@ int tokenGlobal (char* buffer,
         .pose = str,
         .line = 0};
 
-    while (**str != '$' && **str != '\0')
+    while (true)
     {
         skipVoid (&inf);
+        if (**(inf.pose) == '\0' || **(inf.pose) == '$')
+            break;
+
         if (tokenPunct (&inf, vector) == PARSER_THIS_OK)
             continue;
 
@@ -70,6 +73,8 @@ Status_t tokenPunct (TokenContextInf_t* inf,
     assert (inf);
     assert (vector);
 
+    printf ("Punct\n");
+    printf ("%s", *inf->pose);
     Node_t node = {
         .type = NODE_TYPE_PUNCT,
         .parent = NULL,
@@ -101,6 +106,8 @@ Status_t tokenNum (TokenContextInf_t* inf,
     assert (inf);
     assert (vector);
 
+    printf ("Num\n");
+    printf ("%s", *inf->pose);
     if (!isdigit (**inf->pose) || (**inf->pose == '-' && !isdigit (*(*inf->pose + 1))))
         return PARSER_NOT_THIS;
 
@@ -129,7 +136,8 @@ Status_t tokenIndent (TokenContextInf_t* inf,
     assert (inf);
     assert (vector);
 
-    // printf ("Indent\n");
+    printf ("Indent\n");
+    printf ("%s", *inf->pose);
     if (!isalpha (**inf->pose))
         return PARSER_NOT_THIS;
 
@@ -138,10 +146,10 @@ Status_t tokenIndent (TokenContextInf_t* inf,
     while (isalpha ((*str)[len]) || isdigit ((*str)[len]) || (*str)[len] == '_')
         len++;
 
-    char buffer_char = *str[len];
-    *str[len] = '\0';
+    char buffer_char = (*str)[len];
+    (*str)[len] = '\0';
     char* name = strdup (*str);
-    *str[len] = buffer_char;
+    (*str)[len] = buffer_char;
 
     Node_t node = {
         .type = NODE_TYPE_INDENT,
@@ -164,15 +172,20 @@ Status_t tokenKeyWord (TokenContextInf_t* inf,
     assert (inf);
     assert (vector);
 
-    // printf ("ProgSyntax\n");
+    printf ("KeyWord\n");
+    printf ("%s", *inf->pose);
     size_t len = 0;
     char** str = inf->pose;
     while (isalpha((*str)[len]))
+    {
+        // printf ("%c", (*str)[len]);
         len++;
+    }
 
     char buffer_char = (*str)[len];
     (*str)[len] = '\0';
 
+    printf ("STR: %s\n", *str);
     Node_t node = {
         .type = NODE_TYPE_KEY_WORD,
         .parent = NULL,
@@ -189,7 +202,7 @@ Status_t tokenKeyWord (TokenContextInf_t* inf,
     else if (strcmp ("ret", *str) == 0)      node.value.key = KEY_RETURN;
     else
     {
-        *str[len] = buffer_char;
+        (*str)[len] = buffer_char;
         return PARSER_NOT_THIS;
     }
     (*str)[len] = buffer_char;
@@ -207,7 +220,8 @@ Status_t tokenMathOper (TokenContextInf_t* inf,
     assert (inf);
     assert (vector);
 
-    // printf ("Math\n");
+    printf ("Math\n");
+    printf ("%s", *inf->pose);
     size_t len = 0;
     char** str = inf->pose;
     while (ispunct((*str)[len]))
@@ -258,6 +272,7 @@ Status_t tokenMathOper (TokenContextInf_t* inf,
     }
 
     (*str)[len] = buffer_char;
+    *str += len;
     vectorAdd (vector, node);
     return PARSER_THIS_OK;
 }

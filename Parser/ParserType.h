@@ -11,7 +11,7 @@ struct ParserContextInf_t
     Node_t* node;
     int line;
     int error;
-    char* name_file;
+    const char* name_file;
     size_t cur_index;
     size_t capacity;
 };
