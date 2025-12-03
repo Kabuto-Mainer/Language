@@ -5,7 +5,7 @@ alloc c = 0
 trig (a == 0)
 (
     alloc Disc = b**2 - 4*a*c
-
+    Disc = Disc - 1
 )
 
 $

@@ -329,3 +329,28 @@ int tokenOneDump (Node_t* node)
 }
 // ---------------------------------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------------------------------
+int tokenOneDump (Node_t* node, const char* reason)
+{
+    assert (node);
+    assert (reason);
+
+    printf ("[%d]<", node->type);
+    if (node->type == NODE_TYPE_INDENT)
+        printf ("%s", node->value.name);
+    else if (node->type == NODE_TYPE_OPER)
+        printf ("%s", CHAR_OPER_TYPE[node->value.oper]);
+    else if (node->type == NODE_TYPE_KEY_WORD)
+        printf ("%s", CHAR_KEY_WORD[node->value.key]);
+    else if (node->type == NODE_TYPE_PUNCT)
+        printf ("%s", CHAR_PUNCT[node->value.punct]);
+    else if (node->type == NODE_TYPE_NUM)
+        printf ("%d", node->value.num);
+    else
+        printf ("block");
+    printf (">%s\n", reason);
+
+    return 0;
+}
+// ---------------------------------------------------------------------------------------------------
+

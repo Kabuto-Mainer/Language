@@ -534,7 +534,7 @@ Status_t parserAddSub (ParserContextInf_t* inf,
     assert (inf);
     assert (node);
 
-    tokenOneDump (inf->node);
+    // tokenOneDump (inf->node);
     Node_t* buffer_node = newNode ();
     if (parserMulDiv (inf, buffer_node) != PARSER_THIS_OK)
     {
@@ -552,7 +552,7 @@ Status_t parserAddSub (ParserContextInf_t* inf,
         return PARSER_THIS_OK;
     }
 
-    tokenOneDump (inf->node);
+    tokenOneDump (inf->node, "Операция слож");
     addChildren (inf->node, buffer_node);
     deleteOneNode (buffer_node);
     addNode (node, inf->node);
@@ -597,7 +597,7 @@ Status_t parserMulDiv (ParserContextInf_t* inf,
         return PARSER_THIS_OK;
     }
 
-    printf ("MUL\n");
+    // printf ("MUL\n");
     addChildren (inf->node, buffer_node);
     deleteOneNode (buffer_node);
     addNode (node, inf->node);
@@ -626,7 +626,7 @@ Status_t parserPower (ParserContextInf_t* inf,
     assert (inf);
     assert (node);
 
-    // tokenOneDump (inf->node);
+    tokenOneDump (inf->node, "Выражение в степени");
     Node_t* buffer_node = newNode ();
         // printf ("VAlue\n");
     if (parserValue (inf, buffer_node) != PARSER_THIS_OK)
@@ -642,12 +642,14 @@ Status_t parserPower (ParserContextInf_t* inf,
         deleteOneNode (buffer_node);
         return PARSER_THIS_OK;
     }
+    tokenOneDump (inf->node, "Степень");
 
     addChildren (inf->node, buffer_node);
+    addNode (node, inf->node);
+    dumpNode (inf->node);
     deleteOneNode (buffer_node);
     nextNode (inf);
     // skipEndChar (inf);
-    tokenOneDump (inf->node);
     if (parserValue (inf, inf->node - 1) != PARSER_THIS_OK)
         SYNTAX_ERROR (inf, PE_UNKNOWN_VALUE);
 
@@ -688,7 +690,7 @@ Status_t parserValue (ParserContextInf_t* inf,
         // skipEndChar (inf);
         return PARSER_THIS_OK;
     }
-    tokenOneDump (inf->node);
+    // tokenOneDump (inf->node);
     if (parserNumber (inf, node) == PARSER_THIS_OK)
         return PARSER_THIS_OK;
     // printf ("HHH\n");
@@ -781,7 +783,7 @@ Status_t parserNumber (ParserContextInf_t* inf,
     if (inf->node->type != NODE_TYPE_NUM)
         return PARSER_NOT_THIS;
 
-    tokenOneDump (inf->node);
+    tokenOneDump (inf->node, "Число");
     addNode (parent, inf->node);
     nextNode (inf);
     // skipEndChar (inf);
