@@ -106,6 +106,9 @@ NameTable_t* nameTableStackPop (NameTableStack_t* stack);
 int nameTableStackDtr (NameTableStack_t* stack);
 // ---------------------------------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------------------------------
+size_t nameTableStackGetSize (NameTableStack_t* stack);
+// ---------------------------------------------------------------------------------------------------
 
 
 #endif // NAME_TABLE_FUNC_H

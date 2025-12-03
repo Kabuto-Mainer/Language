@@ -58,8 +58,8 @@ int nameTableDtr (NameTable_t* table)
  @return Индекс переменной с таким именем в таблице имен,
          если не найдет (size_t) -1
 */
-size_t nameTableFind (NameTable_t* table,
-                      NameTableName_t name)
+NameTableVar_t* nameTableFind (NameTable_t* table,
+                              char* name)
 {
     assert (table);
     assertNameTableName (name);
@@ -67,54 +67,81 @@ size_t nameTableFind (NameTable_t* table,
     size_t hash = getHash (name);
     NameTableVar_t* data = table->data;
 
-    for (size_t i = 0; i < table->size; i++)
+    NameTableVar_t* var = (NameTableVar_t*) bsearch (&hash, data,
+                          table->size, sizeof (NameTableVar_t), compareVarAndHash);
+
+    if (var == NULL)
+        NULL;
+
+    while (var != NULL)
     {
-        if (hash == data[i].hash && strcmp (name, data[i].name))
-            return i;
+        if (strcmp (var->name, name) == 0)
+            return var;
+        var = var->next;
     }
-    return (size_t) -1;
+    return NULL;
 }
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
 /**
- @brief Функция сравнения элементов таблицы имен по их хешам
- @param [in] var_1 Указатель на первый элемент
- @param [in] var_2 Указатель на второй элемент
- @return 0, если совпадают хеши и имена, 1 - если совпадают только хеши,
-         иначе 1, если hash_1 > hash_2, 0 если hash_1 < hash_2
+ @brief Функция сравнения элементов таблицы по хешу
+ @param [in] void_var_1 Указатель на первый элемент
+ @param [in] void_var_2 Указатель на второй элемент
+ @return sign (var_1.hash - var_2.hash)
 */
-int compareVar (const void* var_1,
-                const void* var_2)
+int compareVarByHash (const void* void_var_1,
+                      const void* void_var_2)
 {
-    assert (var_1);
-    assert (var_2);
+    assert (void_var_1);
+    assert (void_var_2);
 
-    const NameTableVar_t* struct_var_1 = (const NameTableVar_t*) var_1;
-    const NameTableVar_t* struct_var_2 = (const NameTableVar_t*) var_2;
+    const NameTableVar_t* var_1 = (const NameTableVar_t*) void_var_1;
+    const NameTableVar_t* var_2 = (const NameTableVar_t*) void_var_2;
 
-    if (struct_var_1->hash > struct_var_2->hash) { return 1; }
-    if (struct_var_1->hash < struct_var_2->hash) { return -1; }
-
-    return strcmp (struct_var_1->name, struct_var_2->name);
+    if (var_1->hash > var_2->hash)  { return 1; }
+    if (var_1->hash < var_2->hash)  { return -1; }
+    return 0;
 }
 // ---------------------------------------------------------------------------------------------------
-
 
 // ---------------------------------------------------------------------------------------------------
 /**
- @brief Функция, возвращающая имя, лежащее под полученным индексом
- @param [in] table Указатель на таблицу имен
- @param [in] index Полученный индекс
- @return Имя, иначе NULL
+ @brief Функция сравнения хеша и элемента таблицы по хешу
+ @param [in] void_hash_1 Указатель на хеш
+ @param [in] void_var_2 Указатель на элемент
+ @return sign (hash_1 - var_2.hash)
 */
-NameTableName_t nameTableGetName (const NameTable_t* table,
-                                  const size_t index)
+int compareVarAndHash (const void* void_hash_1,
+                       const void* void_var_2)
 {
-    assert (table);
-    return table->data[index].name;
+    assert (void_hash_1);
+    assert (void_var_2);
+
+    const int* hash_1 = (const int*) void_hash_1;
+    const NameTableVar_t* var_2 = (const NameTableVar_t*) void_var_2;
+
+    if (*hash_1 > var_2->hash)  { return 1; }
+    if (*hash_1 < var_2->hash)  { return -1; }
+    return 0;
 }
 // ---------------------------------------------------------------------------------------------------
+
+//
+// // ---------------------------------------------------------------------------------------------------
+// /**
+//  @brief Функция, возвращающая имя, лежащее под полученным индексом
+//  @param [in] table Указатель на таблицу имен
+//  @param [in] index Полученный индекс
+//  @return Имя, иначе NULL
+// */
+// NameTableVar_t nameTableGetVar (const NameTable_t* table,
+//                                 const size_t index)
+// {
+//     assert (table);
+//     return table->data[index].name;
+// }
+// // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
 /**
@@ -135,34 +162,62 @@ size_t nameTableGetSize (NameTable_t* table)
  @brief Функция добавления элемента в таблицу имен
  @param [in] table Указатель на таблицу имен
  @param [in] name Имя добавляемого объекта
- @param [in] value Значение, соответствующее имени
- @param [in] len_name Длина имени
- @return Индекс имени в таблице имен (при ошибке (size_t) -1)
+ @return Указатель на элемент
 */
-size_t nameTableAdd (NameTable_t* table,
-                     NameTableName_t name,
-                     NameTableValue_t value,
-                     size_t len_name)
+NameTableVar_t* nameTableAdd (NameTable_t* table,
+                              char* name)
 {
     assert (table);
     assertNameTableName (name);
 
-    if (table->size >= table->capacity)
+    NameTableVar_t* find_var = nameTableFind (table, name);
+    if (find_var != NULL)
+        return find_var;
+
+    size_t hash = getHash (name);
+    NameTableVar_t* data = table->data;
+
+    find_var = (NameTableVar_t*) bsearch (&hash, data, table->size,
+                                 sizeof (NameTableVar_t), compareVarAndHash);
+
+    if (find_var == NULL)
     {
-        NameTableVar_t* buffer = (NameTableVar_t*) realloc (table->data, table->capacity * 2);
-        if (buffer == NULL)
-            EXIT_FUNC("NULL realloc", 1);
+        if (table->size >= table->capacity)
+        {
+            NameTableVar_t* buffer = (NameTableVar_t*) realloc (table->data, table->capacity * 2);
+            if (buffer == NULL)
+                EXIT_FUNC ("NULL realloc", 1);
 
-        table->data = buffer;
-        table->capacity *= 2;
+            table->data = buffer;
+            table->capacity *= 2;
+        }
+        table->data[table->size].name = strdup (name);
+        table->data[table->size].hash = hash;
+        table->data[table->size].next = NULL;
+        table->size++;
+        qsort (table->data, table->size, sizeof (NameTableVar_t), compareVarByHash);
+        find_var = nameTableFind (table, name);
     }
+    else
+    {
+        NameTableVar_t* buffer_var = find_var;
+        int size = 1;
+        while (buffer_var->next != NULL)
+        {
+            size++;
+            buffer_var = buffer_var->next;
+        }
 
-    table->data[table->size].name = strndup (name, len_name);
-    table->data[table->size].value = value;
-    table->data[table->size].hash = getHash (table->data[table->size].name);
-    table->size++;
-    // qsort (table->data, table->size, sizeof (NameTableVar_t), compareVar);
-    return nameTableFind (table, name);
+        find_var = (NameTableVar_t*) calloc (1, sizeof (NameTableVar_t));
+        if (find_var == NULL)
+            EXIT_FUNC ("NULL calloc", NULL);
+
+        buffer_var->next = find_var;
+        find_var->next = NULL;
+        find_var->hash = hash;
+        find_var->name = name;
+    }
+    return find_var;
 }
 // ---------------------------------------------------------------------------------------------------
 
@@ -239,6 +294,13 @@ int nameTableStackDtr (NameTableStack_t* stack)
 
     free (stack->data);
     return 0;
+}
+// ---------------------------------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------------------------------
+size_t nameTableStackGetSize (NameTableStack_t* stack)
+{
+    return stack->size;
 }
 // ---------------------------------------------------------------------------------------------------
 
