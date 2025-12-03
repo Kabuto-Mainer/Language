@@ -534,7 +534,7 @@ Status_t parserAddSub (ParserContextInf_t* inf,
     assert (inf);
     assert (node);
 
-    // tokenOneDump (inf->node);
+    tokenOneDump (inf->node);
     Node_t* buffer_node = newNode ();
     if (parserMulDiv (inf, buffer_node) != PARSER_THIS_OK)
     {
@@ -544,20 +544,20 @@ Status_t parserAddSub (ParserContextInf_t* inf,
     }
 
     if (inf->node->type != NODE_TYPE_OPER ||
-        inf->node->value.oper != OPER_ADD ||
-        inf->node->value.oper != OPER_SUB)
+       (inf->node->value.oper != OPER_ADD &&
+        inf->node->value.oper != OPER_SUB))
     {
         addChildren (node, buffer_node);
         deleteOneNode (buffer_node);
         return PARSER_THIS_OK;
     }
 
+    tokenOneDump (inf->node);
     addChildren (inf->node, buffer_node);
     deleteOneNode (buffer_node);
     addNode (node, inf->node);
     nextNode (inf);
     // skipEndChar (inf);
-    // tokenOneDump (inf->node);
     if (parserAddSub (inf, inf->node - 1) != PARSER_THIS_OK)
         SYNTAX_ERROR (inf, PE_UNKNOWN_VALUE);
 
@@ -584,20 +584,20 @@ Status_t parserMulDiv (ParserContextInf_t* inf,
     Node_t* buffer_node = newNode ();
     if (parserPower (inf, buffer_node) != PARSER_THIS_OK)
     {
-    // printf ("MUL\n");
         deleteOneNode (buffer_node);
         SYNTAX_ERROR (inf, PE_UNKNOWN_VALUE);
     }
 
     if (inf->node->type != NODE_TYPE_OPER ||
-        inf->node->value.oper != OPER_MUL ||
-        inf->node->value.oper != OPER_DIV)
+       (inf->node->value.oper != OPER_MUL &&
+        inf->node->value.oper != OPER_DIV))
     {
         addChildren (node, buffer_node);
         deleteOneNode (buffer_node);
         return PARSER_THIS_OK;
     }
 
+    printf ("MUL\n");
     addChildren (inf->node, buffer_node);
     deleteOneNode (buffer_node);
     addNode (node, inf->node);
@@ -644,8 +644,10 @@ Status_t parserPower (ParserContextInf_t* inf,
     }
 
     addChildren (inf->node, buffer_node);
+    deleteOneNode (buffer_node);
     nextNode (inf);
     // skipEndChar (inf);
+    tokenOneDump (inf->node);
     if (parserValue (inf, inf->node - 1) != PARSER_THIS_OK)
         SYNTAX_ERROR (inf, PE_UNKNOWN_VALUE);
 
@@ -686,7 +688,7 @@ Status_t parserValue (ParserContextInf_t* inf,
         // skipEndChar (inf);
         return PARSER_THIS_OK;
     }
-    // tokenOneDump (inf->node);
+    tokenOneDump (inf->node);
     if (parserNumber (inf, node) == PARSER_THIS_OK)
         return PARSER_THIS_OK;
     // printf ("HHH\n");
@@ -775,11 +777,11 @@ Status_t parserNumber (ParserContextInf_t* inf,
                        Node_t* parent)
 {
     assert (inf);
-    // tokenOneDump (inf->node);
 
     if (inf->node->type != NODE_TYPE_NUM)
         return PARSER_NOT_THIS;
 
+    tokenOneDump (inf->node);
     addNode (parent, inf->node);
     nextNode (inf);
     // skipEndChar (inf);

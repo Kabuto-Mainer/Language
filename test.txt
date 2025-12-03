@@ -1,11 +1,11 @@
-alloc a = 10
-alloc b = 20
-a = 0
+alloc a = 0
+alloc b = 0
+alloc c = 0
+
 trig (a == 0)
 (
+    alloc Disc = b**2 - 4*a*c
 
-    b = 0
-
-    alloc c = 1
 )
+
 $

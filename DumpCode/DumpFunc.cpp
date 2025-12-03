@@ -77,7 +77,7 @@ int createGraph (Node_t* root)
              "digraph {\n"
              "  rankdir=UD;\n"
              "  bgcolor=\"#1e1e1e\"\n"
-            //  "  splines=ortho;\n"
+             "  splines=spline;\n"
              "  nodesep=0.4;\n"
              "  ranksep=0.6;\n"
              "  node [shape=plaintext, style=filled, fontname=\"Helvetica\"];\n"
@@ -113,6 +113,7 @@ int createBlock (Node_t* node,
 }
 // -------------------------------------------------------------------------------------------------------
 
+#ifndef DEBUG_MODE
 // ------------------------------------------------------------------------------------------------------
 /**
  @brief Функция описания блока дерева для кратного дампа
@@ -162,10 +163,13 @@ int printFullBlock (Node_t* node,
         strcpy (color, "#de3434ff");
         sprintf (label, "%d", node->value.num);
     }
+    else if (node->type == NODE_TYPE_OPER)
+    {
+        strcpy (color, "#e8802bff");
+        sprintf (label, "%s", CHAR_OPER_TYPE[node->value.oper]);
+    }
     else
     {
-        // printf ("999\n");
-        // dumpNode (node);
         strcpy (color, "#d119ffff");
         sprintf (label, "block");
     }
@@ -176,7 +180,89 @@ int printFullBlock (Node_t* node,
     return 0;
 }
 // -------------------------------------------------------------------------------------------------------
+#else
+// ------------------------------------------------------------------------------------------------------
+/**
+ @brief Функция описания блока дерева для кратного дампа
+ @param [in] node Узел, блок которого описывается
+ @param [in] stream Файл для вывода
+*/
+int printFullBlock (Node_t* node,
+                    FILE* stream)
+{
+    assert (node);
+    assert (stream);
 
+    char shape[] = "box";
+    char type[20] = "";
+    char color[10] = "";
+    char label[40] = "";
+
+    if (node->type == NODE_TYPE_FUNC)
+    {
+        strcpy (color, "#4fdc36ff");
+        sprintf (label, "%s", node->value.name);
+        strcpy (type, "FUNC");
+    }
+    else if (node->type == NODE_TYPE_INDENT)
+    {
+        strcpy (color, "#1bc3a7ff");
+        sprintf (label, "%s", node->value.name);
+        strcpy (type, "INDENT");
+    }
+    else if (node->type == NODE_TYPE_VAR)
+    {
+        strcpy (color, "#c1f453ff");
+        sprintf (label, "%s", node->value.name);
+        strcpy (type, "VAR");
+    }
+    else if (node->type == NODE_TYPE_KEY_WORD)
+    {
+        strcpy (color, "#0f32e0ff");
+        sprintf (label, "%s", CHAR_KEY_WORD[node->value.key]);
+        strcpy (type, "KEY");
+    }
+    else if (node->type == NODE_TYPE_PUNCT)
+    {
+        strcpy (color, "#ddf331ff");
+        sprintf (label, "%s", CHAR_PUNCT[node->value.punct]);
+        strcpy (type, "PUNCT");
+    }
+    else if (node->type == NODE_TYPE_NUM)
+    {
+        strcpy (color, "#de3434ff");
+        sprintf (label, "%d", node->value.num);
+        strcpy (type, "NUM");
+    }
+    else if (node->type == NODE_TYPE_OPER)
+    {
+        strcpy (color, "#e8802bff");
+        sprintf (label, "%s", CHAR_OPER_TYPE[node->value.oper]);
+        strcpy (type, "OPER");
+    }
+    else
+    {
+        strcpy (color, "#d119ffff");
+        sprintf (label, "block");
+        sprintf (type, "block");
+    }
+
+    fprintf (stream, "block_%p [shape=%s, label=<\n<TABLE CELLSPACING=\"0\" CELLPADDING=\"4\">\n"
+            "<TR><TD PORT=\"root\" BGCOLOR=\"%s\" COLSPAN=\"2\"><B>%p", node, shape, color, node);
+    fprintf (stream, "</B></TD></TR>\n"
+             "<TR><TD BGCOLOR=\"#b209ccff\" COLSPAN=\"2\">ROOT=%p", node->parent);
+    fprintf (stream, "</TD></TR>\n"
+             "<TR><TD BGCOLOR=\"#6bd934ff\" COLSPAN=\"2\">%s</TD></TR>\n"
+             "<TR><TD BGCOLOR=\"#46f2f5ff\" COLSPAN=\"2\">%s", type, label);
+    fprintf (stream, "</TD></TR>\n"
+             "<TR>\n<TD PORT=\"child\" BGCOLOR=\"#ff7301ff\" COLSPAN=\"2\">CHILDREN [%d]</TD>", node->amount_children);
+    fprintf (stream, "</TR>\n</TABLE> >];\n\n");
+
+    return 0;
+
+}
+// ------------------------------------------------------------------------------------------------------
+#endif /* DEBUG_MODE */
 // -------------------------------------------------------------------------------------------------------
 /**
  @brief Функция распечатки адреса в HEX-формате
@@ -203,7 +289,7 @@ int printAddress (FILE* stream,
     return 0;
 }
 // -------------------------------------------------------------------------------------------------------
-
+#ifndef DEBUG_MODE
 // -------------------------------------------------------------------------------------------------------
 /**
  @brief Рекурсивная функция создания связей между блоками
@@ -235,7 +321,41 @@ int createLine (Node_t* node,
     return 0;
 }
 // -------------------------------------------------------------------------------------------------------
+#else
+// -------------------------------------------------------------------------------------------------------
+/**
+ @brief Рекурсивная функция создания связей между блоками
+ @param [in] node Указатель на текущий узел
+ @param [in] stream Указатель на dot файл
+*/
+int createLine (Node_t* node,
+                FILE* stream)
+{
+    assert (node);
+    assert (stream);
 
+    for (int i = 0; i < node->amount_children; i++)
+        createLine (node->children[i], stream);
+
+
+    for (int i = 0; i < node->amount_children; i++)
+    {
+        Node_t* child = node->children[i];
+        if (child->parent == node)
+            fprintf (stream, "block_%p:child -> block_%p:root [color=\"#fefefeff\", "
+            "penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];\n",
+                     node, child);
+
+        else
+            fprintf (stream, "block_%p:child -> block_%p:root [color=\"#f82f2fff\", "
+            "penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];\n",
+                     node, child);
+    }
+
+    return 0;
+}
+// -------------------------------------------------------------------------------------------------------
+#endif /* DEBUG_MODE */
 // -------------------------------------------------------------------------------------------------------
 int dumpNode (Node_t* node)
 {

@@ -15,7 +15,7 @@ int main ()
     vectorCtr (&vector);
 
     tokenGlobal (buffer, &vector);
-    // tokenDump (&vector);
+    tokenDump (&vector);
 
     Node_t* root = newNode ();
     root->value.name = strdup ("main block");
