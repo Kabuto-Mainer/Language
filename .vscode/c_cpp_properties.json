@@ -1,22 +1,48 @@
 {
   "configurations": [
     {
-      "name": "linux-gcc-x64",
+      "name": "linux-g++-x64",
       "includePath": [
-        "${workspaceFolder}/**"
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/Common",
+        "${workspaceFolder}/NameTable",
+        "${workspaceFolder}/Parser",
+        "${workspaceFolder}/Support",
+        "${workspaceFolder}/Token",
+        "${workspaceFolder}/Vector",
+        "${workspaceFolder}/DumpCode",
+        "/usr/include",
+        "/usr/local/include"
       ],
-      "defines": [],
-      "compilerPath": "/usr/bin/gcc",
-      "cStandard": "${default}",
-      "cppStandard": "${default}",
+      "defines": [
+        "_DEBUG"
+      ],
+      "compilerPath": "/usr/bin/g++",  // ИЗМЕНЕНО: gcc → g++
+      "cStandard": "gnu17",
+      "cppStandard": "gnu++17",  // ИЗМЕНЕНО: для C++ вместо default
       "intelliSenseMode": "linux-gcc-x64",
       "compilerArgs": [
         "-std=c++17",
         "-Wall",
         "-Wextra",
-        "-pedantic"
+        "-pedantic",
+        "-D_DEBUG",
+        "-ggdb3",
+        "-I${workspaceFolder}/Common",
+        "-I${workspaceFolder}/NameTable",
+        "-I${workspaceFolder}/Parser",
+        "-I${workspaceFolder}/Support",
+        "-I${workspaceFolder}/Token",
+        "-I${workspaceFolder}/Vector",
+        "-I${workspaceFolder}/DumpCode"
       ],
-      "configurationProvider": "ms-vscode.cmake-tools"
+      "browse": {
+        "path": [
+          "${workspaceFolder}/**"
+        ],
+        "limitSymbolsToIncludedHeaders": true,
+        "databaseFilename": "${workspaceFolder}/.vscode/browse.vc.db"
+      }
     }
   ],
   "version": 4

@@ -72,8 +72,8 @@ Status_t tokenPunct (TokenContextInf_t* inf,
     assert (inf);
     assert (vector);
 
-    printf ("Punct\n");
-    printf ("%s", *inf->pose);
+    // printf ("Punct\n");
+    // printf ("%s", *inf->pose);
     Node_t node = {
         .type = NODE_TYPE_PUNCT,
         .parent = NULL,
@@ -105,8 +105,8 @@ Status_t tokenNum (TokenContextInf_t* inf,
     assert (inf);
     assert (vector);
 
-    printf ("Num\n");
-    printf ("%s", *inf->pose);
+    // printf ("Num\n");
+    // printf ("%s", *inf->pose);
     if (!isdigit (**inf->pose) || (**inf->pose == '-' && !isdigit (*(*inf->pose + 1))))
         return PARSER_NOT_THIS;
 
@@ -135,8 +135,8 @@ Status_t tokenIndent (TokenContextInf_t* inf,
     assert (inf);
     assert (vector);
 
-    printf ("Indent\n");
-    printf ("%s", *inf->pose);
+    // printf ("Indent\n");
+    // printf ("%s", *inf->pose);
     if (!isalpha (**inf->pose))
         return PARSER_NOT_THIS;
 
@@ -171,8 +171,8 @@ Status_t tokenKeyWord (TokenContextInf_t* inf,
     assert (inf);
     assert (vector);
 
-    printf ("KeyWord\n");
-    printf ("%s", *inf->pose);
+    // printf ("KeyWord\n");
+    // printf ("%s", *inf->pose);
     size_t len = 0;
     char** str = inf->pose;
     while (isalpha((*str)[len]))
@@ -184,7 +184,7 @@ Status_t tokenKeyWord (TokenContextInf_t* inf,
     char buffer_char = (*str)[len];
     (*str)[len] = '\0';
 
-    printf ("STR: %s\n", *str);
+    // printf ("STR: %s\n", *str);
     Node_t node = {
         .type = NODE_TYPE_KEY_WORD,
         .parent = NULL,
@@ -219,8 +219,8 @@ Status_t tokenMathOper (TokenContextInf_t* inf,
     assert (inf);
     assert (vector);
 
-    printf ("Math\n");
-    printf ("%s", *inf->pose);
+    // printf ("Math\n");
+    // printf ("%s", *inf->pose);
     size_t len = 0;
     char** str = inf->pose;
     while (ispunct((*str)[len]))

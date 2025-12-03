@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 
 #include "NameTableFunc.h"
 #include "SupportFunc.h"
@@ -17,6 +18,7 @@ int main ()
     tokenDump (&vector);
 
     Node_t* root = newNode ();
+    root->value.name = strdup ("main block");
     parserGlobal (vector.data, vector.size, root,"test.txt");
     // dumpNode (*((*(root->children))->children));
     treeDump (root, "text");

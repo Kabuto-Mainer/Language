@@ -1,3 +1,9 @@
 alloc a = 10
 alloc b = 20
+a = 0
+trig (a == 0)
+(
+    b = 0
+    alloc c = 1
+)
 $

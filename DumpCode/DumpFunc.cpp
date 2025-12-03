@@ -139,7 +139,13 @@ int printFullBlock (Node_t* node,
     else if (node->type == NODE_TYPE_INDENT)
     {
         strcpy (color, "#1bc3a7ff");
-        // sprintf (label, "%s", node->value.name);`
+        // if (node->value.name != NULL)
+            sprintf (label, "%s", node->value.name);
+    }
+    else if (node->type == NODE_TYPE_VAR)
+    {
+        strcpy (color, "#c1f453ff");
+        sprintf (label, "%s", node->value.name);
     }
     else if (node->type == NODE_TYPE_KEY_WORD)
     {
@@ -158,6 +164,8 @@ int printFullBlock (Node_t* node,
     }
     else
     {
+        printf ("999\n");
+        dumpNode (node);
         strcpy (color, "#d119ffff");
         sprintf (label, "block");
     }

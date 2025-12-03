@@ -29,14 +29,17 @@ int vectorAdd (TokenVector_t* vector,
 {
     assert (vector);
 
-    if (vector->size == vector->capacity)
+    // printf ("SIZE %zu\nCAP %zu\n", vector->size, vector->capacity);
+    if (vector->size >= vector->capacity)
     {
         Node_t* buffer = (Node_t*) realloc (vector->data, vector->capacity * 2 * sizeof (Node_t));
         if (buffer == NULL)
             EXIT_FUNC ("NULL realloc", 1);
         vector->data = buffer;
+        vector->capacity *= 2;
     }
-    vector->data[vector->size++] = token;
+    vector->data[vector->size] = token;
+    vector->size++;
     return 0;
 }
 // ---------------------------------------------------------------------------------------------------
