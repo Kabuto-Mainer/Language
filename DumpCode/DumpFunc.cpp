@@ -164,8 +164,8 @@ int printFullBlock (Node_t* node,
     }
     else
     {
-        printf ("999\n");
-        dumpNode (node);
+        // printf ("999\n");
+        // dumpNode (node);
         strcpy (color, "#d119ffff");
         sprintf (label, "block");
     }
