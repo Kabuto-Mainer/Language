@@ -1,0 +1,47 @@
+{
+  "configurations": [
+    {
+      "name": "Linux G++",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/Common",
+        "${workspaceFolder}/NameTable",
+        "${workspaceFolder}/Parser",
+        "${workspaceFolder}/Support",
+        "${workspaceFolder}/Token",
+        "${workspaceFolder}/Vector",
+        "${workspaceFolder}/DumpCode",
+        "/usr/include",
+        "/usr/local/include"
+      ],
+      "defines": [
+        "_DEBUG"
+      ],
+      "compilerPath": "/usr/bin/g++",
+      "cStandard": "gnu17",
+      "cppStandard": "gnu++17",
+      "intelliSenseMode": "linux-gcc-x64",
+      "compilerArgs": [
+        "-std=c++17",
+        "-D_DEBUG",
+        "-ggdb3",
+        "-I${workspaceFolder}",
+        "-I${workspaceFolder}/Common",
+        "-I${workspaceFolder}/NameTable",
+        "-I${workspaceFolder}/Parser",
+        "-I${workspaceFolder}/Support",
+        "-I${workspaceFolder}/Token",
+        "-I${workspaceFolder}/Vector",
+        "-I${workspaceFolder}/DumpCode"
+      ],
+      "browse": {
+        "path": [
+          "${workspaceFolder}/**"
+        ],
+        "limitSymbolsToIncludedHeaders": true,
+        "databaseFilename": "${workspaceFolder}/.vscode/browse.vc.db"
+      }
+    }
+  ],
+  "version": 4
+}

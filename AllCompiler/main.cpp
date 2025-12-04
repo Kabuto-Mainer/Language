@@ -1,0 +1,30 @@
+#include <stdlib.h>
+#include <string.h>
+
+#include "NameTableFunc.h"
+#include "SupportFunc.h"
+#include "VectorFunc.h"
+#include "TokenFunc.h"
+#include "ParserFunc.h"
+#include "DumpFunc.h"
+
+int main ()
+{
+    char* buffer = createCharBuffer ("test.txt");
+    TokenVector_t vector = {};
+    vectorCtr (&vector);
+
+    tokenGlobal (buffer, &vector);
+    tokenDump (&vector);
+
+    Node_t* root = newNode ();
+    root->value.name = strdup ("main block");
+    parserGlobal (vector.data, vector.size, root,"test.txt");
+    // dumpNode (*((*(root->children))->children));
+    treeDump (root, "text");
+
+    vectorDtr (&vector);
+    free (buffer);
+
+    return 0;
+}
