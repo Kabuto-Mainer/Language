@@ -1,8 +1,8 @@
+#include <assert.h>
 
-
-#include "../Common/NodeType.h"
-#include "../Common/TypesOfType.h"
-#include "../NameTable/NameTableFunc.h"
+#include "NodeType.h"
+#include "TypesOfType.h"
+#include "NameTableFunc.h"
 
 struct CompilerContextInf_t
 {
@@ -24,41 +24,42 @@ typedef int Memory_t;
 //
 // }
 
-int compilerKey (Node_t* parent,
-                 CompilerContext_t* inf)
-{
-    assert (parent);
-    assert (inf);
-
-    if (parent->type != NODE_TYPE_KEY_WORD)
-        return 0;
-
-    switch (parent->value.key)
-    {
-        case (KEY_EXTENR_VAR):
-        {
-
-        }
-        case (KEY_EXTERN_FUNC):
-        {
-
-        }
-
-
-
-
-    }
-
-}
+// int compilerKey (Node_t* parent,
+//                  CompilerContext_t* inf)
+// {
+//     assert (parent);
+//     assert (inf);
+//
+//     if (parent->type != NODE_TYPE_KEY_WORD)
+//         return 0;
+//
+//     switch (parent->value.key)
+//     {
+//         case (KEY_EXTENR_VAR):
+//         {
+//
+//         }
+//         case (KEY_EXTERN_FUNC):
+//         {
+//
+//         }
+//
+//
+//
+//
+//     }
+//
+// }
 
 int compilerBlock (Node_t* parent,
-                   CompilerContext_t* inf)
+                   CompilerContextInf_t* inf)
 {
     assert (parent);
     assert (inf);
 
     NameTable_t new_table = {};
     nameTableCtr (&new_table);
+    nameTableStackPush (inf->stack, &new_table);
 
     for (int i = 0; i < parent->amount_children; i++)
     {
@@ -66,7 +67,7 @@ int compilerBlock (Node_t* parent,
         if (node->type == NODE_TYPE_KEY_WORD &&
             node->value.key == KEY_EXTERN_VAR)
         {
-
+            if (node.)
 
 
         }
@@ -74,32 +75,39 @@ int compilerBlock (Node_t* parent,
 
 }
 
-Memory_t compilerFindVar (NameTableStack_t* stack,
-                          char* name)
+int compilerExtVar (CompilerContextInf_t* inf,
+                    Node_t* parent)
+{
+    assert (inf);
+    assert (parent);
+
+    if ()
+}
+
+NameTableVar_t* compilerFindVar (NameTableStack_t* stack,
+                                 char* name)
 {
     assert (stack);
     assert (name);
 
     NameTableStack_t new_stack = {};
     nameTableStackCtr (&new_stack);
-    Memory_t address = 0;
+    NameTableVar_t* var = NULL;
 
     for (size_t i = 0; i < nameTableStackGetSize (stack); i++)
     {
         NameTable_t* table = nameTableStackPop (stack);
-        size_t index = nameTableFind (table, name);
-        if (index == (size_t) -1)
-        {
-            nameTableStackPush (new_stack, table);
+        var = nameTableFind (table, name);
+
+        nameTableStackPush (&new_stack, table);
+        if (var == NULL)
             continue;
-        }
-        else
-        {
-            address =
-        }
-
     }
+    for (size_t i = 0; i < nameTableStackGetSize (&new_stack); i++)
+        nameTableStackPush (stack, nameTableStackPop (&new_stack));
 
+    nameTableStackDtr (&new_stack);
+    return var;
 }
 
 

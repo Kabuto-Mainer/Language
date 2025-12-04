@@ -17,11 +17,10 @@ int nameTableCtr (NameTable_t* table)
 {
     assert (table);
 
+    // table->data = NULL;
     table->data = (NameTableVar_t*) calloc (START_SIZE_TABLE, sizeof (NameTableVar_t));
     if (table->data == NULL)
-    {
         EXIT_FUNC("NULL calloc", 1);
-    }
 
     table->capacity = START_SIZE_TABLE;
     table->size = 0;
@@ -40,10 +39,26 @@ int nameTableDtr (NameTable_t* table)
     assert (table);
 
     for (size_t i = 0; i < table->size; i++)
-        free (table->data[i].name);
+    {
+        NameTableVar_t* buffer = &(table->data[i]);
+        // printf ("S: %s\n", buffer->name);
+        free (buffer->name);
+        if (buffer->next == NULL)
+        {
+            continue;
+        }
+        buffer = buffer->next;
+        while (buffer != NULL)
+        {
+            NameTableVar_t* next_buffer = buffer->next;
+            free (buffer->name);
+            free (buffer);
+            buffer = next_buffer;
+        }
+    }
 
     free (table->data);
-    free (table);
+    // free (table);
 
     return 0;
 }
@@ -55,11 +70,11 @@ int nameTableDtr (NameTable_t* table)
  @brief Функция поиска имени в таблице имен
  @param [in] table Указатель на структуру таблицы имен
  @param [in] name Полученное имя
- @return Индекс переменной с таким именем в таблице имен,
-         если не найдет (size_t) -1
+ @return Указатель на структуру таблицы переменных, если найдена,
+         иначе NULL
 */
 NameTableVar_t* nameTableFind (NameTable_t* table,
-                              char* name)
+                               char* name)
 {
     assert (table);
     assertNameTableName (name);
@@ -71,8 +86,9 @@ NameTableVar_t* nameTableFind (NameTable_t* table,
                           table->size, sizeof (NameTableVar_t), compareVarAndHash);
 
     if (var == NULL)
-        NULL;
+        return NULL;
 
+    // printf ("FIND: %s\nINPUT: %s\n", var->name, name);
     while (var != NULL)
     {
         if (strcmp (var->name, name) == 0)
@@ -118,7 +134,7 @@ int compareVarAndHash (const void* void_hash_1,
     assert (void_hash_1);
     assert (void_var_2);
 
-    const int* hash_1 = (const int*) void_hash_1;
+    const size_t* hash_1 = (const size_t*) void_hash_1;
     const NameTableVar_t* var_2 = (const NameTableVar_t*) void_var_2;
 
     if (*hash_1 > var_2->hash)  { return 1; }
@@ -126,22 +142,6 @@ int compareVarAndHash (const void* void_hash_1,
     return 0;
 }
 // ---------------------------------------------------------------------------------------------------
-
-//
-// // ---------------------------------------------------------------------------------------------------
-// /**
-//  @brief Функция, возвращающая имя, лежащее под полученным индексом
-//  @param [in] table Указатель на таблицу имен
-//  @param [in] index Полученный индекс
-//  @return Имя, иначе NULL
-// */
-// NameTableVar_t nameTableGetVar (const NameTable_t* table,
-//                                 const size_t index)
-// {
-//     assert (table);
-//     return table->data[index].name;
-// }
-// // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
 /**
@@ -155,7 +155,6 @@ size_t nameTableGetSize (NameTable_t* table)
     return table->size;
 }
 // ---------------------------------------------------------------------------------------------------
-
 
 // ---------------------------------------------------------------------------------------------------
 /**
@@ -180,13 +179,14 @@ NameTableVar_t* nameTableAdd (NameTable_t* table,
     find_var = (NameTableVar_t*) bsearch (&hash, data, table->size,
                                  sizeof (NameTableVar_t), compareVarAndHash);
 
+    // printf ("ADR: %p\n", find_var);
     if (find_var == NULL)
     {
         if (table->size >= table->capacity)
         {
             NameTableVar_t* buffer = (NameTableVar_t*) realloc (table->data, table->capacity * 2);
             if (buffer == NULL)
-                EXIT_FUNC ("NULL realloc", 1);
+                EXIT_FUNC ("NULL realloc", NULL);
 
             table->data = buffer;
             table->capacity *= 2;
@@ -207,6 +207,7 @@ NameTableVar_t* nameTableAdd (NameTable_t* table,
             size++;
             buffer_var = buffer_var->next;
         }
+        // printf ("SIZE: %d\n", size);
 
         find_var = (NameTableVar_t*) calloc (1, sizeof (NameTableVar_t));
         if (find_var == NULL)
@@ -215,11 +216,15 @@ NameTableVar_t* nameTableAdd (NameTable_t* table,
         buffer_var->next = find_var;
         find_var->next = NULL;
         find_var->hash = hash;
-        find_var->name = name;
+        find_var->name = strdup (name);
+
+        // printf ("NAME: %s\n", find_var->name);
     }
     return find_var;
 }
 // ---------------------------------------------------------------------------------------------------
+
+
 
 // ---------------------------------------------------------------------------------------------------
 /**
