@@ -42,6 +42,12 @@ struct CompilerContextInf_t
     // int free_memory;
 };
 
+enum CompilerStatus_t
+{
+    CMP_THIS_OK,
+    CMP_NOT_THIS
+};
+
 typedef int Memory_t;
 // int compilerGlobal (Node_t* root,
 //                     NameTableStack_t* stack,
@@ -81,65 +87,103 @@ typedef int Memory_t;
 //
 // }
 
-int compilerBlock (Node_t* parent,
-                   CompilerContextInf_t* inf)
+CompilerStatus_t compilerBlock (CompilerContextInf_t* inf,
+                                Node_t* node_block)
 {
-    assert (parent);
     assert (inf);
+    assert (node_block);
+
+    if (node_block->type != NODE_TYPE_BLOCK)
+        return CMP_NOT_THIS;
 
     NameTable_t new_table = {};
     nameTableCtr (&new_table);
     nameTableStackPush (inf->stack, &new_table);
 
-    for (int i = 0; i < parent->amount_children; i++)
+    for (int i = 0; i < node_block->amount_children; i++)
     {
-        Node_t* node = parent->children[i];
+        Node_t* node = node_block->children[i];
         if (node->type == NODE_TYPE_KEY_WORD &&
             node->value.key == KEY_EXTERN_VAR)
         {
-            if (node.)
-
-
+            if (compilerExtVar (inf, node) != CMP_THIS_OK)
+                COMPILER_ERROR ();
         }
+        else if (node->type == NODE_TYPE_KEY_WORD &&
+                 node->value.key == KEY_ASSIGN)
     }
 
 }
 
-int compilerExtVar (CompilerContextInf_t* inf,
-                    Node_t* node_extern)
+
+// --------------------------------------------------------------------------------------------------
+CompilerStatus_t compilerExtVar (CompilerContextInf_t* inf,
+                                 Node_t* node_extern)
 {
     assert (inf);
     assert (node_extern);
 
-    if (node_extern->type != NODE_TYPE_VAR)
-        return 0;
+    if (node_extern->type != NODE_TYPE_KEY_WORD ||
+        node_extern->value.key != KEY_EXTERN_VAR)
+        return CMP_NOT_THIS;
 
     for (int i = 0; i < node_extern->amount_children; i++)
     {
         Node_t* node_var = node_extern->children[i];
         if (node_var->type == NODE_TYPE_VAR)
         {
-            if (compilerAddVar (inf, node_var->value.name) == NULL)
+            NameTableVar_t* add_var = compilerAddVar (inf, node_var->value.name);
+            if (add_var == NULL)
                 COMPILER_ERROR ();
+
+            printAsm (inf, "PUSH 0\n");
+            popValueStackToVar (inf, add_var);
         }
         else if (node_var->type == NODE_TYPE_KEY_WORD &&
                  node_var->value.key == KEY_ASSIGN)
         {
             node_var = node_var->children[0];
-            if (compilerAddVar (inf, node_var->value.name) == NULL)
+            NameTableVar_t* add_var = compilerAddVar (inf, node_var->value.name);
+            if (add_var == NULL)
                 COMPILER_ERROR ();
 
             node_var = node_var->parent->children[1];
-            compilerOper ();
+            compilerOper (inf, node_var);
+            popValueStackToVar (inf, add_var);
         }
         else
             COMPILER_ERROR ();
-
-
-
     }
+    return CMP_THIS_OK;
+}
+// --------------------------------------------------------------------------------------------------
+
+// --------------------------------------------------------------------------------------------------
+int compilerIf (CompilerContextInf_t* inf,
+                Node_t* node_key)
+{
+    assert (inf);
+    assert (node_key);
+
+    if (node_key->type != NODE_TYPE_KEY_WORD ||
+        node_key->value.key != KEY_IF)
+        return 0;
+
+    if (node_key->amount_children != 2)
+        COMPILER_ERROR ();
+
+    compilerOper (inf, node_key->children[0]);
+    printAsm (inf, "PUSH 0\n");
+    printAsm (inf, "JE");
+
+    long int jmp_to_else = ftell (inf->stream);
+    fseek (inf->stream, 6, SEEK_CUR);
+    printAsm (inf, "\n");
+    compilerBlock (inf, node_key->children[1]);
+    if ()
 
 }
+// --------------------------------------------------------------------------------------------------
 
 // --------------------------------------------------------------------------------------------------
 int printAsm (CompilerContextInf_t* inf,
@@ -162,8 +206,7 @@ int printAsm (CompilerContextInf_t* inf,
 }
 // --------------------------------------------------------------------------------------------------
 
-
-
+// --------------------------------------------------------------------------------------------------
 int compilerKeyWord (CompilerContextInf_t* inf,
                      Node_t* node)
 {
@@ -173,9 +216,11 @@ int compilerKeyWord (CompilerContextInf_t* inf,
     if (node->type != NODE_TYPE_KEY_WORD)
         return 0;
 
-
+    if (node->value.key == KEY_)
 }
+// --------------------------------------------------------------------------------------------------
 
+// --------------------------------------------------------------------------------------------------
 int compilerOper (CompilerContextInf_t* inf,
                   Node_t* node)
 {
@@ -210,7 +255,9 @@ int compilerOper (CompilerContextInf_t* inf,
     }
     return 0;
 }
+// --------------------------------------------------------------------------------------------------
 
+// --------------------------------------------------------------------------------------------------
 int compareValue (CompilerContextInf_t* inf,
                   int oper)
 {
@@ -232,7 +279,9 @@ int compareValue (CompilerContextInf_t* inf,
 
     return 0;
 }
+// --------------------------------------------------------------------------------------------------
 
+// --------------------------------------------------------------------------------------------------
 NameTableVar_t* compilerAddVar (CompilerContextInf_t* inf,
                                 char* name)
 {
@@ -250,7 +299,9 @@ NameTableVar_t* compilerAddVar (CompilerContextInf_t* inf,
     var->val.phase = table_var->size - 1;
     return var;
 }
+// --------------------------------------------------------------------------------------------------
 
+// --------------------------------------------------------------------------------------------------
 NameTableVar_t* compilerFindVar (NameTableStack_t* stack,
                                  char* name)
 {
@@ -269,7 +320,9 @@ NameTableVar_t* compilerFindVar (NameTableStack_t* stack,
     }
     return var;
 }
+// --------------------------------------------------------------------------------------------------
 
+// --------------------------------------------------------------------------------------------------
 int pushValueVarToStack (CompilerContextInf_t* inf,
                          NameTableVar_t* var)
 {
@@ -284,9 +337,11 @@ int pushValueVarToStack (CompilerContextInf_t* inf,
 
     return 0;
 }
+// --------------------------------------------------------------------------------------------------
 
+// --------------------------------------------------------------------------------------------------
 int popValueStackToVar (CompilerContextInf_t* inf,
-                        NameTableVar_t* var);
+                        NameTableVar_t* var)
 {
     assert (inf);
     assert (var);
@@ -299,7 +354,9 @@ int popValueStackToVar (CompilerContextInf_t* inf,
 
     return 0;
 }
+// --------------------------------------------------------------------------------------------------
 
+// --------------------------------------------------------------------------------------------------
 int saveStatusFunc (CompilerContextInf_t* inf,
                     int amount_var)
 {
@@ -318,7 +375,9 @@ int saveStatusFunc (CompilerContextInf_t* inf,
 
     return 0;
 }
+// --------------------------------------------------------------------------------------------------
 
+// --------------------------------------------------------------------------------------------------
 int replaceStatusToPrev (CompilerContextInf_t* inf)
 {
     assert (inf);
@@ -334,6 +393,7 @@ int replaceStatusToPrev (CompilerContextInf_t* inf)
 
     return 0;
 }
+// --------------------------------------------------------------------------------------------------
 
 
 

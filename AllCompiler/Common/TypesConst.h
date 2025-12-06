@@ -29,7 +29,7 @@ const char CHAR_KEY_WORD[][10] =
 {
     "trig",
     "nexttrig",
-    "else",
+    "default",
     "loop",
     "alloc",
     "server",
