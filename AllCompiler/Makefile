@@ -39,7 +39,7 @@ all_flags =	-I$(common_h) -I$(table_h) -I$(parser_h) -I$(support_h) -I$(token_h)
 
 # --------------------------------------------------------------------------------------------
 lang:
-	g++ $(all_flags) main.cpp $(vector) $(token) $(support) $(parser) $(table) $(dump) -o lang.exe
+	g++ $(all_flags) main.cpp $(vector) $(token) $(support) $(table) $(dump) -o lang.exe
 
 run-l:
 	./lang.exe

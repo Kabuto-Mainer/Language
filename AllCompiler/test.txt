@@ -1,20 +1,6 @@
 alloc a
-alloc b = 0
-alloc c = 0
+alloc b
 
-server func (a, b)
-trig (a == 0)
-(
-    alloc Disc = b**2 - 4*a*c
-    Disc = Disc - 1
-)
-nexttrig (b == 0)
-(
-    alloc DICV = 0
-)
-default
-(
-    alloc BVN
-)
-func ()
+a = b * 10 - 5 \
+
 $

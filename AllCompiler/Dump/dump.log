@@ -27,3 +27,6 @@
 [16995][Parser/ParserFunc.cpp:66]: Err: Syntax Error
 [17783][Parser/ParserFunc.cpp:323]: Err: Syntax Error
 [18249][Parser/ParserFunc.cpp:66]: Err: Syntax Error
+[13939][Token/TokenFunc.cpp:62]: Err: UNKNOWN SYNTAX
+[10392][Token/TokenFunc.cpp:62]: Err: UNKNOWN SYNTAX
+[12324][Token/TokenFunc.cpp:62]: Err: UNKNOWN SYNTAX

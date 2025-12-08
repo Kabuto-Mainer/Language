@@ -15,13 +15,13 @@ int main ()
     vectorCtr (&vector);
 
     tokenGlobal (buffer, &vector);
-    // tokenDump (&vector);
+    tokenDump (&vector);
 
-    Node_t* root = newNode ();
-    root->value.name = strdup ("main block");
-    parserGlobal (vector.data, vector.size, root,"test.txt");
-    // dumpNode (*((*(root->children))->children));
-    treeDump (root, "text");
+    // Node_t* root = newNode ();
+    // root->value.name = strdup ("main block");
+    // parserGlobal (vector.data, vector.size, root,"test.txt");
+    // // dumpNode (*((*(root->children))->children));
+    // treeDump (root, "text");
 
     vectorDtr (&vector);
     free (buffer);

@@ -9,6 +9,7 @@
 #include "DumpFunc.h"
 
 
+
 // ---------------------------------------------------------------------------------------------------
 /**
  @brief Функция создания связей в массиве узлов
@@ -152,7 +153,7 @@ Status_t parserIfOper (ParserContextInf_t* inf,
 
     if (inf->node->type != NODE_TYPE_KEY_WORD ||
        (inf->node->value.key != KEY_IF &&
-        inf->node->value.key != KEY_ELIF &&
+        inf->node->value.key != KEY_ELSE_IF &&
         inf->node->value.key != KEY_ELSE))
         return PARSER_NOT_THIS;
 
@@ -337,83 +338,9 @@ Status_t parserBlockFunc (ParserContextInf_t* inf,
 }
 // ---------------------------------------------------------------------------------------------------
 
-/*
-// ---------------------------------------------------------------------------------------------------
-Status_t compilerExtern (ParserContextInf_t* inf,
-                         Node_t* node)
-{
-    assert (inf);
-    assert (node);
-
-    if (inf->node->type != NODE_TYPE_KEY_WORD &&
-        inf->node->value.key != KEY_EXTERN_VAR &&
-        inf->node->value.key != KEY_EXTERN_FUNC)
-        return PARSER_NOT_THIS;
-
-    addNode (node, inf->node);
-    Node_t* ext = inf->node;
-    nextNode (inf);
-
-    if (inf->node->type != NODE_TYPE_INDENT)
-        SYNTAX_ERROR ();
-
-    Node_t* indent = inf->node;
-    nextNode (inf);
-    if (ext->value.key == KEY_EXTERN_VAR)
-    {
-        if (inf->node->type == NODE_TYPE_KEY_WORD &&
-            inf->node->value.key == KEY_ASSIGN)
-        {
-            addNode (ext, inf->node);
-            addNode (inf->node, indent);
-            nextNode (inf);
-            if (parserExpresion (inf, inf->node - 1) != PARSER_THIS_OK)
-                SYNTAX_ERROR ();
-        }
-        else    { addNode (ext, indent); }
-    }
-    else if (parent->value.key == KEY_EXTERN_FUNC)
-    {
-        if (inf->node->type != NODE_TYPE_PUNCT &&
-            inf->node->value.punct != PUNCT_LEFT_ROUND)
-            SYNTAX_ERROR ();
-
-        addNode (parent, ext);
-        nextNode (inf);
-
-        while (true)
-        {
-            if (inf->node->type != NODE_TYPE_INDENT)
-                break;
-
-            addNode (ext, inf->node);
-            nextNode (inf);
-            if (inf->node->type == NODE_TYPE_PUNCT &&
-                inf->node->value.punct == PUNCT_COMMA)
-            {
-                nextNode (inf);
-                continue;
-            }
-            break;
-        }
-        if (inf->node->type != NODE_TYPE_PUNCT &&
-            inf->node->value.punct != PUNCT_RIGHT_ROUND)
-            SYNTAX_ERROR ();
-
-        nextNode (inf);
-    }
-    if (inf->node.type != NODE_TYPE_PUCNT &&
-        inf->node->value.punct != PUCNT_END_STR)
-        SYNTAX_ERROR ();
-
-    nextNode (inf);
-    return PARSER_THIS_OK;
-}
-// ---------------------------------------------------------------------------------------------------
-*/
 // ---------------------------------------------------------------------------------------------------
 /**
- @brief Функция считывания объявления заголовка функции
+ @brief Функция считывания объявления функции
  @param [in] inf Указатель на структуру с текущим положением
  @param [in] node Указатель на родителя поддерева
  @return PARSER_THIS_OK - если все нормально и это нужное место
@@ -427,17 +354,17 @@ Status_t parserDeclarationFunc (ParserContextInf_t* inf,
     assert (parent);
 
     if (inf->node->type != NODE_TYPE_KEY_WORD ||
-        inf->node->value.key != KEY_EXTERN_FUNC)
+        inf->node->value.key != KEY_DEFINE_FUNC)
         return PARSER_NOT_THIS;
 
+    Node_t* node_define = inf->node;
+    addNode (parent, node_define);
     nextNode (inf);
     if (inf->node->type != NODE_TYPE_INDENT ||
-        getNextNotEndNode (inf)->type != NODE_TYPE_PUNCT ||
-        getNextNotEndNode (inf)->value.punct != PUNCT_LEFT_ROUND)
+        !isLeftRound (getNextNotEndNode (inf)))
         SYNTAX_ERROR (inf, PE_NOT_ARG_IN_DECL_FUNC);
 
-    addNode (parent, inf->node);
-    Node_t* ext = inf->node;
+    addNode (node_define, inf->node);
     nextNode (inf);
     // skipEndChar (inf);
 
@@ -503,7 +430,7 @@ Status_t parserDeclarationVar (ParserContextInf_t* inf,
     assert (node);
 
     if (inf->node->type != NODE_TYPE_KEY_WORD ||
-        inf->node->value.key != KEY_EXTERN_VAR)
+        inf->node->value.key != KEY_DEFINE_VAR)
         return PARSER_NOT_THIS;
 
     addNode (node, inf->node);
@@ -523,6 +450,7 @@ Status_t parserDeclarationVar (ParserContextInf_t* inf,
         addNode (ext, inf->node);
         addNode (inf->node, indent);
         nextNode (inf);
+        skipNextChar (inf);
         // skipEndChar (inf);
     // tokenOneDump (inf->node);
         if (parserExpresion (inf, inf->node - 1) != PARSER_THIS_OK)
@@ -530,11 +458,11 @@ Status_t parserDeclarationVar (ParserContextInf_t* inf,
     }
     else    { addNode (ext, indent); }
 
-    if (inf->node->type != NODE_TYPE_PUNCT ||
-        inf->node->value.punct != PUNCT_END_STR)
+    if (!isEndChar (inf->node))
         SYNTAX_ERROR (inf, PE_NOT_END_CHAR);
 
     nextNode (inf);
+    skipVoid (inf);
     // skipEndChar (inf);
     return PARSER_THIS_OK;
 }
@@ -585,6 +513,7 @@ Status_t parserExpresion (ParserContextInf_t* inf,
     deleteOneNode (buffer_node);
     addNode (node, inf->node);
     nextNode (inf);
+    skipNextChar (inf);
     // skipEndChar (inf);
 
     if (parserAddSub (inf, inf->node - 1) != PARSER_THIS_OK)
@@ -632,6 +561,7 @@ Status_t parserAddSub (ParserContextInf_t* inf,
     deleteOneNode (buffer_node);
     addNode (node, inf->node);
     nextNode (inf);
+    skipNextChar (inf);
     // skipEndChar (inf);
     if (parserAddSub (inf, inf->node - 1) != PARSER_THIS_OK)
         SYNTAX_ERROR (inf, PE_UNKNOWN_VALUE);
@@ -657,7 +587,7 @@ Status_t parserMulDiv (ParserContextInf_t* inf,
 
     // tokenOneDump (inf->node);
     Node_t* buffer_node = newNode ();
-    if (parserPower (inf, buffer_node) != PARSER_THIS_OK)
+    if (parserValue (inf, buffer_node) != PARSER_THIS_OK)
     {
         deleteOneNode (buffer_node);
         SYNTAX_ERROR (inf, PE_UNKNOWN_VALUE);
@@ -677,55 +607,10 @@ Status_t parserMulDiv (ParserContextInf_t* inf,
     deleteOneNode (buffer_node);
     addNode (node, inf->node);
     nextNode (inf);
+    skipNextChar (inf);
     // skipEndChar (inf);
 
     if (parserMulDiv (inf, inf->node - 1) != PARSER_THIS_OK)
-        SYNTAX_ERROR (inf, PE_UNKNOWN_VALUE);
-
-    return PARSER_THIS_OK;
-}
-// ---------------------------------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------------------------------
-/**
- @brief Функция считывания значений в степени
- @param [in] inf Указатель на структуру с текущим положением
- @param [in] node Указатель на родителя поддерева
- @return PARSER_THIS_OK - если все нормально и это нужное место
-         PARSER_NOT_THIS - если это не то место
-         PARSER_ERROR - если произошла ошибка
-*/
-Status_t parserPower (ParserContextInf_t* inf,
-                      Node_t* node)
-{
-    assert (inf);
-    assert (node);
-
-    // tokenOneDump (inf->node, "Выражение в степени");
-    Node_t* buffer_node = newNode ();
-        // printf ("VAlue\n");
-    if (parserValue (inf, buffer_node) != PARSER_THIS_OK)
-    {
-        deleteOneNode (buffer_node);
-        SYNTAX_ERROR (inf, PE_UNKNOWN_VALUE);
-    }
-
-    if (inf->node->type != NODE_TYPE_OPER ||
-        inf->node->value.oper != OPER_POW)
-    {
-        addChildren (node, buffer_node);
-        deleteOneNode (buffer_node);
-        return PARSER_THIS_OK;
-    }
-    // tokenOneDump (inf->node, "Степень");
-
-    addChildren (inf->node, buffer_node);
-    addNode (node, inf->node);
-    // dumpNode (inf->node);
-    deleteOneNode (buffer_node);
-    nextNode (inf);
-    // skipEndChar (inf);
-    if (parserValue (inf, inf->node - 1) != PARSER_THIS_OK)
         SYNTAX_ERROR (inf, PE_UNKNOWN_VALUE);
 
     return PARSER_THIS_OK;
@@ -748,21 +633,21 @@ Status_t parserValue (ParserContextInf_t* inf,
     assert (node);
 
     // tokenOneDump (inf->node);
-    if (inf->node->type == NODE_TYPE_PUNCT &&
-        inf->node->value.punct == PUNCT_LEFT_ROUND)
+    if (isLeftRound (inf->node))
     {
     // tokenOneDump (inf->node);
         nextNode (inf);
+        skipVoid (inf);
         // skipEndChar (inf);
         if (parserExpresion (inf, node) != PARSER_THIS_OK)
             SYNTAX_ERROR (inf, PE_NOT_EXPRESION);
 
-        if (inf->node->type == NODE_TYPE_PUNCT &&
-            inf->node->value.punct == PUNCT_RIGHT_ROUND)
+        skipVoid (inf);
+        if (!isRightRound (inf->node))
             SYNTAX_ERROR (inf, PE_NOT_RIGHT_ROUND);
 
         nextNode (inf);
-        // skipEndChar (inf);
+        skipCharNext (inf);
         return PARSER_THIS_OK;
     }
     // tokenOneDump (inf->node);
@@ -794,49 +679,66 @@ Status_t parserIndent (ParserContextInf_t* inf,
     if (inf->node->type != NODE_TYPE_INDENT)
         return PARSER_NOT_THIS;
 
-    addNode (parent, inf->node);
-    nextNode (inf);
-    // skipEndChar (inf);
-
-    if (inf->node->type != NODE_TYPE_PUNCT ||
-        inf->node->value.punct != PUNCT_LEFT_ROUND)
+    if (isLeftRound (getNextNotEndNode(inf)))
     {
-        (inf->node - 1)->type = NODE_TYPE_VAR;
-        return PARSER_THIS_OK;
+        if (parserCallFunc (inf, parent) != PARSER_THIS_OK)
+            SYNTAX_ERROR ();
     }
 
-    (inf->node - 1)->type = NODE_TYPE_FUNC;
-    nextNode (inf);
-    // skipEndChar (inf);
-
-    if (inf->node->type == NODE_TYPE_PUNCT &&
-        inf->node->value.oper == PUNCT_RIGHT_ROUND)
+    else
     {
-        nextNode (inf);
-        // skipEndChar (inf);
-        return PARSER_THIS_OK;
+        if (parserVar (inf, parent) != PARSER_THIS_OK)
+            SYNTAX_ERROR ();
     }
+    return PARSER_THIS_OK;
+}
+// ---------------------------------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------------------------------
+Status_t parserCallFunc (ParserContextInf_t* inf,
+                         Node_t* parent)
+{
+    assert (inf);
+    assert (parent);
+
+    Node_t* node_func = inf->node;
+    addNode (parent, node_func);
+    node_func->type = NODE_TYPE_FUNC;
+    nextNode (inf);
+    nextNode (inf); // Skip '('
 
     while (true)
     {
-        if (parserExpresion (inf, inf->node) != PARSER_THIS_OK)
-            SYNTAX_ERROR (inf, PE_NOT_EXPRESION_IN_FUNC);
+        skipVoid (inf);
+        if (parserExpresion (inf, node_func) != PARSER_THIS_OK)
+            SYNTAX_ERROR ();
 
-        if (inf->node->type == NODE_TYPE_PUNCT &&
-            inf->node->value.punct == PUNCT_COMMA)
-        {
-            nextNode (inf);
-            // skipEndChar (inf);
-            continue;
-        }
-        break;
+        skipVoid (inf);
+        if (isComma (inf->node))
+            break;
+        nextNode (inf);
+        continue;
     }
-    if (inf->node->type != NODE_TYPE_PUNCT ||
-        inf->node->value.punct != PUNCT_RIGHT_ROUND)
-        SYNTAX_ERROR (inf, PE_NOT_RIGHT_ROUND);
-
+    if (!isLeftRound (inf->node))
+        SYNTAX_ERROR ();
     nextNode (inf);
-    // skipEndChar (inf);
+
+    return PARSER_THIS_OK;
+}
+// ---------------------------------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------------------------------
+Status_t parserVar (ParserContextInf_t* inf,
+                    Node_t* parent)
+{
+    assert (inf);
+    assert (parent);
+
+    addNode (parent, inf->node);
+    inf->node->type = NODE_TYPE_VAR;
+    nextNode (inf);
+    skipCharNext (inf);
+
     return PARSER_THIS_OK;
 }
 // ---------------------------------------------------------------------------------------------------
@@ -861,6 +763,7 @@ Status_t parserNumber (ParserContextInf_t* inf,
     // tokenOneDump (inf->node, "Число");
     addNode (parent, inf->node);
     nextNode (inf);
+    skipCharNext (inf);
     // skipEndChar (inf);
 
     return PARSER_THIS_OK;
@@ -868,6 +771,53 @@ Status_t parserNumber (ParserContextInf_t* inf,
 // ---------------------------------------------------------------------------------------------------
 
 
+
+
+
+
+// ---------------------------------------------------------------------------------------------------
+int isComma (Node_t* node)
+{
+    assert (node);
+    if (node->type == NODE_TYPE_PUNCT &&
+        node->value.punct == PUNCT_COMMA)
+        return 1;
+    return 0;
+}
+// ---------------------------------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------------------------------
+int isLeftRound (Node_t* node)
+{
+    assert (node);
+    if (node->type == NODE_TYPE_PUNCT &&
+        node->value.punct == PUNCT_LEFT_ROUND)
+        return 1;
+    return 0;
+}
+// ---------------------------------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------------------------------
+int isRightRound (Node_t* node)
+{
+    assert (node);
+    if (node->type == NODE_TYPE_PUNCT &&
+        node->value.punct == PUNCT_RIGHT_ROUND)
+        return 1;
+    return 0;
+}
+// ---------------------------------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------------------------------
+int isEndChar (Node_t* node)
+{
+    assert (node);
+    if (node->type == NODE_TYPE_PUNCT &&
+        node->value.punct == PUNCT_END_STR)
+        return 1;
+    return 0;
+}
+// ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
 /**
@@ -929,6 +879,50 @@ int skipEndChar (ParserContextInf_t* inf)
 
 // ---------------------------------------------------------------------------------------------------
 /**
+ * \brief Функция скипа всех символов переноса на новую строку '\'
+ * \param [in] inf Указатель на структуру контекста
+ */
+int skipCharNext (ParserContextInf_t* inf)
+{
+    assert (inf);
+
+    while (inf->node->type == NODE_TYPE_PUNCT &&
+           inf->node->value.punct == PUNCT_NEXT_STR)
+    {
+        if (inf->cur_index == inf->capacity)
+            return 1;
+
+        inf->node = inf->node + 1;
+        inf->cur_index++;
+        inf->line++;
+    }
+    return 0;
+}
+// ---------------------------------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------------------------------
+int skipVoid (ParserContextInf_t* inf)
+{
+    assert (inf);
+
+    while ((inf->node->type == NODE_TYPE_PUNCT &&
+            inf->node->value.punct == PUNCT_END_STR) ||
+           (inf->node->type == NODE_TYPE_PUNCT &&
+            inf->node->value.punct == PUNCT_NEXT_STR))
+    {
+        if (inf->cur_index == inf->capacity)
+            return 1;
+
+        inf->node = inf->node + 1;
+        inf->cur_index++;
+        inf->line++;
+    }
+    return 0;
+}
+// ---------------------------------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------------------------------
+/**
  @brief Функция выдачи следующего неконечного контекстного токена
  @param [in] inf Указатель на структуру контекста
  @return Узел
@@ -938,8 +932,10 @@ Node_t* getNextNotEndNode (ParserContextInf_t* inf)
     assert (inf);
     Node_t* node = inf->node;
 
-    while (node->type == NODE_TYPE_PUNCT &&
-        node->value.punct == PUNCT_END_STR)
+    while ((node->type == NODE_TYPE_PUNCT &&
+            node->value.punct == PUNCT_END_STR) ||
+           (node->type == NODE_TYPE_PUNCT &&
+            node->value.punct == PUNCT_NEXT_STR))
         node = node + 1;
 
     return node;

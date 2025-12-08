@@ -9,6 +9,7 @@
 #include "DumpConfig.h"
 #include "TypesConst.h"
 #include "TokenFunc.h"
+#include "ConfigLangConst.h"
 
 
 // -------------------------------------------------------------------------------------------------------
@@ -219,13 +220,21 @@ int printFullBlock (Node_t* node,
     else if (node->type == NODE_TYPE_KEY_WORD)
     {
         strcpy (color, "#0f32e0ff");
-        sprintf (label, "%s", CHAR_KEY_WORD[node->value.key]);
+        for (size_t i = 0; i < sizeof (ALL_SYSTEM_WORD) / sizeof (ALL_SYSTEM_WORD[0]); i++)
+        {
+            if (node->value.key == ALL_SYSTEM_WORD[i].value)
+                printf ("%s", ALL_SYSTEM_WORD[i].name);
+        }
         strcpy (type, "KEY");
     }
     else if (node->type == NODE_TYPE_PUNCT)
     {
         strcpy (color, "#ddf331ff");
-        sprintf (label, "%s", CHAR_PUNCT[node->value.punct]);
+        for (size_t i = 0; i < sizeof (ALL_PUNCT_WORD) / sizeof (ALL_PUNCT_WORD[0]); i++)
+        {
+            if (node->value.punct == ALL_PUNCT_WORD[i].value)
+                printf ("%s", ALL_PUNCT_WORD[i].name);
+        }
         strcpy (type, "PUNCT");
     }
     else if (node->type == NODE_TYPE_NUM)
@@ -237,7 +246,11 @@ int printFullBlock (Node_t* node,
     else if (node->type == NODE_TYPE_OPER)
     {
         strcpy (color, "#e8802bff");
-        sprintf (label, "%s", CHAR_OPER_TYPE[node->value.oper]);
+        for (size_t i = 0; i < sizeof (ALL_OPER_WORD) / sizeof (ALL_OPER_WORD[0]); i++)
+        {
+            if (node->value.oper == ALL_OPER_WORD[i].value)
+                printf ("%s", ALL_OPER_WORD[i].name);
+        }
         strcpy (type, "OPER");
     }
     else

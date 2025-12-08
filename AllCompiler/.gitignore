@@ -1,0 +1,5 @@
+# Ignore all .log file
+.log
+
+# Ignore VS Setting files
+.vscode/
