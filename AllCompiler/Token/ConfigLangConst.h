@@ -34,7 +34,7 @@ const SystemSyntaxWord_t ALL_PUNCT_WORD[] =
     // {";",          NODE_TYPE_PUNCT,         PUNCT_END_TREE_STR},
     {"\\",          NODE_TYPE_PUNCT,        PUNCT_NEXT_STR},
     {"\n",          NODE_TYPE_PUNCT,        PUNCT_END_STR},
-    {"@",           NODE_TYPE_PUNCT,        PUNCT_DOG},`
+    {"@",           NODE_TYPE_PUNCT,        PUNCT_DOG},
     {"#",           NODE_TYPE_PUNCT,        PUNCT_H},
     {"\"",          NODE_TYPE_PUNCT,        PUNCT_QUOT},
     {"<",           NODE_TYPE_PUNCT,        PUNCT_LEFT_TANG},

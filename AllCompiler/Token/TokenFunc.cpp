@@ -44,7 +44,7 @@ int tokenGlobal (char* buffer,
         if (**(inf.pose) == '\0' || **(inf.pose) == '$')
             break;
 
-        printf ("Str Global: ---%s---\n", *(inf.pose));
+        printf ("Str Global: \" %s \"\n", *(inf.pose));
         if (tokenNum (&inf, vector) == PARSER_THIS_OK)
             continue;
 
@@ -181,7 +181,8 @@ Status_t tokenKeyWord (TokenContextInf_t* inf,
     char buffer[MAX_TOKEN_LEN] = "";
 
     while (isalpha((*str)[len]) ||
-           (*str)[len] == '_')
+           (*str)[len] == '_' ||
+           (*str)[len] == '=')
     {
         buffer[len] = (*str)[len];
         len++;
@@ -229,6 +230,7 @@ Status_t tokenMathOper (TokenContextInf_t* inf,
 
     while (true)
     {
+        // printf ("M: %c\n", *str);
         bool is_correct = false;
         for (size_t i = 0; i < sizeof (OPER_SYMBOLS) / sizeof (OPER_SYMBOLS[0]); i++)
         {
@@ -244,6 +246,7 @@ Status_t tokenMathOper (TokenContextInf_t* inf,
             break;
     }
 
+    // printf ("Math Buffer: \"%s\"\n", buffer);
     Node_t node = {
         .type = NODE_TYPE_OPER,
         .parent = NULL,
@@ -254,6 +257,7 @@ Status_t tokenMathOper (TokenContextInf_t* inf,
     bool is_real = false;
     for (size_t i = 0; i < sizeof (ALL_OPER_WORD) / sizeof (ALL_OPER_WORD[0]); i++)
     {
+        // printf ("Name: \"%s\"", ALL_OPER_WORD[i].name);
         if (strcmp (ALL_OPER_WORD[i].name, buffer) == 0)
         {
             node.value.oper = ALL_OPER_WORD[i].value;

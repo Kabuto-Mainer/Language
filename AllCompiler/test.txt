@@ -1,6 +1,9 @@
-alloc a
-alloc b
+alloc a = 0
+alloc b = 4 * 4 - 8 \
+          - 4 * 4
 
-a = b * 10 - 5 \
-
+server Fact <a, b, c>
+(
+    alloc hhh
+)
 $
