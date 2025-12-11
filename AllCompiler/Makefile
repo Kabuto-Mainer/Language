@@ -4,45 +4,47 @@ flags = -D_DEBUG -Werror -ggdb3 -lSDL2 -std=c++17 -O3 -Wall -Wextra -Weffc++ -Wa
 # --------------------------------------------------------------------------------------------
 
 # --------------------------------------------------------------------------------------------
-dump			= DumpCode/DumpFunc.cpp
+dump			= Sup/DumpCode/DumpFunc.cpp
 
-table			= NameTable/NameTableFunc.cpp
+table			= Struct/NameTable/NameTableFunc.cpp
 
-parser			= Parser/ParserFunc.cpp
+parser			= Front/Parser/ParserFunc.cpp Front/Parser/WriteTreeFunc.cpp
 
-support 		= Support/Support.cpp
+support 		= Sup/Support/Support.cpp Sup/Common/NodeFunc.cpp
 
-token 			= Token/TokenFunc.cpp
+token 			= Front/Token/TokenFunc.cpp
 
-vector 			= Vector/Vector.cpp
+vector 			= Struct/Vector/Vector.cpp
 # --------------------------------------------------------------------------------------------
 
 # --------------------------------------------------------------------------------------------
-common_h		= Common/
+common_h		= Sup/Common/
 
-dump_h			= DumpCode/
+dump_h			= Sup/DumpCode/
 
-table_h			= NameTable/
+table_h			= Struct/NameTable/
 
-parser_h		= Parser/
+parser_h		= Front/Parser/
 
-support_h		= Support/
+support_h		= Sup/Support/
 
-token_h 		= Token/
+token_h 		= Front/Token/
 
-vector_h		= Vector/
+vector_h		= Struct/Vector/
+
+config_h 		= Sup/Configs/
 # --------------------------------------------------------------------------------------------
 
 # --------------------------------------------------------------------------------------------
-all_flags =	-I$(common_h) -I$(table_h) -I$(parser_h) -I$(support_h) -I$(token_h) -I$(vector_h) -I$(dump_h) $(flags)
+all_flags =	-I$(common_h) -I$(table_h) -I$(parser_h) -I$(support_h) -I$(token_h) -I$(vector_h) -I$(dump_h) -I$(config_h) $(flags)
 # --------------------------------------------------------------------------------------------
 
 # --------------------------------------------------------------------------------------------
 lang:
-	g++ $(all_flags) main.cpp $(vector) $(token) $(support) $(table) $(dump) -o lang.exe
+	g++ $(all_flags) main.cpp $(vector) $(token) $(support) $(table) $(dump) $(parser) -o System/lang.exe
 
 run-l:
-	./lang.exe
+	./System/lang.exe
 # --------------------------------------------------------------------------------------------
 
 # --------------------------------------------------------------------------------------------

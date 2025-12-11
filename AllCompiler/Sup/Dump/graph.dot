@@ -1,0 +1,43 @@
+digraph {
+  rankdir=UD;
+  bgcolor="#1e1e1e"
+  splines=spline;
+  nodesep=0.4;
+  ranksep=0.6;
+  node [shape=plaintext, style=filled, fontname="Helvetica"];
+  edge [arrowhead=vee, arrowsize=0.6, penwidth=1.2];
+
+block_0x7cf4a3de0090 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#de3434ff" COLSPAN="2"><B>0x7cf4a3de0090</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7cf4a3de0040</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">NUM</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">5</TD></TR>
+<TR>
+<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7cf4a3de0040 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#0f32e0ff" COLSPAN="2"><B>0x7cf4a3de0040</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7bf4a3de0090</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">KEY</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">trig</TD></TR>
+<TR>
+<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [1]</TD></TR>
+</TABLE> >];
+
+block_0x7bf4a3de0090 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#d119ffff" COLSPAN="2"><B>0x7bf4a3de0090</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=(nil)</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">block</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">block</TD></TR>
+<TR>
+<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [1]</TD></TR>
+</TABLE> >];
+
+block_0x7cf4a3de0040:child -> block_0x7cf4a3de0090:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7bf4a3de0090:child -> block_0x7cf4a3de0040:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+
+}

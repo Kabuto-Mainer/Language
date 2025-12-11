@@ -1,0 +1,56 @@
+My code:
+```
+server Main <>
+(
+    alloc a = 0
+    alloc b
+)
+```
+
+My Tree:
+```
+(def:Main
+    (block
+        (key:int
+            (key:=
+                (var:a)
+                (num:0)
+            )
+        )
+        (key:int
+            (var:b)
+        )
+    )
+)
+```
+
+Must Be Tree:
+```
+(def:Main
+    (.)
+    (next
+        (block
+            (key:int
+                (key:=
+                    (var:a
+                        (.)
+                        (.)
+                    )
+                    (num:0
+                        (.)
+                        (.)
+                    )
+                )
+                (.)
+            )
+            (key:int
+                (var:b
+                    (.)
+                    (.)
+                )
+                (.)
+            )
+        )
+    )
+)
+```

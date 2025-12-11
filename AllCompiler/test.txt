@@ -1,9 +1,0 @@
-alloc a = 0
-alloc b = 4 * 4 - 8 \
-          - 4 * 4
-
-server Fact <a, b, c>
-(
-    alloc hhh
-)
-$
