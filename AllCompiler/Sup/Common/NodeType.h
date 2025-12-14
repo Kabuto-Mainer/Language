@@ -1,5 +1,5 @@
-#ifndef COMPILER_TYPE_H
-#define COMPILER_TYPE_H
+#ifndef NODE_TYPE_H
+#define NODE_TYPE_H
 
 #include <stdio.h>
 #include "NameTableType.h"
@@ -58,4 +58,4 @@ struct Node_t
 // ---------------------------------------------------------------------------------------------------
 
 
-#endif /* COMPILER_TYPE_H */
+#endif /* NODE_TYPE_H */

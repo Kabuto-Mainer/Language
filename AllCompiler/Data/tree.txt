@@ -1,1 +1,1 @@
-(block:(key:if(num:5(.)(.))(.))(.))
+(block:(key:func(func:fact(.)(.))(next:(var:num(.)(.))(block:(key:if(oper:>(var:num(.)(.))(num:1(.)(.)))(block:(key:=(var:num(.)(.))(oper:*(var:num(.)(.))(func:fact(var:num(.)(.))(.))))(.)))(next:(key:else(block:(key:return(num:1(.)(.))(.))(.))(.))(key:return(var:num(.)(.))(.))))))(next:(key:int(key:=(var:num(.)(.))(num:0(.)(.)))(.))(next:(key:in(var:num(.)(.))(.))(key:out(func:fact(var:num(.)(.))(.))(.)))))

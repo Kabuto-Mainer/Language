@@ -41,7 +41,11 @@ void writeNode (Node_t* node,
     assert (node);
     assert (stream);
 
-    writeValue (node, stream);
+    bool in_next = amount_last != node->amount_children;
+
+    if (!in_next)
+         writeValue (node, stream);
+
     if (amount_last == 0)
         fprintf (stream, "(.)(.)");
 
@@ -70,7 +74,9 @@ void writeNode (Node_t* node,
         writeNode (node, stream, amount_last - 1);
         fprintf (stream, ")");
     }
-    fprintf (stream, ")");
+
+    if (!in_next)
+        fprintf (stream, ")");
 
     return;
 }
@@ -95,7 +101,7 @@ void writeValue (Node_t* node,
     else if (node->type == NODE_TYPE_NUM)
         fprintf (stream, "num:%d", node->value.num);
     else if (node->type == NODE_TYPE_FUNC)
-        fprintf (stream, "def:%s", node->value.name);
+        fprintf (stream, "func:%s", node->value.name);
     else if (node->type == NODE_TYPE_KEY_WORD)
     {
         fprintf (stream, "key:");

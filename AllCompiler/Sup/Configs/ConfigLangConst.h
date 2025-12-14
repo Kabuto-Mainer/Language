@@ -12,14 +12,17 @@ const int MAX_TOKEN_LEN = 20;
 // ---------------------------------------------------------------------------------------------------
 const SystemSyntaxWord_t ALL_SYSTEM_WORD[] =
 {
-    {"alloc",       NODE_TYPE_KEY_WORD,     KEY_DEFINE_VAR},
-    {"server",      NODE_TYPE_KEY_WORD,     KEY_DEFINE_FUNC},
-    {"trig",        NODE_TYPE_KEY_WORD,     KEY_IF},
-    {"nexttrig",    NODE_TYPE_KEY_WORD,     KEY_ELSE_IF},
-    {"default",     NODE_TYPE_KEY_WORD,     KEY_ELSE},
-    {"push",        NODE_TYPE_KEY_WORD,     KEY_RETURN},
+    {"al",          NODE_TYPE_KEY_WORD,     KEY_DEFINE_VAR},
+    {"ser",         NODE_TYPE_KEY_WORD,     KEY_DEFINE_FUNC},
+    {"tr",          NODE_TYPE_KEY_WORD,     KEY_IF},
+    {"ntr",         NODE_TYPE_KEY_WORD,     KEY_ELSE_IF},
+    {"def",         NODE_TYPE_KEY_WORD,     KEY_ELSE},
+    {"ret",         NODE_TYPE_KEY_WORD,     KEY_RETURN},
     {"loop",        NODE_TYPE_KEY_WORD,     KEY_WHILE},
-    {"=",           NODE_TYPE_KEY_WORD,     KEY_ASSIGN}
+    {"=",           NODE_TYPE_KEY_WORD,     KEY_ASSIGN},
+    {"err",         NODE_TYPE_KEY_WORD,     KEY_BREAK},
+    {"in",          NODE_TYPE_KEY_WORD,     KEY_IN},
+    {"out",         NODE_TYPE_KEY_WORD,     KEY_OUT}
 };
 // ---------------------------------------------------------------------------------------------------
 
@@ -31,7 +34,7 @@ const SystemSyntaxWord_t ALL_PUNCT_WORD[] =
     {")",           NODE_TYPE_PUNCT,        PUNCT_RIGHT_ROUND},
     // {"{",           NODE_TYPE_PUNCT,        PUNCT_LEFT_FIGURE},
     // {"}",           NODE_TYPE_PUNCT,        PUNCT_RIGHT_FIGURE},
-    // {";",          NODE_TYPE_PUNCT,         PUNCT_END_TREE_STR},
+    {"|",          NODE_TYPE_PUNCT,         PUNCT_NEXT_STR},
     {"\\",          NODE_TYPE_PUNCT,        PUNCT_NEXT_STR},
     {"\n",          NODE_TYPE_PUNCT,        PUNCT_END_STR},
     {"@",           NODE_TYPE_PUNCT,        PUNCT_DOG},

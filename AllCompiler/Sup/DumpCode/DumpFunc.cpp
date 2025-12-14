@@ -9,7 +9,7 @@
 #include "DumpConfig.h"
 #include "TypesConst.h"
 #include "TokenFunc.h"
-#include "ConfigLangConst.h"
+#include "ConfigLangDump.h"
 
 
 // -------------------------------------------------------------------------------------------------------
@@ -202,19 +202,19 @@ int printFullBlock (Node_t* node,
     if (node->type == NODE_TYPE_FUNC)
     {
         strcpy (color, "#4fdc36ff");
-        sprintf (label, "%s", node->value.name);
+        sprintf (label, "\"%s\"", node->value.name);
         strcpy (type, "FUNC");
     }
     else if (node->type == NODE_TYPE_INDENT)
     {
         strcpy (color, "#1bc3a7ff");
-        sprintf (label, "%s", node->value.name);
+        sprintf (label, "\"%s\"", node->value.name);
         strcpy (type, "INDENT");
     }
     else if (node->type == NODE_TYPE_VAR)
     {
         strcpy (color, "#c1f453ff");
-        sprintf (label, "%s", node->value.name);
+        sprintf (label, "\"%s\"", node->value.name);
         strcpy (type, "VAR");
     }
     else if (node->type == NODE_TYPE_KEY_WORD)
@@ -225,7 +225,7 @@ int printFullBlock (Node_t* node,
         {
             if (node->value.key == ALL_SYSTEM_WORD[i].value)
             {
-                sprintf (label, "%s", ALL_SYSTEM_WORD[i].name);
+                sprintf (label, "\"%s\"", ALL_SYSTEM_WORD[i].name);
                 break;
             }
         }
@@ -239,7 +239,7 @@ int printFullBlock (Node_t* node,
         {
             if (node->value.punct == ALL_PUNCT_WORD[i].value)
             {
-                sprintf (label, "%s", ALL_PUNCT_WORD[i].name);
+                sprintf (label, "\"%s\"", ALL_PUNCT_WORD[i].name);
                 break;
             }
         }
@@ -259,7 +259,7 @@ int printFullBlock (Node_t* node,
         {
             if (node->value.oper == ALL_OPER_WORD[i].value)
             {
-                sprintf (label, "%s", ALL_OPER_WORD[i].name);
+                sprintf (label, "\"%s\"", ALL_OPER_WORD[i].name);
                 break;
             }
         }

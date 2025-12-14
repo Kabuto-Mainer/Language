@@ -1,5 +1,5 @@
-#ifndef NODE_TYPE_H
-#define NODE_TYPE_H
+#ifndef TYPES_OF_TYPE_H
+#define TYPES_OF_TYPE_H
 
 
 // ---------------------------------------------------------------------------------------------------
@@ -47,7 +47,10 @@ enum KeyWord_t
     KEY_DEFINE_VAR      = 4,
     KEY_DEFINE_FUNC     = 5,
     KEY_RETURN          = 6,
-    KEY_ASSIGN          = 7
+    KEY_ASSIGN          = 7,
+    KEY_BREAK           = 8,
+    KEY_IN              = 9,
+    KEY_OUT             = 10,
 };
 // ---------------------------------------------------------------------------------------------------
 
@@ -72,4 +75,4 @@ enum Punct_t
 // ---------------------------------------------------------------------------------------------------
 
 
-#endif /* NODE_TYPE_H */
+#endif /* TYPES_OF_TYPE_H */

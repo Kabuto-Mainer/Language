@@ -57,7 +57,8 @@ int nameTableDtr (NameTable_t* table)
         }
     }
 
-    free (table->data);
+    if (table->data != NULL)
+        free (table->data);
     // free (table);
 
     return 0;
@@ -261,15 +262,18 @@ int nameTableStackPush (NameTableStack_t* stack,
     NameTable_t** buffer = stack->data;
     if (stack->capacity == 0)
     {
-        buffer = (NameTable_t**) calloc (1, sizeof (NameTable_t*));
+        buffer = (NameTable_t**) calloc (2, sizeof (NameTable_t*));
         if (buffer == NULL)
             EXIT_FUNC ("NULL calloc", 1);
+        stack->capacity = 2;
     }
     else if (stack->size >= stack->capacity)
     {
         buffer = (NameTable_t**) realloc (stack->data, sizeof (NameTable_t*) * stack->capacity * 2);
         if (buffer == NULL)
             EXIT_FUNC ("NULL calloc", 1);
+
+        stack->capacity *= 2;
     }
     stack->data = buffer;
     stack->data[stack->size++] = table;
@@ -325,7 +329,9 @@ int nameTableStackDtr (NameTableStack_t* stack)
     for (size_t i = 0; i < stack->size; i++)
         nameTableDtr (stack->data[i]);
 
-    free (stack->data);
+    if (stack->data != NULL)
+        free (stack->data);
+
     return 0;
 }
 // ---------------------------------------------------------------------------------------------------

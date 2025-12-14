@@ -1,0 +1,21 @@
+ser fact <num>
+(
+    out <num>
+    tr <num >> 1>
+    (
+        out <100>
+        num = num * fact <num - 1>
+    )
+    def
+    (
+        out <50>
+        ret 1
+    )
+    out <num>
+    ret num
+)
+
+al num = 0
+in <num>
+out < fact <num> >
+$

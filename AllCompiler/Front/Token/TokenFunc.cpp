@@ -44,7 +44,6 @@ int tokenGlobal (char* buffer,
         if (**(inf.pose) == '\0' || **(inf.pose) == '$')
             break;
 
-        // printf ("Str Global: \" %s \"\n", *(inf.pose));
         if (tokenNum (&inf, vector) == PARSER_THIS_OK)
             continue;
 
@@ -62,7 +61,6 @@ int tokenGlobal (char* buffer,
 
         EXIT_FUNC ("UNKNOWN SYNTAX", 1);
     }
-    // token
     return 0;
 }
 // ---------------------------------------------------------------------------------------------------
@@ -93,6 +91,7 @@ Status_t tokenPunct (TokenContextInf_t* inf,
         case '\"': { node.value.punct = PUNCT_QUOT; break; }
         case '<':  { node.value.punct = PUNCT_LEFT_TANG; break; }
         case '>':  { node.value.punct = PUNCT_RIGHT_TANG; break; }
+        case '~':  { node.value.punct = PUNCT_END_STR; break; }
         default: { return PARSER_NOT_THIS; }
     }
 
@@ -109,17 +108,14 @@ Status_t tokenNum (TokenContextInf_t* inf,
     assert (inf);
     assert (vector);
 
-    // printf ("Str: %s\n", *inf->pose);
     if ((**inf->pose == '-' && !isdigit (*(*inf->pose + 1))) ||
         (**inf->pose != '-' && !isdigit (**inf->pose)))
         return PARSER_NOT_THIS;
 
-    // printf ("Str: %s\n", *inf->pose);
     int value = 0;
     int len = 0;
     sscanf (*(inf->pose), "%d%n", &value, &len);
 
-    // printf ("VALUE: %d\n", value);
     Node_t node = {
         .type = NODE_TYPE_NUM,
         .parent = NULL,
@@ -224,15 +220,12 @@ Status_t tokenMathOper (TokenContextInf_t* inf,
     assert (inf);
     assert (vector);
 
-    // printf ("Math\n");
-    // printf ("%s", *inf->pose);
     size_t len = 0;
     char* str = *(inf->pose);
     char buffer[MAX_TOKEN_LEN] = "";
 
     while (true)
     {
-        // printf ("M: %c\n", *str);
         bool is_correct = false;
         for (size_t i = 0; i < sizeof (OPER_SYMBOLS) / sizeof (OPER_SYMBOLS[0]); i++)
         {
@@ -248,7 +241,6 @@ Status_t tokenMathOper (TokenContextInf_t* inf,
             break;
     }
 
-    // printf ("Math Buffer: \"%s\"\n", buffer);
     Node_t node = {
         .type = NODE_TYPE_OPER,
         .parent = NULL,
@@ -259,7 +251,6 @@ Status_t tokenMathOper (TokenContextInf_t* inf,
     bool is_real = false;
     for (size_t i = 0; i < sizeof (ALL_OPER_WORD) / sizeof (ALL_OPER_WORD[0]); i++)
     {
-        // printf ("Name: \"%s\"", ALL_OPER_WORD[i].name);
         if (strcmp (ALL_OPER_WORD[i].name, buffer) == 0)
         {
             node.value.oper = ALL_OPER_WORD[i].value;

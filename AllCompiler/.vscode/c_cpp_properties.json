@@ -14,6 +14,7 @@
         "${workspaceFolder}/Sup/DumpCode",
         "${workspaceFolder}/Sup/Dump",
         "${workspaceFolder}/Sup/Support",
+        "${workspaceFolder}/Back",
         "/usr/include",
         "/usr/local/include"
       ],
@@ -38,7 +39,8 @@
         "-I${workspaceFolder}/Sup/Configs",
         "-I${workspaceFolder}/Sup/DumpCode",
         "-I${workspaceFolder}/Sup/Dump",
-        "-I${workspaceFolder}/Sup/Support"
+        "-I${workspaceFolder}/Sup/Support",
+        "-I${workspaceFolder}/Back"
       ],
       "browse": {
         "path": [
