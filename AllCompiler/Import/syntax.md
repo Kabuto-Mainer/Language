@@ -36,7 +36,7 @@ block Point < int x ~ &int y ~ str name<10> >
 
 ## Функции
 
-ser Name <int arg, &int ptr, str name<10> >
+ser Name <int arg, &int ptr, str name<10> >     -> int (&int, str<10>)
 (
 ```Тело функции```
 )

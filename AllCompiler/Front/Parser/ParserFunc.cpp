@@ -358,7 +358,7 @@ Status_t parserWhile (ParserContextInf_t* inf,
     assert (parent);
 
     if (inf->node->type != NODE_TYPE_KEY_WORD ||
-        inf->node->value.key != KEY_WHILE)
+        inf->node->val.key != KEY_WHILE)
         return PARSER_NOT_THIS;
 
     Node_t* node_while = inf->node;
@@ -404,7 +404,7 @@ Status_t parserBreak (ParserContextInf_t* inf,
     assert (parent);
 
     if (inf->node->type != NODE_TYPE_KEY_WORD ||
-        inf->node->value.key != KEY_BREAK)
+        inf->node->val.key != KEY_BREAK)
         return PARSER_NOT_THIS;
 
     addNode (parent, inf->node);
@@ -434,7 +434,7 @@ Status_t parserDeclarationFunc (ParserContextInf_t* inf,
     assert (parent);
 
     if (inf->node->type != NODE_TYPE_KEY_WORD ||
-        inf->node->value.key != KEY_DEFINE_FUNC)
+        inf->node->val.key != KEY_DEFINE_FUNC)
         return PARSER_NOT_THIS;
 
     // tokenOneDump (inf->node, "Enter to declaration func");
@@ -448,21 +448,56 @@ Status_t parserDeclarationFunc (ParserContextInf_t* inf,
         !isLeftTang (getNextNotEndNode (inf)))
         SYNTAX_ERROR (inf, PE_NOT_INDENT);
 
+    Node_t* node_func = inf->node;
     addNode (node_define, inf->node);
     inf->node->type = NODE_TYPE_FUNC;
+    node_func->val.func.name = node_func->val.name;
+
     nextNode (inf);
     nextNode (inf);
 
     while (true)
     {
         skipVoid (inf);
-        if (inf->node->type == NODE_TYPE_INDENT)
+
+        if (inf->node->type == NODE_TYPE_PUNCT &&
+            inf->node->val.punct == PUNCT_RIGHT_TANG)
+            break;
+
+        int point_level = 0;
+        if (inf->node->type == NODE_TYPE_PUNCT &&
+            inf->node->val.punct == PUNCT_NAME)
         {
-            addNode (node_define, inf->node);
-            inf->node->type = NODE_TYPE_VAR;
-            nextNode (inf);
-            continue;
+            while (true)
+            {
+                point_level++;
+                nextNode (inf);
+                skipVoid (inf);
+
+                if (inf->node->type != NODE_TYPE_PUNCT ||
+                    inf->node->val.punct != PUNCT_NAME)
+                    break;
+            }
         }
+        if (inf->node->type != NODE_TYPE_INDENT)
+            SYNTAX_ERROR (inf, PE_NOT_INDENT);
+        Node_t* type = inf->node;
+
+        nextNode (inf);
+        skipVoid (inf);
+        Node_t* argument = inf->node;
+
+        if (argument->type != NODE_TYPE_INDENT)
+            SYNTAX_ERROR (inf, PE_NOT_INDENT);
+
+        argument->type = NODE_TYPE_VAR;
+        argument->val.var.type = type->val.name;
+        argument->val.var.name = argument->val.name;
+        argument->val.var.point_level = point_level;
+
+        addNode (node_define, argument);
+        nextNode (inf);
+        skipVoid (inf);
         if (isComma (inf->node))
         {
             nextNode (inf);
@@ -473,6 +508,46 @@ Status_t parserDeclarationFunc (ParserContextInf_t* inf,
     if (!isRightTang (inf->node))
         SYNTAX_ERROR (inf, PE_NOT_RIGHT_TANG);
     nextNode (inf);
+    skipVoid (inf);
+
+    /* Да, тут нужны операции, т.к. на момент написания синтаксис был такой
+        ser Func <...> -> int (&int, str<10>)
+        А в токенизаторе строка -> разделится на OPER (-) и PUNCT (>)
+    */
+    if (inf->node->type != NODE_TYPE_OPER ||
+        inf->node->val.oper != OPER_SUB ||
+        getNextNotEndNode (inf)->type != NODE_TYPE_PUNCT ||
+        getNextNotEndNode (inf)->val.punct != PUNCT_RIGHT_TANG)
+        SYNTAX_ERROR (inf, PE_NOT_RETURN_VALUE);
+
+    nextNode (inf);
+    skipVoid (inf);
+    nextNode (inf);
+    nextNode (inf);
+
+    int point_level = 0;
+    if (inf->node->type == NODE_TYPE_PUNCT &&
+        inf->node->val.punct == PUNCT_NAME)
+    {
+        while (true)
+        {
+            point_level++;
+            nextNode (inf);
+            skipVoid (inf);
+
+            if (inf->node->type != NODE_TYPE_PUNCT ||
+                inf->node->val.punct != PUNCT_NAME)
+                break;
+        }
+    }
+    Node_t* type = inf->node;
+    if (type->type != NODE_TYPE_INDENT)
+        SYNTAX_ERROR (inf, PE_NOT_TYPE);
+
+    node_func->val.func.ret_point_level = point_level;
+    node_func->val.func.ret_type = type->val.name;
+    nextNode (inf);
+    skipVoid (inf);
 
     if (!isRightRound (inf->node) && !isEndChar (inf->node))
         SYNTAX_ERROR (inf, PE_NOT_RIGHT_ROUND);

@@ -160,7 +160,7 @@ Status_t tokenIndent (TokenContextInf_t* inf,
         .children = NULL,
         .amount_children = 0,
     };
-    node.val.func.name = name;
+    node.val.name = name;
     vectorAdd (vector, node);
 
     *str += len;
@@ -335,7 +335,7 @@ int tokenOneDump (Node_t* node, const char* reason)
 
     printf ("[%d]<", node->type);
     if (node->type == NODE_TYPE_INDENT || node->type == NODE_TYPE_VAR || node->type == NODE_TYPE_FUNC)
-        printf ("%s", node->val.func.name);
+        printf ("%s", node->val.name);
 
     else if (node->type == NODE_TYPE_OPER)
     {
