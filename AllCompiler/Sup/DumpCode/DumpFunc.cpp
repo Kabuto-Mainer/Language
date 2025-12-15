@@ -198,24 +198,51 @@ int printFullBlock (Node_t* node,
     char type[20] = "";
     char color[10] = "";
     char label[40] = "";
+    char func_ret_value[200] = "";
 
     if (node->type == NODE_TYPE_FUNC)
     {
         strcpy (color, "#4fdc36ff");
-        sprintf (label, "\"%s\"", node->value.name);
+        sprintf (label, "\"%s\"", node->val.func.name);
         strcpy (type, "FUNC");
+
+        if (node->val.func.ret_type != NULL)
+        {
+            sprintf (func_ret_value, "<TR><TD BGCOLOR=\"#386de7ff\""
+                     "COMSPAN=\"1\" TYPE RETURN VALUE</TD>"
+                     "<TD BGCOLOR=\"#386de7ff\" COMSPAN=\"1\"%s</TD></TR>\n"
+                     "<TR><TD BGCOLOR=\"#386de7ff\""
+                     "COMSPAN=\"1\" POINT LEVEL </TD>"
+                     "<TD BGCOLOR=\"#386de7ff\" COMSPAN=\"1\"%d</TD></TR>\n",
+                     node->val.func.ret_type, node->val.func.ret_point_level);
+            // sprintf (func_ret_value, "<TR><TD BGCOLOR=\"#386de7ff\""
+            //          "COMSPAN=\"1\" POINT LEVEL </TD>"
+            //          "<TD BGCOLOR=\"#386de7ff\" COMSPAN=\"1\"%d</TD></TR>\n",
+            //          node->val.func.ret_point_level);
+        }
     }
     else if (node->type == NODE_TYPE_INDENT)
     {
         strcpy (color, "#1bc3a7ff");
-        sprintf (label, "\"%s\"", node->value.name);
+        sprintf (label, "\"%s\"", node->val.name);
         strcpy (type, "INDENT");
     }
     else if (node->type == NODE_TYPE_VAR)
     {
         strcpy (color, "#c1f453ff");
-        sprintf (label, "\"%s\"", node->value.name);
+        sprintf (label, "\"%s\"", node->val.name);
         strcpy (type, "VAR");
+
+        if (node->val.var.type != NULL)
+        {
+            sprintf (func_ret_value, "<TR><TD BGCOLOR=\"#386de7ff\""
+                     "COMSPAN=\"1\" TYPE VAR</TD>"
+                     "<TD BGCOLOR=\"#386de7ff\" COMSPAN=\"1\"%s</TD></TR>\n"
+                     "<TR><TD BGCOLOR=\"#386de7ff\""
+                     "COMSPAN=\"1\" POINT LEVEL </TD>"
+                     "<TD BGCOLOR=\"#386de7ff\" COMSPAN=\"1\"%d</TD></TR>\n",
+                     node->val.var.type, node->val.var.point_level);
+        }
     }
     else if (node->type == NODE_TYPE_KEY_WORD)
     {
@@ -223,7 +250,7 @@ int printFullBlock (Node_t* node,
         strcpy (color, "#0f32e0ff");
         for (size_t i = 0; i < sizeof (ALL_SYSTEM_WORD) / sizeof (ALL_SYSTEM_WORD[0]); i++)
         {
-            if (node->value.key == ALL_SYSTEM_WORD[i].value)
+            if (node->val.key == ALL_SYSTEM_WORD[i].value)
             {
                 sprintf (label, "\"%s\"", ALL_SYSTEM_WORD[i].name);
                 break;
@@ -237,7 +264,7 @@ int printFullBlock (Node_t* node,
         strcpy (color, "#ddf331ff");
         for (size_t i = 0; i < sizeof (ALL_PUNCT_WORD) / sizeof (ALL_PUNCT_WORD[0]); i++)
         {
-            if (node->value.punct == ALL_PUNCT_WORD[i].value)
+            if (node->val.punct == ALL_PUNCT_WORD[i].value)
             {
                 sprintf (label, "\"%s\"", ALL_PUNCT_WORD[i].name);
                 break;
@@ -248,7 +275,7 @@ int printFullBlock (Node_t* node,
     else if (node->type == NODE_TYPE_NUM)
     {
         strcpy (color, "#de3434ff");
-        sprintf (label, "%d", node->value.num);
+        sprintf (label, "%d", node->val.num);
         strcpy (type, "NUM");
     }
     else if (node->type == NODE_TYPE_OPER)
@@ -257,7 +284,7 @@ int printFullBlock (Node_t* node,
         strcpy (color, "#e8802bff");
         for (size_t i = 0; i < sizeof (ALL_OPER_WORD) / sizeof (ALL_OPER_WORD[0]); i++)
         {
-            if (node->value.oper == ALL_OPER_WORD[i].value)
+            if (node->val.oper == ALL_OPER_WORD[i].value)
             {
                 sprintf (label, "\"%s\"", ALL_OPER_WORD[i].name);
                 break;
@@ -279,8 +306,9 @@ int printFullBlock (Node_t* node,
     fprintf (stream, "</TD></TR>\n"
              "<TR><TD BGCOLOR=\"#6bd934ff\" COLSPAN=\"2\">%s</TD></TR>\n"
              "<TR><TD BGCOLOR=\"#46f2f5ff\" COLSPAN=\"2\">%s", type, label);
-    fprintf (stream, "</TD></TR>\n"
-             "<TR>\n<TD PORT=\"child\" BGCOLOR=\"#ff7301ff\" COLSPAN=\"2\">CHILDREN [%d]</TD>", node->amount_children);
+    fprintf (stream, "</TD></TR>\n%s"
+             "<TR>\n<TD PORT=\"child\" BGCOLOR=\"#ff7301ff\" COLSPAN=\"2\">CHILDREN [%d]</TD>",
+             func_ret_value, node->amount_children);
     fprintf (stream, "</TR>\n</TABLE> >];\n\n");
 
     return 0;

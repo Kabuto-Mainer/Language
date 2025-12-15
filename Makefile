@@ -179,12 +179,23 @@ gitcom:
 	git add Proc/ASSEMBLER/ Proc/BIN/ Proc/COMMON/ Proc/PROCESSOR/ Proc/Makefile \
 			AllCompiler/Back/ AllCompiler/Front/ AllCompiler/Struct/ \
 			AllCompiler/Sup/ AllCompiler/System AllCompiler/main.cpp \
-			kbt Makefile TODO.md program.txt
+			AllCompiler/Import/ Import/ \
+			kbt Makefile
 	@echo "Git: коммит с сообщением '$(m)'..."
 	git commit -m "$(m)"
 	@echo "Git: отправка на сервер..."
 	git push
 	@echo "✓ Git операции завершены"
+
+# Git add
+gitadd:
+	@echo "========================================================================"
+	@echo "Git: добавление файлов..."
+	git add Proc/ASSEMBLER/ Proc/BIN/ Proc/COMMON/ Proc/PROCESSOR/ Proc/Makefile \
+			AllCompiler/Back/ AllCompiler/Front/ AllCompiler/Struct/ \
+			AllCompiler/Sup/ AllCompiler/System AllCompiler/main.cpp \
+			AllCompiler/Import/ Import/ \
+			kbt Makefile
 
 # Сборка виртуальной машины
 virtbox: hash-cmd assembler processor

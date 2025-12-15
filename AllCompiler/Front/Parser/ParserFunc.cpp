@@ -45,7 +45,6 @@ Status_t parserGlobal (Node_t* start_node,
 
     while (inf.cur_index < inf.capacity)
     {
-        // printf ("sdbfjsbdfhsbdjfhbsjdhb\n");
         skipVoid (&inf);
         if (parserDeclarationFunc (&inf, global_node) == PARSER_THIS_OK)
             continue;
@@ -107,7 +106,7 @@ Status_t parserUnion (ParserContextInf_t* inf,
 
     Node_t* block = inf->node;
     block->type = NODE_TYPE_BLOCK;
-    block->value.name = NULL;
+    block->val.name = NULL;
     addNode (node, block);
     nextNode (inf);
 
@@ -167,8 +166,8 @@ Status_t parserInOut (ParserContextInf_t* inf,
     assert (parent);
 
     if (inf->node->type != NODE_TYPE_KEY_WORD ||
-        (inf->node->value.key != KEY_IN &&
-         inf->node->value.key != KEY_OUT))
+        (inf->node->val.key != KEY_IN &&
+         inf->node->val.key != KEY_OUT))
         return PARSER_NOT_THIS;
 
     Node_t* node_key = inf->node;
@@ -181,7 +180,7 @@ Status_t parserInOut (ParserContextInf_t* inf,
     nextNode (inf);
     skipVoid (inf);
 
-    if (node_key->value.key == KEY_IN)
+    if (node_key->val.key == KEY_IN)
     {
         if (inf->node->type != NODE_TYPE_INDENT)
             SYNTAX_ERROR (inf, PE_NOT_INDENT);
@@ -226,10 +225,10 @@ Status_t parserCondOper (ParserContextInf_t* inf,
     assert (node);
 
     if (inf->node->type != NODE_TYPE_KEY_WORD ||
-       (inf->node->value.key != KEY_IF &&
-        inf->node->value.key != KEY_ELSE_IF &&
-        inf->node->value.key != KEY_ELSE &&
-        inf->node->value.key != KEY_WHILE))
+       (inf->node->val.key != KEY_IF &&
+        inf->node->val.key != KEY_ELSE_IF &&
+        inf->node->val.key != KEY_ELSE &&
+        inf->node->val.key != KEY_WHILE))
         return PARSER_NOT_THIS;
 
     Node_t* cond_node = inf->node;
@@ -237,7 +236,7 @@ Status_t parserCondOper (ParserContextInf_t* inf,
     nextNode (inf);
     skipVoid (inf);
 
-    if (cond_node->value.key != KEY_ELSE)
+    if (cond_node->val.key != KEY_ELSE)
     {
         if (!isLeftTang (inf->node))
             SYNTAX_ERROR (inf, PE_NOT_LEFT_TANG);
@@ -283,7 +282,7 @@ Status_t parserAssign (ParserContextInf_t* inf,
     skipVoid (inf);
 
     if (inf->node->type == NODE_TYPE_KEY_WORD &&
-        inf->node->value.key == KEY_ASSIGN)
+        inf->node->val.key == KEY_ASSIGN)
     {
         Node_t* assign = inf->node;
         addNode (node, assign);
@@ -325,7 +324,7 @@ Status_t parserReturn (ParserContextInf_t* inf,
     assert (node);
 
     if (inf->node->type != NODE_TYPE_KEY_WORD ||
-        inf->node->value.key != KEY_RETURN)
+        inf->node->val.key != KEY_RETURN)
         return PARSER_NOT_THIS;
 
     Node_t* ret_node = inf->node;
@@ -358,7 +357,7 @@ Status_t parserWhile (ParserContextInf_t* inf,
     assert (parent);
 
     if (inf->node->type != NODE_TYPE_KEY_WORD ||
-        inf->node->value.key != KEY_WHILE)
+        inf->node->val.key != KEY_WHILE)
         return PARSER_NOT_THIS;
 
     Node_t* node_while = inf->node;
@@ -404,7 +403,7 @@ Status_t parserBreak (ParserContextInf_t* inf,
     assert (parent);
 
     if (inf->node->type != NODE_TYPE_KEY_WORD ||
-        inf->node->value.key != KEY_BREAK)
+        inf->node->val.key != KEY_BREAK)
         return PARSER_NOT_THIS;
 
     addNode (parent, inf->node);
@@ -434,7 +433,7 @@ Status_t parserDeclarationFunc (ParserContextInf_t* inf,
     assert (parent);
 
     if (inf->node->type != NODE_TYPE_KEY_WORD ||
-        inf->node->value.key != KEY_DEFINE_FUNC)
+        inf->node->val.key != KEY_DEFINE_FUNC)
         return PARSER_NOT_THIS;
 
     // tokenOneDump (inf->node, "Enter to declaration func");
@@ -448,21 +447,56 @@ Status_t parserDeclarationFunc (ParserContextInf_t* inf,
         !isLeftTang (getNextNotEndNode (inf)))
         SYNTAX_ERROR (inf, PE_NOT_INDENT);
 
+    Node_t* node_func = inf->node;
     addNode (node_define, inf->node);
     inf->node->type = NODE_TYPE_FUNC;
+    node_func->val.func.name = node_func->val.name;
+
     nextNode (inf);
     nextNode (inf);
 
     while (true)
     {
         skipVoid (inf);
-        if (inf->node->type == NODE_TYPE_INDENT)
+
+        if (inf->node->type == NODE_TYPE_PUNCT &&
+            inf->node->val.punct == PUNCT_RIGHT_TANG)
+            break;
+
+        int point_level = 0;
+        if (inf->node->type == NODE_TYPE_PUNCT &&
+            inf->node->val.punct == PUNCT_NAME)
         {
-            addNode (node_define, inf->node);
-            inf->node->type = NODE_TYPE_VAR;
-            nextNode (inf);
-            continue;
+            while (true)
+            {
+                point_level++;
+                nextNode (inf);
+                skipVoid (inf);
+
+                if (inf->node->type != NODE_TYPE_PUNCT ||
+                    inf->node->val.punct != PUNCT_NAME)
+                    break;
+            }
         }
+        if (inf->node->type != NODE_TYPE_INDENT)
+            SYNTAX_ERROR (inf, PE_NOT_INDENT);
+        Node_t* type = inf->node;
+
+        nextNode (inf);
+        skipVoid (inf);
+        Node_t* argument = inf->node;
+
+        if (argument->type != NODE_TYPE_INDENT)
+            SYNTAX_ERROR (inf, PE_NOT_INDENT);
+
+        argument->type = NODE_TYPE_VAR;
+        argument->val.var.type = type->val.name;
+        argument->val.var.name = argument->val.name;
+        argument->val.var.point_level = point_level;
+
+        addNode (node_define, argument);
+        nextNode (inf);
+        skipVoid (inf);
         if (isComma (inf->node))
         {
             nextNode (inf);
@@ -473,6 +507,46 @@ Status_t parserDeclarationFunc (ParserContextInf_t* inf,
     if (!isRightTang (inf->node))
         SYNTAX_ERROR (inf, PE_NOT_RIGHT_TANG);
     nextNode (inf);
+    skipVoid (inf);
+
+    /* Да, тут нужны операции, т.к. на момент написания синтаксис был такой
+        ser Func <...> -> int (&int, str<10>)
+        А в токенизаторе строка -> разделится на OPER (-) и PUNCT (>)
+    */
+    if (inf->node->type != NODE_TYPE_OPER ||
+        inf->node->val.oper != OPER_SUB ||
+        getNextNotEndNode (inf)->type != NODE_TYPE_PUNCT ||
+        getNextNotEndNode (inf)->val.punct != PUNCT_RIGHT_TANG)
+        SYNTAX_ERROR (inf, PE_NOT_RETURN_VALUE);
+
+    nextNode (inf);
+    skipVoid (inf);
+    nextNode (inf);
+    nextNode (inf);
+
+    int point_level = 0;
+    if (inf->node->type == NODE_TYPE_PUNCT &&
+        inf->node->val.punct == PUNCT_NAME)
+    {
+        while (true)
+        {
+            point_level++;
+            nextNode (inf);
+            skipVoid (inf);
+
+            if (inf->node->type != NODE_TYPE_PUNCT ||
+                inf->node->val.punct != PUNCT_NAME)
+                break;
+        }
+    }
+    Node_t* type = inf->node;
+    if (type->type != NODE_TYPE_INDENT)
+        SYNTAX_ERROR (inf, PE_NOT_TYPE);
+
+    node_func->val.func.ret_point_level = point_level;
+    node_func->val.func.ret_type = type->val.name;
+    nextNode (inf);
+    skipVoid (inf);
 
     if (!isRightRound (inf->node) && !isEndChar (inf->node))
         SYNTAX_ERROR (inf, PE_NOT_RIGHT_ROUND);
@@ -504,23 +578,46 @@ Status_t parserDeclarationVar (ParserContextInf_t* inf,
     assert (node);
 
     if (inf->node->type != NODE_TYPE_KEY_WORD ||
-        inf->node->value.key != KEY_DEFINE_VAR)
+        inf->node->val.key != KEY_DEFINE_VAR)
         return PARSER_NOT_THIS;
 
     addNode (node, inf->node);
     Node_t* ext = inf->node;
     nextNode (inf);
-    // skipCharEnd (inf);
+    skipVoid (inf);
+
+    int point_level = 0;
+    if (node->type == NODE_TYPE_PUNCT &&
+        node->val.punct == PUNCT_NAME)
+    {
+        while (true)
+        {
+            point_level++;
+            skipVoid (inf);
+            if (node->type != NODE_TYPE_PUNCT ||
+                node->val.punct != PUNCT_NAME)
+                break;
+        }
+    }
+    if (inf->node->type != NODE_TYPE_INDENT)
+        SYNTAX_ERROR (inf, PE_NOT_INDENT);
+
+    Node_t* type = inf->node;
+    nextNode (inf);
+    skipVoid (inf);
 
     if (inf->node->type != NODE_TYPE_INDENT)
         SYNTAX_ERROR (inf, PE_NOT_INDENT);
 
     Node_t* indent = inf->node;
+    indent->val.var.type = type->val.var.name;
+    indent->val.var.point_level = point_level;
     indent->type = NODE_TYPE_VAR;
+
     nextNode (inf);
-    // skipCharEnd (inf);
+    skipVoid (inf);
     if (inf->node->type == NODE_TYPE_KEY_WORD &&
-        inf->node->value.key == KEY_ASSIGN)
+        inf->node->val.key == KEY_ASSIGN)
     {
         addNode (ext, inf->node);
         addNode (inf->node, indent);
@@ -563,12 +660,12 @@ Status_t parserExpresion (ParserContextInf_t* inf,
     }
 
     if (inf->node->type != NODE_TYPE_OPER ||
-       (inf->node->value.oper != OPER_COMP_BIG_EQUAL &&
-        inf->node->value.oper != OPER_COMP_ONLY_BIG &&
-        inf->node->value.oper != OPER_COMP_LIT_EQUAL &&
-        inf->node->value.oper != OPER_COMP_ONLY_LIT &&
-        inf->node->value.oper != OPER_COMP_EQUAL &&
-        inf->node->value.oper != OPER_COMP_NOT_EQUAL))
+       (inf->node->val.oper != OPER_COMP_BIG_EQUAL &&
+        inf->node->val.oper != OPER_COMP_ONLY_BIG &&
+        inf->node->val.oper != OPER_COMP_LIT_EQUAL &&
+        inf->node->val.oper != OPER_COMP_ONLY_LIT &&
+        inf->node->val.oper != OPER_COMP_EQUAL &&
+        inf->node->val.oper != OPER_COMP_NOT_EQUAL))
     {
         addChildren (node, buffer_node);
         deleteOneNode (buffer_node);
@@ -611,8 +708,8 @@ Status_t parserAddSub (ParserContextInf_t* inf,
     }
 
     if (inf->node->type != NODE_TYPE_OPER ||
-       (inf->node->value.oper != OPER_ADD &&
-        inf->node->value.oper != OPER_SUB))
+       (inf->node->val.oper != OPER_ADD &&
+        inf->node->val.oper != OPER_SUB))
     {
         addChildren (node, buffer_node);
         deleteOneNode (buffer_node);
@@ -654,8 +751,8 @@ Status_t parserMulDiv (ParserContextInf_t* inf,
     }
 
     if (inf->node->type != NODE_TYPE_OPER ||
-       (inf->node->value.oper != OPER_MUL &&
-        inf->node->value.oper != OPER_DIV))
+       (inf->node->val.oper != OPER_MUL &&
+        inf->node->val.oper != OPER_DIV))
     {
         addChildren (node, buffer_node);
         deleteOneNode (buffer_node);
@@ -765,6 +862,9 @@ Status_t parserCallFunc (ParserContextInf_t* inf,
     Node_t* node_func = inf->node;
     addNode (parent, node_func);
     node_func->type = NODE_TYPE_FUNC;
+    node_func->val.func.name = node_func->val.name;
+    node_func->val.func.ret_type = NULL;
+
     nextNode (inf);
     nextNode (inf); // Skip '<'
 
@@ -859,14 +959,14 @@ int checkPunctNode (Node_t* node, int val)
     if (val == PUNCT_END_STR)
     {
         if ((node->type == NODE_TYPE_PUNCT &&
-             node->value.punct == val) ||
+             node->val.punct == val) ||
             (node->type == NODE_TYPE_PUNCT &&
-             node->value.punct == PUNCT_END_STR))
+             node->val.punct == PUNCT_END_STR))
             return 1;
     }
     // tokenOneDump (node, "In checkPunct");
     if (node->type == NODE_TYPE_PUNCT &&
-        node->value.punct == val)
+        node->val.punct == val)
         return 1;
     return 0;
 }
@@ -886,7 +986,7 @@ int nextNode (ParserContextInf_t* inf)
         return 1;
 
     if (inf->node->type == NODE_TYPE_PUNCT &&
-        inf->node->value.punct == PUNCT_END_STR)
+        inf->node->val.punct == PUNCT_END_STR)
         inf->line++;
     inf->node = inf->node + 1;
     inf->cur_index++;
@@ -904,7 +1004,7 @@ int skipCharEnd (ParserContextInf_t* inf)
     assert (inf);
 
     while (inf->node->type == NODE_TYPE_PUNCT &&
-           inf->node->value.punct == PUNCT_END_STR)
+           inf->node->val.punct == PUNCT_END_STR)
     {
         if (inf->cur_index == inf->capacity - 1)
             return 1;
@@ -929,7 +1029,7 @@ int skipCharNext (ParserContextInf_t* inf)
     // tokenOneDump (inf->node, "1");
     // tokenOneDump (inf->node + 1, "2");
     while (inf->node->type == NODE_TYPE_PUNCT &&
-           inf->node->value.punct == PUNCT_NEXT_STR &&
+           inf->node->val.punct == PUNCT_NEXT_STR &&
            isEndChar (inf->node + 1))
     {
         if (inf->cur_index == inf->capacity)
@@ -954,9 +1054,9 @@ int skipVoid (ParserContextInf_t* inf)
     assert (inf);
 
     while ((inf->node->type == NODE_TYPE_PUNCT &&
-            inf->node->value.punct == PUNCT_END_STR) ||
+            inf->node->val.punct == PUNCT_END_STR) ||
            (inf->node->type == NODE_TYPE_PUNCT &&
-            inf->node->value.punct == PUNCT_NEXT_STR))
+            inf->node->val.punct == PUNCT_NEXT_STR))
     {
         if (inf->cur_index == inf->capacity - 1)
             return 1;
@@ -981,9 +1081,9 @@ Node_t* getNextNotEndNode (ParserContextInf_t* inf)
     Node_t* node = inf->node + 1;
 
     while ((node->type == NODE_TYPE_PUNCT &&
-            node->value.punct == PUNCT_END_STR) ||
+            node->val.punct == PUNCT_END_STR) ||
            (node->type == NODE_TYPE_PUNCT &&
-            node->value.punct == PUNCT_NEXT_STR))
+            node->val.punct == PUNCT_NEXT_STR))
         node = node + 1;
 
     return node;

@@ -22,7 +22,7 @@ const SystemSyntaxWord_t ALL_SYSTEM_WORD[] =
     {"=",           NODE_TYPE_KEY_WORD,     KEY_ASSIGN},
     {"err",         NODE_TYPE_KEY_WORD,     KEY_BREAK},
     {"in",          NODE_TYPE_KEY_WORD,     KEY_IN},
-    {"out",         NODE_TYPE_KEY_WORD,     KEY_OUT}
+    {"out",         NODE_TYPE_KEY_WORD,     KEY_OUT},
 };
 // ---------------------------------------------------------------------------------------------------
 
@@ -34,11 +34,12 @@ const SystemSyntaxWord_t ALL_PUNCT_WORD[] =
     {")",           NODE_TYPE_PUNCT,        PUNCT_RIGHT_ROUND},
     // {"{",           NODE_TYPE_PUNCT,        PUNCT_LEFT_FIGURE},
     // {"}",           NODE_TYPE_PUNCT,        PUNCT_RIGHT_FIGURE},
-    {"|",          NODE_TYPE_PUNCT,         PUNCT_NEXT_STR},
+    {"|",           NODE_TYPE_PUNCT,        PUNCT_END_STR},
     {"\\",          NODE_TYPE_PUNCT,        PUNCT_NEXT_STR},
     {"\n",          NODE_TYPE_PUNCT,        PUNCT_END_STR},
     {"@",           NODE_TYPE_PUNCT,        PUNCT_DOG},
-    {"#",           NODE_TYPE_PUNCT,        PUNCT_H},
+    {"*",           NODE_TYPE_PUNCT,        PUNCT_UNNAME},
+    {"&",           NODE_TYPE_PUNCT,        PUNCT_NAME},
     {"\"",          NODE_TYPE_PUNCT,        PUNCT_QUOT},
     {"<",           NODE_TYPE_PUNCT,        PUNCT_LEFT_TANG},
     {">",           NODE_TYPE_PUNCT,        PUNCT_RIGHT_TANG}
