@@ -1,0 +1,19 @@
+ser fact <num>
+(
+    tr <num >> 1>
+    (
+        num = num * fact <num - 1>
+    )
+    def
+    (
+        ret 1
+    )
+    ret num
+)
+
+al num = 0
+num = 4
+in <num>
+out < fact <num> >
+$
+

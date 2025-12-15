@@ -61,16 +61,15 @@ enum Punct_t
     PUNCT_COMMA,
     PUNCT_LEFT_ROUND,
     PUNCT_RIGHT_ROUND,
-    PUNCT_LEFT_FIGURE,
-    PUNCT_RIGHT_FIGURE,
     PUNCT_END_TREE_STR,
     PUNCT_NEXT_STR,
     PUNCT_DOG,
-    PUNCT_H,
     PUNCT_QUOT,
     PUNCT_END_STR,
     PUNCT_LEFT_TANG,
     PUNCT_RIGHT_TANG,
+    PUNCT_UNNAME,
+    PUNCT_NAME
 };
 // ---------------------------------------------------------------------------------------------------
 

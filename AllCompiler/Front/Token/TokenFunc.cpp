@@ -75,23 +75,24 @@ Status_t tokenPunct (TokenContextInf_t* inf,
     Node_t node = {
         .type = NODE_TYPE_PUNCT,
         .parent = NULL,
-        .amount_children = 0,
         .children = NULL,
+        .amount_children = 0,
     };
 
     switch (**inf->pose)
     {
-        case ',':  { node.value.punct = PUNCT_COMMA; break; }
-        case '(':  { node.value.punct = PUNCT_LEFT_ROUND; break; }
-        case ')':  { node.value.punct = PUNCT_RIGHT_ROUND; break; }
-        case '\\': { node.value.punct = PUNCT_NEXT_STR; break; }
-        case '\n': { node.value.punct = PUNCT_END_STR; break; }
-        case '@':  { node.value.punct = PUNCT_DOG; break; }
-        case '#':  { node.value.punct = PUNCT_H; break; }
-        case '\"': { node.value.punct = PUNCT_QUOT; break; }
-        case '<':  { node.value.punct = PUNCT_LEFT_TANG; break; }
-        case '>':  { node.value.punct = PUNCT_RIGHT_TANG; break; }
-        case '~':  { node.value.punct = PUNCT_END_STR; break; }
+        case ',':  { node.val.punct = PUNCT_COMMA; break; }
+        case '\\': { node.val.punct = PUNCT_NEXT_STR; break; }
+        case '\n': { node.val.punct = PUNCT_END_STR; break; }
+        case '|':  { node.val.punct = PUNCT_END_STR; break; }
+        case '(':  { node.val.punct = PUNCT_LEFT_ROUND; break; }
+        case '<':  { node.val.punct = PUNCT_LEFT_TANG; break; }
+        case ')':  { node.val.punct = PUNCT_RIGHT_ROUND; break; }
+        case '>':  { node.val.punct = PUNCT_RIGHT_TANG; break; }
+        case '@':  { node.val.punct = PUNCT_DOG; break; }
+        case '\"': { node.val.punct = PUNCT_QUOT; break; }
+        case '#':  { node.val.punct = PUNCT_UNNAME; break; }
+        case '^':  { node.val.punct = PUNCT_NAME; break; }
         default: { return PARSER_NOT_THIS; }
     }
 
@@ -119,10 +120,10 @@ Status_t tokenNum (TokenContextInf_t* inf,
     Node_t node = {
         .type = NODE_TYPE_NUM,
         .parent = NULL,
-        .amount_children = 0,
         .children = NULL,
-        .value = {.num = value}
+        .amount_children = 0
     };
+    node.val.num = value;
     vectorAdd (vector, node);
 
     *(inf->pose) += len;
@@ -156,10 +157,10 @@ Status_t tokenIndent (TokenContextInf_t* inf,
     Node_t node = {
         .type = NODE_TYPE_INDENT,
         .parent = NULL,
-        .amount_children = 0,
         .children = NULL,
-        .value = {.name = name }
+        .amount_children = 0,
     };
+    node.val.func.name = name;
     vectorAdd (vector, node);
 
     *str += len;
@@ -189,8 +190,8 @@ Status_t tokenKeyWord (TokenContextInf_t* inf,
     Node_t node = {
         .type = NODE_TYPE_KEY_WORD,
         .parent = NULL,
-        .amount_children = 0,
         .children = NULL,
+        .amount_children = 0,
     };
 
     bool is_real = false;
@@ -198,7 +199,7 @@ Status_t tokenKeyWord (TokenContextInf_t* inf,
     {
         if (strcmp (ALL_SYSTEM_WORD[i].name, buffer) == 0)
         {
-            node.value.key = ALL_SYSTEM_WORD[i].value;
+            node.val.key = ALL_SYSTEM_WORD[i].value;
             is_real = true;
             break;
         }
@@ -244,8 +245,8 @@ Status_t tokenMathOper (TokenContextInf_t* inf,
     Node_t node = {
         .type = NODE_TYPE_OPER,
         .parent = NULL,
+        .children = NULL,
         .amount_children = 0,
-        .children = NULL
     };
 
     bool is_real = false;
@@ -253,7 +254,7 @@ Status_t tokenMathOper (TokenContextInf_t* inf,
     {
         if (strcmp (ALL_OPER_WORD[i].name, buffer) == 0)
         {
-            node.value.oper = ALL_OPER_WORD[i].value;
+            node.val.oper = ALL_OPER_WORD[i].value;
             is_real = true;
         }
     }
@@ -288,14 +289,14 @@ int tokenOneDump (Node_t* node)
     assert (node);
 
     printf ("[%d]<", node->type);
-    if (node->type == NODE_TYPE_INDENT)
-        printf ("%s", node->value.name);
+    if (node->type == NODE_TYPE_INDENT || node->type == NODE_TYPE_VAR || node->type == NODE_TYPE_FUNC)
+        printf ("%s", node->val.func.name);
 
     else if (node->type == NODE_TYPE_OPER)
     {
         for (size_t i = 0; i < sizeof (ALL_OPER_WORD) / sizeof (ALL_OPER_WORD[0]); i++)
         {
-            if (node->value.oper == ALL_OPER_WORD[i].value)
+            if (node->val.oper == ALL_OPER_WORD[i].value)
                 printf ("%s", ALL_OPER_WORD[i].name);
         }
     }
@@ -303,7 +304,7 @@ int tokenOneDump (Node_t* node)
     {
         for (size_t i = 0; i < sizeof (ALL_SYSTEM_WORD) / sizeof (ALL_SYSTEM_WORD[0]); i++)
         {
-            if (node->value.key == ALL_SYSTEM_WORD[i].value)
+            if (node->val.key == ALL_SYSTEM_WORD[i].value)
                 printf ("%s", ALL_SYSTEM_WORD[i].name);
         }
     }
@@ -311,12 +312,12 @@ int tokenOneDump (Node_t* node)
     {
         for (size_t i = 0; i < sizeof (ALL_PUNCT_WORD) / sizeof (ALL_PUNCT_WORD[0]); i++)
         {
-            if (node->value.punct == ALL_PUNCT_WORD[i].value)
+            if (node->val.punct == ALL_PUNCT_WORD[i].value)
                 printf ("%s", ALL_PUNCT_WORD[i].name);
         }
     }
     else if (node->type == NODE_TYPE_NUM)
-        printf ("%d", node->value.num);
+        printf ("%d", node->val.num);
     else
         printf ("block");
 
@@ -333,14 +334,14 @@ int tokenOneDump (Node_t* node, const char* reason)
     assert (reason);
 
     printf ("[%d]<", node->type);
-    if (node->type == NODE_TYPE_INDENT)
-        printf ("%s", node->value.name);
+    if (node->type == NODE_TYPE_INDENT || node->type == NODE_TYPE_VAR || node->type == NODE_TYPE_FUNC)
+        printf ("%s", node->val.func.name);
 
     else if (node->type == NODE_TYPE_OPER)
     {
         for (size_t i = 0; i < sizeof (ALL_OPER_WORD) / sizeof (ALL_OPER_WORD[0]); i++)
         {
-            if (node->value.oper == ALL_OPER_WORD[i].value)
+            if (node->val.oper == ALL_OPER_WORD[i].value)
                 printf ("%s", ALL_OPER_WORD[i].name);
         }
     }
@@ -348,7 +349,7 @@ int tokenOneDump (Node_t* node, const char* reason)
     {
         for (size_t i = 0; i < sizeof (ALL_SYSTEM_WORD) / sizeof (ALL_SYSTEM_WORD[0]); i++)
         {
-            if (node->value.key == ALL_SYSTEM_WORD[i].value)
+            if (node->val.key == ALL_SYSTEM_WORD[i].value)
                 printf ("%s", ALL_SYSTEM_WORD[i].name);
         }
     }
@@ -356,12 +357,12 @@ int tokenOneDump (Node_t* node, const char* reason)
     {
         for (size_t i = 0; i < sizeof (ALL_PUNCT_WORD) / sizeof (ALL_PUNCT_WORD[0]); i++)
         {
-            if (node->value.punct == ALL_PUNCT_WORD[i].value)
+            if (node->val.punct == ALL_PUNCT_WORD[i].value)
                 printf ("%s", ALL_PUNCT_WORD[i].name);
         }
     }
     else if (node->type == NODE_TYPE_NUM)
-        printf ("%d", node->value.num);
+        printf ("%d", node->val.num);
     else
         printf ("block");
 
