@@ -75,7 +75,8 @@ PROC_ASM_DOP_CPP = Proc/PROCESSOR/processor.cpp Proc/PROCESSOR/proc-func.cpp \
 DUMP_CPP = 		AllCompiler/Sup/DumpCode/DumpFunc.cpp
 TABLE_CPP = 	AllCompiler/Struct/NameTable/NameTableFunc.cpp
 PARSER_CPP = 	AllCompiler/Front/Parser/ParserFunc.cpp \
-				AllCompiler/Front/Parser/WriteTreeFunc.cpp
+				AllCompiler/Front/Parser/WriteTreeFunc.cpp \
+				AllCompiler/Front/Parser/WriteCode.cpp
 SUPPORT_CPP = 	AllCompiler/Sup/Support/Support.cpp \
 				AllCompiler/Sup/Common/NodeFunc.cpp
 TOKEN_CPP = 	AllCompiler/Front/Token/TokenFunc.cpp

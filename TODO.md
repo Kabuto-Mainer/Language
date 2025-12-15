@@ -21,3 +21,6 @@
 ## 5. Strings
 - **Note**: Strings implement as specialized massive (arrays) under the hood.
 - **Declaration**: `als str = "something"` allocates and initializes a string variable.
+
+## 6. Comments
+- **Syntax**: String `# Something ` will be skipped in parsing code
