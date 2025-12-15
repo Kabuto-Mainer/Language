@@ -115,11 +115,11 @@ int vectorDtrToken (VectorVar_t* token)
          token->type == NODE_TYPE_VAR ||
          token->type == NODE_TYPE_FUNC ||
          token->type == NODE_TYPE_BLOCK) &
-         (token->value.name != NULL))
+         (token->val.name != NULL))
     {
-        // printf ("STR: %s\n", token->value.name);
-        free (token->value.name);
+        free (token->val.name);
     }
+    // if ((token.))
 
     if (token->children != NULL)
         free (token->children);

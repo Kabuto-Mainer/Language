@@ -198,7 +198,7 @@ int printFullBlock (Node_t* node,
     char type[20] = "";
     char color[10] = "";
     char label[40] = "";
-    char func_ret_value[200] = "";
+    char func_ret_value[400] = "";
 
     if (node->type == NODE_TYPE_FUNC)
     {
@@ -208,12 +208,12 @@ int printFullBlock (Node_t* node,
 
         if (node->val.func.ret_type != NULL)
         {
-            sprintf (func_ret_value, "<TR><TD BGCOLOR=\"#386de7ff\""
-                     "COMSPAN=\"1\" TYPE RETURN VALUE</TD>"
-                     "<TD BGCOLOR=\"#386de7ff\" COMSPAN=\"1\"%s</TD></TR>\n"
-                     "<TR><TD BGCOLOR=\"#386de7ff\""
-                     "COMSPAN=\"1\" POINT LEVEL </TD>"
-                     "<TD BGCOLOR=\"#386de7ff\" COMSPAN=\"1\"%d</TD></TR>\n",
+            sprintf (func_ret_value, "<TR><TD BGCOLOR=\"#386de7ff\" "
+                     "COLSPAN=\"1\">TYPE RETURN VALUE</TD>"
+                     "<TD BGCOLOR=\"#386de7ff\" COLSPAN=\"1\">%s</TD></TR>\n"
+                     "<TR><TD BGCOLOR=\"#386de7ff\" "
+                     "COLSPAN=\"1\">POINT LEVEL </TD>"
+                     "<TD BGCOLOR=\"#386de7ff\" COLSPAN=\"1\">%d</TD></TR>\n",
                      node->val.func.ret_type, node->val.func.ret_point_level);
             // sprintf (func_ret_value, "<TR><TD BGCOLOR=\"#386de7ff\""
             //          "COMSPAN=\"1\" POINT LEVEL </TD>"
@@ -235,12 +235,12 @@ int printFullBlock (Node_t* node,
 
         if (node->val.var.type != NULL)
         {
-            sprintf (func_ret_value, "<TR><TD BGCOLOR=\"#386de7ff\""
-                     "COMSPAN=\"1\" TYPE VAR</TD>"
-                     "<TD BGCOLOR=\"#386de7ff\" COMSPAN=\"1\"%s</TD></TR>\n"
-                     "<TR><TD BGCOLOR=\"#386de7ff\""
-                     "COMSPAN=\"1\" POINT LEVEL </TD>"
-                     "<TD BGCOLOR=\"#386de7ff\" COMSPAN=\"1\"%d</TD></TR>\n",
+            sprintf (func_ret_value, "<TR><TD BGCOLOR=\"#386de7ff\" "
+                     "COLSPAN=\"1\">TYPE VAR</TD>"
+                     "<TD BGCOLOR=\"#386de7ff\" COLSPAN=\"1\">%s</TD></TR>\n"
+                     "<TR><TD BGCOLOR=\"#386de7ff\" "
+                     "COLSPAN=\"1\">POINT LEVEL </TD>"
+                     "<TD BGCOLOR=\"#386de7ff\" COLSPAN=\"1\">%d</TD></TR>\n",
                      node->val.var.type, node->val.var.point_level);
         }
     }
@@ -419,7 +419,7 @@ int dumpNode (Node_t* node)
     {
         printf ("    %p\n", node->children[i]);
     }
-    printf ("Type: %d\nValue: %d\n", node->type, node->value.num);
+    printf ("Type: %d\nValue: %d\n", node->type, node->val.num);
     return 0;
 }
 // -------------------------------------------------------------------------------------------------------

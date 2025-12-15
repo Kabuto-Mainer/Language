@@ -442,7 +442,6 @@ Status_t parserDeclarationFunc (ParserContextInf_t* inf,
     nextNode (inf);
     skipCharNext (inf);
 
-    // tokenOneDump (inf->node, "Before checking arguments");
     if (inf->node->type != NODE_TYPE_INDENT ||
         !isLeftTang (getNextNotEndNode (inf)))
         SYNTAX_ERROR (inf, PE_NOT_INDENT);
@@ -522,7 +521,7 @@ Status_t parserDeclarationFunc (ParserContextInf_t* inf,
     nextNode (inf);
     skipVoid (inf);
     nextNode (inf);
-    nextNode (inf);
+    skipVoid (inf);
 
     int point_level = 0;
     if (inf->node->type == NODE_TYPE_PUNCT &&
@@ -548,7 +547,8 @@ Status_t parserDeclarationFunc (ParserContextInf_t* inf,
     nextNode (inf);
     skipVoid (inf);
 
-    if (!isRightRound (inf->node) && !isEndChar (inf->node))
+    // tokenOneDump (inf->node, "Before checking arguments");
+    if (!isLeftRound (inf->node) && !isEndChar (inf->node))
         SYNTAX_ERROR (inf, PE_NOT_RIGHT_ROUND);
 
     skipVoid (inf);
@@ -585,20 +585,23 @@ Status_t parserDeclarationVar (ParserContextInf_t* inf,
     Node_t* ext = inf->node;
     nextNode (inf);
     skipVoid (inf);
+    // printf ("VAL: %d\n", inf->node->val.punct);
 
     int point_level = 0;
-    if (node->type == NODE_TYPE_PUNCT &&
-        node->val.punct == PUNCT_NAME)
+    if (inf->node->type == NODE_TYPE_PUNCT &&
+        inf->node->val.punct == PUNCT_NAME)
     {
         while (true)
         {
             point_level++;
+            nextNode (inf);
             skipVoid (inf);
             if (node->type != NODE_TYPE_PUNCT ||
                 node->val.punct != PUNCT_NAME)
                 break;
         }
     }
+    // tokenOneDump (inf->node, "HHH");`
     if (inf->node->type != NODE_TYPE_INDENT)
         SYNTAX_ERROR (inf, PE_NOT_INDENT);
 
@@ -615,7 +618,9 @@ Status_t parserDeclarationVar (ParserContextInf_t* inf,
     indent->type = NODE_TYPE_VAR;
 
     nextNode (inf);
-    skipVoid (inf);
+    skipCharNext (inf);
+
+
     if (inf->node->type == NODE_TYPE_KEY_WORD &&
         inf->node->val.key == KEY_ASSIGN)
     {
@@ -787,6 +792,9 @@ Status_t parserValue (ParserContextInf_t* inf,
     assert (inf);
     assert (node);
 
+    if (parserNameOper (inf, node) == PARSER_THIS_OK)
+        return PARSER_THIS_OK;
+
     if (isLeftRound (inf->node))
     {
         nextNode (inf);
@@ -943,6 +951,46 @@ Status_t parserNumber (ParserContextInf_t* inf,
 }
 // ---------------------------------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------------------------------
+/**
+ @brief Функция считывания операций по взятию и разыменованию адресов
+ @param [in] inf Указатель на структуру с текущим положением
+ @param [in] node Указатель на родителя поддерева
+ @return PARSER_THIS_OK - если все нормально и это нужное место
+         PARSER_NOT_THIS - если это не то место
+         PARSER_ERROR - если произошла ошибка
+*/
+Status_t parserNameOper (ParserContextInf_t* inf,
+                         Node_t* parent)
+{
+    assert (inf);
+    assert (parent);
+
+    if ((inf->node->type != NODE_TYPE_OPER ||
+         inf->node->val.oper != OPER_MUL) &&
+        (inf->node->type != NODE_TYPE_PUNCT ||
+         inf->node->val.punct != PUNCT_NAME))
+        return PARSER_NOT_THIS;
+
+    Node_t* nameOper = inf->node;
+    nameOper->type = NODE_TYPE_KEY_WORD;
+    addNode (parent, nameOper);
+
+    if (inf->node->type == NODE_TYPE_OPER)
+        nameOper->val.key = KEY_UNNAME;
+    else
+        nameOper->val.key = KEY_NAME;
+
+    nextNode (inf);
+    skipVoid (inf);
+
+    if (parserValue (inf, nameOper) != PARSER_THIS_OK)
+        SYNTAX_ERROR (inf, PE_NOT_EXPRESION);
+
+    return PARSER_THIS_OK;
+}
+// ---------------------------------------------------------------------------------------------------
+
 
 
 // ---------------------------------------------------------------------------------------------------
@@ -984,6 +1032,7 @@ int nextNode (ParserContextInf_t* inf)
 
     if (inf->cur_index == inf->capacity - 1)
         return 1;
+    // tokenOneDump (inf->node, "Bla Bla Bla");
 
     if (inf->node->type == NODE_TYPE_PUNCT &&
         inf->node->val.punct == PUNCT_END_STR)
@@ -1160,6 +1209,14 @@ int parserError (ParserError_t error,
 
         case PE_NOT_INDENT:
             printf ("Expected identifier but found something else");
+            break;
+
+        case PE_NOT_RETURN_VALUE:
+            printf ("Missing return value of function");
+            break;
+
+        case PE_NOT_TYPE:
+            printf ("Missing type of variable");
             break;
 
         case PE_NOT_ERROR:

@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-
+/*
 #include "NameTableFunc.h"
 #include "SupportFunc.h"
 #include "VectorFunc.h"
@@ -225,3 +225,33 @@ void codeToCode (const char* name_input,
     return;
 }
 // ---------------------------------------------------------------------------------------------------
+*/
+
+// #include "NameTableFunc.h"
+#include "SupportFunc.h"
+#include "VectorFunc.h"
+#include "TokenFunc.h"
+#include "ParserFunc.h"
+#include "DumpFunc.h"
+// #include "WriteTree.h"
+#include "NodeFunc.h"
+// #include "ParseTree.h"
+// #include "CompilerFunc.h"
+// #include "WriteCode.h"
+
+int main ()
+{
+    char* buffer = createCharBuffer ("prog.txt");
+    TokenVector_t vector = {};
+    vectorCtr (&vector);
+    tokenGlobal (buffer, &vector);
+    tokenDump (&vector);
+
+    Node_t* root = newNode ();
+    root->type = NODE_TYPE_BLOCK;
+    root->val.name = strdup ("main block");
+    parserGlobal (vector.data, vector.size, root, "prog.txt");
+    treeDump (root, "Read AST-tree before convert to Code");
+
+    return 0;
+}

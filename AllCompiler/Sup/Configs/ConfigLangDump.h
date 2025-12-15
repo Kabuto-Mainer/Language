@@ -22,7 +22,9 @@ const SystemSyntaxWord_t ALL_SYSTEM_WORD[] =
     {"=",           NODE_TYPE_KEY_WORD,     KEY_ASSIGN},
     {"break",       NODE_TYPE_KEY_WORD,     KEY_BREAK},
     {"in",          NODE_TYPE_KEY_WORD,     KEY_IN},
-    {"out",         NODE_TYPE_KEY_WORD,     KEY_OUT}
+    {"out",         NODE_TYPE_KEY_WORD,     KEY_OUT},
+    {"bring adr",   NODE_TYPE_KEY_WORD,     KEY_NAME},
+    {"unname adr",  NODE_TYPE_KEY_WORD,     KEY_UNNAME},
 };
 // ---------------------------------------------------------------------------------------------------
 
@@ -38,7 +40,7 @@ const SystemSyntaxWord_t ALL_PUNCT_WORD[] =
     {"\\",          NODE_TYPE_PUNCT,        PUNCT_NEXT_STR},
     {"\n",          NODE_TYPE_PUNCT,        PUNCT_END_STR},
     {"@",           NODE_TYPE_PUNCT,        PUNCT_DOG},
-    {"#",           NODE_TYPE_PUNCT,        PUNCT_H},
+    // {"#",           NODE_TYPE_PUNCT,        PUNCT_H},
     {"&quot;",      NODE_TYPE_PUNCT,        PUNCT_QUOT},
     {"&lt;",        NODE_TYPE_PUNCT,        PUNCT_LEFT_TANG},
     {"&gt;",        NODE_TYPE_PUNCT,        PUNCT_RIGHT_TANG}

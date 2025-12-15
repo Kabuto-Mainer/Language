@@ -97,17 +97,17 @@ void writeValue (Node_t* node,
 
     fprintf (stream, "(");
     if (node->type == NODE_TYPE_VAR)
-        fprintf (stream, "var:%s", node->value.name);
+        fprintf (stream, "var:%s", node->val.name);
     else if (node->type == NODE_TYPE_NUM)
-        fprintf (stream, "num:%d", node->value.num);
+        fprintf (stream, "num:%d", node->val.num);
     else if (node->type == NODE_TYPE_FUNC)
-        fprintf (stream, "func:%s", node->value.name);
+        fprintf (stream, "func:%s", node->val.name);
     else if (node->type == NODE_TYPE_KEY_WORD)
     {
         fprintf (stream, "key:");
         for (size_t i = 0; i < sizeof (ALL_SYSTEM_WORD) / sizeof (ALL_SYSTEM_WORD[0]); i++)
         {
-            if (ALL_SYSTEM_WORD[i].value == node->value.key)
+            if (ALL_SYSTEM_WORD[i].value == node->val.key)
             {
                 fprintf (stream, "%s", ALL_SYSTEM_WORD[i].name);
                 break;
@@ -119,7 +119,7 @@ void writeValue (Node_t* node,
         fprintf (stream, "oper:");
         for (size_t i = 0; i < sizeof (ALL_OPER_WORD) / sizeof (ALL_OPER_WORD[0]); i++)
         {
-            if (ALL_OPER_WORD[i].value == node->value.oper)
+            if (ALL_OPER_WORD[i].value == node->val.oper)
             {
                 fprintf (stream, "%s", ALL_OPER_WORD[i].name);
                 break;

@@ -79,6 +79,15 @@ Status_t tokenPunct (TokenContextInf_t* inf,
         .amount_children = 0,
     };
 
+    if (**inf->pose == '-' &&
+        *(*inf->pose + 1) == '>')
+    {
+        node.val.oper = OPER_SUB;
+        node.type = NODE_TYPE_OPER;
+        ++ *inf->pose;
+        vectorAdd (vector, node);
+        return PARSER_THIS_OK;
+    }
     switch (**inf->pose)
     {
         case ',':  { node.val.punct = PUNCT_COMMA; break; }
@@ -91,8 +100,8 @@ Status_t tokenPunct (TokenContextInf_t* inf,
         case '>':  { node.val.punct = PUNCT_RIGHT_TANG; break; }
         case '@':  { node.val.punct = PUNCT_DOG; break; }
         case '\"': { node.val.punct = PUNCT_QUOT; break; }
-        case '#':  { node.val.punct = PUNCT_UNNAME; break; }
-        case '^':  { node.val.punct = PUNCT_NAME; break; }
+        case '*':  { node.val.oper = OPER_MUL; node.type = NODE_TYPE_OPER; break; }
+        case '&':  { node.val.punct = PUNCT_NAME; break; }
         default: { return PARSER_NOT_THIS; }
     }
 
@@ -221,6 +230,7 @@ Status_t tokenMathOper (TokenContextInf_t* inf,
     assert (inf);
     assert (vector);
 
+    // printf ("STR in math: %s\n", *inf->pose);
     size_t len = 0;
     char* str = *(inf->pose);
     char buffer[MAX_TOKEN_LEN] = "";

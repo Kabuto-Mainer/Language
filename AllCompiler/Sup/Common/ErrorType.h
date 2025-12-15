@@ -29,7 +29,9 @@ enum ParserError_t
 
     PE_NOT_UNION,
     PE_NOT_EXPRESION,
-    PE_NOT_INDENT
+    PE_NOT_INDENT,
+    PE_NOT_RETURN_VALUE,
+    PE_NOT_TYPE
 };
 // ---------------------------------------------------------------------------------------------------
 
