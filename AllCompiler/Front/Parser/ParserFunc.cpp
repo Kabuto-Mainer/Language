@@ -45,7 +45,6 @@ Status_t parserGlobal (Node_t* start_node,
 
     while (inf.cur_index < inf.capacity)
     {
-        // printf ("sdbfjsbdfhsbdjfhbsjdhb\n");
         skipVoid (&inf);
         if (parserDeclarationFunc (&inf, global_node) == PARSER_THIS_OK)
             continue;
@@ -107,7 +106,7 @@ Status_t parserUnion (ParserContextInf_t* inf,
 
     Node_t* block = inf->node;
     block->type = NODE_TYPE_BLOCK;
-    block->value.name = NULL;
+    block->val.name = NULL;
     addNode (node, block);
     nextNode (inf);
 
@@ -167,8 +166,8 @@ Status_t parserInOut (ParserContextInf_t* inf,
     assert (parent);
 
     if (inf->node->type != NODE_TYPE_KEY_WORD ||
-        (inf->node->value.key != KEY_IN &&
-         inf->node->value.key != KEY_OUT))
+        (inf->node->val.key != KEY_IN &&
+         inf->node->val.key != KEY_OUT))
         return PARSER_NOT_THIS;
 
     Node_t* node_key = inf->node;
@@ -181,7 +180,7 @@ Status_t parserInOut (ParserContextInf_t* inf,
     nextNode (inf);
     skipVoid (inf);
 
-    if (node_key->value.key == KEY_IN)
+    if (node_key->val.key == KEY_IN)
     {
         if (inf->node->type != NODE_TYPE_INDENT)
             SYNTAX_ERROR (inf, PE_NOT_INDENT);
@@ -226,10 +225,10 @@ Status_t parserCondOper (ParserContextInf_t* inf,
     assert (node);
 
     if (inf->node->type != NODE_TYPE_KEY_WORD ||
-       (inf->node->value.key != KEY_IF &&
-        inf->node->value.key != KEY_ELSE_IF &&
-        inf->node->value.key != KEY_ELSE &&
-        inf->node->value.key != KEY_WHILE))
+       (inf->node->val.key != KEY_IF &&
+        inf->node->val.key != KEY_ELSE_IF &&
+        inf->node->val.key != KEY_ELSE &&
+        inf->node->val.key != KEY_WHILE))
         return PARSER_NOT_THIS;
 
     Node_t* cond_node = inf->node;
@@ -237,7 +236,7 @@ Status_t parserCondOper (ParserContextInf_t* inf,
     nextNode (inf);
     skipVoid (inf);
 
-    if (cond_node->value.key != KEY_ELSE)
+    if (cond_node->val.key != KEY_ELSE)
     {
         if (!isLeftTang (inf->node))
             SYNTAX_ERROR (inf, PE_NOT_LEFT_TANG);
@@ -283,7 +282,7 @@ Status_t parserAssign (ParserContextInf_t* inf,
     skipVoid (inf);
 
     if (inf->node->type == NODE_TYPE_KEY_WORD &&
-        inf->node->value.key == KEY_ASSIGN)
+        inf->node->val.key == KEY_ASSIGN)
     {
         Node_t* assign = inf->node;
         addNode (node, assign);
@@ -325,7 +324,7 @@ Status_t parserReturn (ParserContextInf_t* inf,
     assert (node);
 
     if (inf->node->type != NODE_TYPE_KEY_WORD ||
-        inf->node->value.key != KEY_RETURN)
+        inf->node->val.key != KEY_RETURN)
         return PARSER_NOT_THIS;
 
     Node_t* ret_node = inf->node;
@@ -863,6 +862,9 @@ Status_t parserCallFunc (ParserContextInf_t* inf,
     Node_t* node_func = inf->node;
     addNode (parent, node_func);
     node_func->type = NODE_TYPE_FUNC;
+    node_func->val.func.name = node_func->val.name;
+    node_func->val.func.ret_type = NULL;
+
     nextNode (inf);
     nextNode (inf); // Skip '<'
 
