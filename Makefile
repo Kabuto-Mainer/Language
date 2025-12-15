@@ -175,7 +175,10 @@ clean:
 gitcom:
 	@echo "========================================================================"
 	@echo "Git: добавление файлов..."
-	git add ASSEMBLER/ BIN/ COMMON/ DISASSEMBLER/ PROCESSOR/ Makefile myasm/ TEST/ LIST/ LIST-COMMON/ TREE/ Sup/ Struct/ Front/ Back/ System/ main.cpp
+	git add Proc/ASSEMBLER/ Proc/BIN/ Proc/COMMON/ Proc/PROCESSOR/ Proc/Makefile \
+			AllCompiler/Back/ AllCompiler/Front/ AllCompiler/Struct/ \
+			AllCompiler/Sup/ AllCompiler/System AllCompiler/main.cpp \
+			kbt Makefile TODO.md program.txt
 	@echo "Git: коммит с сообщением '$(m)'..."
 	git commit -m "$(m)"
 	@echo "Git: отправка на сервер..."

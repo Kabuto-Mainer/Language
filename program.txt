@@ -12,6 +12,7 @@ ser fact <num>
 )
 
 al num = 0
+num = 4
 in <num>
 out < fact <num> >
 $
