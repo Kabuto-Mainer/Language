@@ -179,7 +179,7 @@ gitcom:
 	git add Proc/ASSEMBLER/ Proc/BIN/ Proc/COMMON/ Proc/PROCESSOR/ Proc/Makefile \
 			AllCompiler/Back/ AllCompiler/Front/ AllCompiler/Struct/ \
 			AllCompiler/Sup/ AllCompiler/System AllCompiler/main.cpp \
-			kbt Makefile TODO.md program.txt
+			kbt Makefile program.txt
 	@echo "Git: коммит с сообщением '$(m)'..."
 	git commit -m "$(m)"
 	@echo "Git: отправка на сервер..."

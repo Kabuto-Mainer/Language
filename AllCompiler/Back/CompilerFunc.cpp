@@ -375,7 +375,7 @@ CompilerStatus_t compilerWhile (CompilerContextInf_t* inf,
 
     int number_while = inf->free_point++;
     int number_end = inf->free_point++;
-    printAsm (inf, ":while%d\n", number_while);
+    printAsm (inf, "\n:while%d\n", number_while);
     if (compilerExpresion (inf, node_while->children[0]) != CMP_THIS_OK)
         COMPILER_ERROR (inf, CE_EXPRESION, CMP_ERROR);
 
@@ -388,7 +388,7 @@ CompilerStatus_t compilerWhile (CompilerContextInf_t* inf,
 
     StackPop (inf->num_while);
     printAsm (inf, "JMP :while%d\n", number_while);
-    printAsm (inf, ":while%d\n", number_end);
+    printAsm (inf, "\n:while%d\n", number_end);
     return CMP_THIS_OK;
 }
 // --------------------------------------------------------------------------------------------------
@@ -454,7 +454,7 @@ CompilerStatus_t compilerElseIf (CompilerContextInf_t* inf,
     if (compilerExpresion (inf, node_cond->children[0]) != CMP_THIS_OK)
         COMPILER_ERROR (inf, CE_EXPRESION, CMP_ERROR);
 
-    printAsm (inf, "PUSH 0");
+    printAsm (inf, "PUSH 0\n");
 
     int number_else = inf->free_point++;
     printAsm (inf, "JE :cond%d\n", number_else);
@@ -463,7 +463,7 @@ CompilerStatus_t compilerElseIf (CompilerContextInf_t* inf,
         COMPILER_ERROR (inf, CE_BLOCK, CMP_ERROR);
 
     printAsm (inf, "JMP :cond%d\n", number_end);
-    printAsm (inf, ":cond%d", number_else);
+    printAsm (inf, ":cond%d\n", number_else);
 
     return CMP_THIS_OK;
 }
