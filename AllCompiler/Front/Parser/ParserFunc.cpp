@@ -474,7 +474,7 @@ Status_t parserDeclarationFunc (ParserContextInf_t* inf,
         SYNTAX_ERROR (inf, PE_NOT_RIGHT_TANG);
     nextNode (inf);
 
-    if (!isRightRound (inf->node) && !isEndChar (inf->node))
+    if (!isLeftRound (inf->node) && !isEndChar (inf->node))
         SYNTAX_ERROR (inf, PE_NOT_RIGHT_ROUND);
 
     skipVoid (inf);

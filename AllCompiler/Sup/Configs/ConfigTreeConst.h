@@ -16,7 +16,7 @@ const char ADDRESS_TREE_FILE[] = "Data/tree.txt";
 // ---------------------------------------------------------------------------------------------------
 const SystemSyntaxWord_t ALL_SYSTEM_WORD[] =
 {
-    {"int",         NODE_TYPE_KEY_WORD,     KEY_DEFINE_VAR},
+    {"al",          NODE_TYPE_KEY_WORD,     KEY_DEFINE_VAR},
     {"func",        NODE_TYPE_KEY_WORD,     KEY_DEFINE_FUNC},
     {"if",          NODE_TYPE_KEY_WORD,     KEY_IF},
     {"elif",        NODE_TYPE_KEY_WORD,     KEY_ELSE_IF},

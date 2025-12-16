@@ -8,11 +8,12 @@
 
 
 // ---------------------------------------------------------------------------------------------------
-void writeTree (Node_t* root)
+void writeTree (Node_t* root,
+                const char* name_file)
 {
     assert (root);
 
-    FILE* stream = fopen (ADDRESS_TREE_FILE, "w");
+    FILE* stream = fopen (name_file, "w");
     if (stream == NULL)
     {
         Log_Error("NULL file");

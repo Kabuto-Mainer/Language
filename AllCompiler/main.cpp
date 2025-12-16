@@ -158,7 +158,7 @@ void codeToAst (const char* name_input,
     parserGlobal (vector.data, vector.size, root, name_input);
 
     treeDump (root, "Read Code and covert to Tree before write Tree");
-    writeTree (root);
+    writeTree (root, name_tree);
 
     vectorDtr (&vector);
     free (buffer);
