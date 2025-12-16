@@ -22,7 +22,9 @@ const SystemSyntaxWord_t ALL_SYSTEM_WORD[] =
     {"=",           NODE_TYPE_KEY_WORD,     KEY_ASSIGN},
     {"err",         NODE_TYPE_KEY_WORD,     KEY_BREAK},
     {"in",          NODE_TYPE_KEY_WORD,     KEY_IN},
-    {"out",         NODE_TYPE_KEY_WORD,     KEY_OUT}
+    {"out",         NODE_TYPE_KEY_WORD,     KEY_OUT},
+    {"pxl",         NODE_TYPE_KEY_WORD,     KEY_PIXEL},
+    {"drw",         NODE_TYPE_KEY_WORD,     KEY_DRAW}
 };
 // ---------------------------------------------------------------------------------------------------
 

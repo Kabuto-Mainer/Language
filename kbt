@@ -107,12 +107,39 @@ main() {
             print_success "Код сохранен в ${BASENAME}.asm"
             ;;
 
+        -bs)
+            print_step "Запуск программы..."
+            echo "====================== ВЫВОД ПРОГРАММЫ ======================"
+            "$PROCESSOR" -InpFile="$INPUT_FILE"
+            echo "============================================================"
+            ;;
+
+        -ab)
+            print_step "Ассемблирование в бинарник..."
+            "$ASSEMBLER" -InpFile="$INPUT_FILE" -OutFile="${BASENAME}.bin" 2>/dev/null
+            print_success "Код сохранен в ${BASENAME}.bin"
+            ;;
+
+        -as)
+            print_step "1. Ассемблирование в бинарник..."
+            "$ASSEMBLER" -InpFile="$INPUT_FILE" -OutFile="${BASENAME}.bin" 2>/dev/null
+
+            print_step "2. Запуск программы..."
+            echo "====================== ВЫВОД ПРОГРАММЫ ======================"
+            "$PROCESSOR" -InpFile="${BASENAME}.bin"
+            echo "============================================================"
+
+            rm -f "${BASENAME}.bin"
+            print_success "Программа выполнена успешно"
+            ;;
+
+
         -all)
             TEMP_ASM="${BASENAME}_temp.asm"
             TEMP_BIN="${BASENAME}_temp.bin"
 
             print_step "1. Компиляция в ассемблер..."
-            "$COMPILER" "$INPUT_FILE" -ca "$TEMP_ASM" 2>/dev/null
+            "$COMPILER" "$INPUT_FILE" -ca "$TEMP_ASM" # 2>/dev/null
 
             print_step "2. Ассемблирование в бинарник..."
             "$ASSEMBLER" -InpFile="$TEMP_ASM" -OutFile="$TEMP_BIN" 2>/dev/null

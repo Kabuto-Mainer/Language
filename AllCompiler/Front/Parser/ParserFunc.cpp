@@ -75,6 +75,10 @@ Status_t parserGlobal (Node_t* start_node,
             continue;
         if (parserBreak (&inf, global_node) == PARSER_THIS_OK)
             continue;
+        if (parserPixel (&inf, global_node) == PARSER_THIS_OK)
+            continue;
+        if (parserDraw (&inf, global_node) == PARSER_THIS_OK)
+            continue;
 
         if (inf.cur_index == inf.capacity - 1)
             break;
@@ -139,6 +143,10 @@ Status_t parserUnion (ParserContextInf_t* inf,
         if (parserInOut (inf, block) == PARSER_THIS_OK)
             continue;
         if (parserBreak (inf, block) == PARSER_THIS_OK)
+            continue;
+        if (parserDraw (inf, block) == PARSER_THIS_OK)
+            continue;
+        if (parserPixel (inf, block) == PARSER_THIS_OK)
             continue;
 
         break;
@@ -840,6 +848,97 @@ Status_t parserNumber (ParserContextInf_t* inf,
     skipCharNext (inf);
 
     return PARSER_THIS_OK;
+}
+// ---------------------------------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------------------------------
+/**
+ @brief Функция считывания ключевого слова PIXEL
+ @param [in] inf Указатель на структуру с текущим положением
+ @param [in] node Указатель на родителя поддерева
+ @return PARSER_THIS_OK - если все нормально и это нужное место
+         PARSER_NOT_THIS - если это не то место
+         PARSER_ERROR - если произошла ошибка
+*/
+Status_t parserPixel (ParserContextInf_t* inf,
+                      Node_t* parent)
+{
+    assert (inf);
+    assert (parent);
+
+    if (inf->node->type != NODE_TYPE_KEY_WORD ||
+        inf->node->value.key != KEY_PIXEL)
+        return PARSER_NOT_THIS;
+
+    Node_t* node_key = inf->node;
+    addNode (parent, node_key);
+    nextNode (inf);
+    skipVoid (inf);
+
+    if (!isLeftTang (inf->node))
+        SYNTAX_ERROR (inf, PE_NOT_LEFT_TANG);
+
+    nextNode (inf);
+    skipVoid (inf);
+
+    for (int i = 0; i < 2; i++)
+    {
+        if (parserExpresion (inf, node_key) != PARSER_THIS_OK)
+            SYNTAX_ERROR (inf, PE_NOT_EXPRESION);
+
+        if (!isComma (inf->node))
+            SYNTAX_ERROR (inf, PE_NOT_ERROR);
+        nextNode (inf);
+        skipVoid (inf);
+    }
+
+    if (parserExpresion (inf, node_key) != PARSER_THIS_OK)
+        SYNTAX_ERROR (inf, PE_NOT_EXPRESION);
+
+    // tokenOneDump (inf->node);
+    // nextNode (inf);
+    // skipVoid (inf);
+    if (!isRightTang (inf->node))
+        SYNTAX_ERROR (inf, PE_NOT_RIGHT_TANG);
+
+    nextNode (inf);
+    if (isEndChar (inf->node) || isRightRound (inf->node))
+    {
+        skipVoid (inf);
+        return PARSER_THIS_OK;
+    }
+    SYNTAX_ERROR (inf, PE_NO_END_CHAR);
+}
+// ---------------------------------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------------------------------
+/**
+ @brief Функция считывания ключевого слова DRAW
+ @param [in] inf Указатель на структуру с текущим положением
+ @param [in] node Указатель на родителя поддерева
+ @return PARSER_THIS_OK - если все нормально и это нужное место
+         PARSER_NOT_THIS - если это не то место
+         PARSER_ERROR - если произошла ошибка
+*/
+Status_t parserDraw (ParserContextInf_t* inf,
+                     Node_t* parent)
+{
+    assert (inf);
+    assert (parent);
+
+    if (inf->node->type != NODE_TYPE_KEY_WORD ||
+        inf->node->value.key != KEY_DRAW)
+        return PARSER_NOT_THIS;
+
+    addNode (parent, inf->node);
+    nextNode (inf);
+
+    if (isEndChar (inf->node) || isRightRound (inf->node))
+    {
+        skipVoid (inf);
+        return PARSER_THIS_OK;
+    }
+    SYNTAX_ERROR (inf, PE_NO_END_CHAR);
 }
 // ---------------------------------------------------------------------------------------------------
 

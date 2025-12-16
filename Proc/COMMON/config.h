@@ -37,8 +37,8 @@ const char name_type[] = "int";
 const int AMOUNT_REGISTERS = 12;
 
 // Количество меток и переменных
-const int AMOUNT_POINTS = 20;
-const int AMOUNT_VARS = 20;
+const int AMOUNT_POINTS = 1000;
+const int AMOUNT_VARS = 1000;
 
 // Множитель realloc
 const int MOD_REALLOC = 2;
@@ -69,7 +69,7 @@ const int AMOUNT_PRINT_ELEMENT = 10;
 const stmn_t BIRD_NUM = (stmn_t) 0xDEADFACE;
 
 // Размер выделяемой оперативки
-const int RAM_SIZE = 100 * sizeof(int);
+const int RAM_SIZE = 100000* sizeof(int);
 
 // Константа уменьшения времени
 const long long int TIME_DIV = 1e7;
@@ -84,11 +84,11 @@ const int CURRENT_VERSION = 3;
 
 
 // Размер одного пикселя
-const int PIXEL_SIZE = 1;
+const int PIXEL_SIZE = 5;
 
 // Стандартные настройки графики
-const int LEN_DISPLAY = 160;
-const int HIGH_DISPLAY = 120;
+const int LEN_DISPLAY = 100;
+const int HIGH_DISPLAY = 100;
 const int VRAM_SIZE = LEN_DISPLAY * HIGH_DISPLAY;
 
 const int U_AUDIO = 44100;

@@ -212,7 +212,7 @@ CompilerStatus_t compilerBlock (CompilerContextInf_t* inf,
                     (nodes[i+1]->type != NODE_TYPE_KEY_WORD ||
                     (nodes[i+1]->value.key != KEY_ELSE_IF &&
                      nodes[i+1]->value.key != KEY_ELSE)))
-                    { printAsm (inf, ":cond%d\n", number_end_cond);
+                    { printAsm (inf, "::sys%dtem\n", number_end_cond);
                       /*inf->free_point++;*/}
                 break;
 
@@ -226,7 +226,7 @@ CompilerStatus_t compilerBlock (CompilerContextInf_t* inf,
                     (nodes[i+1]->type != NODE_TYPE_KEY_WORD ||
                     (nodes[i+1]->value.key != KEY_ELSE_IF &&
                      nodes[i+1]->value.key != KEY_ELSE)))
-                    printAsm (inf, ":cond%d\n", number_end_cond);
+                    printAsm (inf, "::sys%dtem\n", number_end_cond);
                 break;
 
             case (KEY_ELSE):
@@ -257,11 +257,21 @@ CompilerStatus_t compilerBlock (CompilerContextInf_t* inf,
                 if (inf->num_while->size != 0)
                 {
                     int number = StackPop (inf->num_while);
-                    printAsm (inf, "JMP :while%d\n", number);
+                    printAsm (inf, "JMP ::sys%dtem\n", number);
                     StackPush (inf->num_while, number);
                     break;
                 }
                 COMPILER_ERROR (inf, CE_BREAK_OUT_WHILE, CMP_ERROR);
+
+            case (KEY_PIXEL):
+                if (compilerPixel (inf, node) != CMP_THIS_OK)
+                    COMPILER_ERROR (inf, CE_JUST_ERROR, CMP_ERROR);
+                break;
+
+            case (KEY_DRAW):
+                if (compilerDraw (inf, node) != CMP_THIS_OK)
+                    COMPILER_ERROR (inf, CE_JUST_ERROR, CMP_ERROR);
+                break;
 
             default:
                 COMPILER_ERROR (inf, CE_JUST_ERROR, CMP_ERROR);
@@ -375,20 +385,20 @@ CompilerStatus_t compilerWhile (CompilerContextInf_t* inf,
 
     int number_while = inf->free_point++;
     int number_end = inf->free_point++;
-    printAsm (inf, "\n:while%d\n", number_while);
+    printAsm (inf, "\n::sys%dtem\n", number_while);
     if (compilerExpresion (inf, node_while->children[0]) != CMP_THIS_OK)
         COMPILER_ERROR (inf, CE_EXPRESION, CMP_ERROR);
 
     printAsm (inf, "PUSH 0\n");
-    printAsm (inf, "JE :while%d\n", number_end);
+    printAsm (inf, "JE ::sys%dtem\n", number_end);
 
     StackPush (inf->num_while, number_end);
     if (compilerBlock (inf, node_while->children[1]) != CMP_THIS_OK)
         COMPILER_ERROR (inf, CE_BLOCK, CMP_ERROR);
 
     StackPop (inf->num_while);
-    printAsm (inf, "JMP :while%d\n", number_while);
-    printAsm (inf, "\n:while%d\n", number_end);
+    printAsm (inf, "JMP ::sys%dtem\n", number_while);
+    printAsm (inf, "\n::sys%dtem\n", number_end);
     return CMP_THIS_OK;
 }
 // --------------------------------------------------------------------------------------------------
@@ -418,13 +428,13 @@ CompilerStatus_t compilerIf (CompilerContextInf_t* inf,
     printAsm (inf, "PUSH 0\n");
 
     int number_else = inf->free_point++;
-    printAsm (inf, "JE :cond%d\n", number_else);
+    printAsm (inf, "JE ::sys%dtem\n", number_else);
 
     if (compilerBlock (inf, node_cond->children[1]) != CMP_THIS_OK)
         COMPILER_ERROR (inf, CE_BLOCK, CMP_ERROR);
 
-    printAsm (inf, "JMP :cond%d\n", number_end);
-    printAsm (inf, ":cond%d\n", number_else);
+    printAsm (inf, "JMP ::sys%dtem\n", number_end);
+    printAsm (inf, "::sys%dtem\n", number_else);
 
     return CMP_THIS_OK;
 }
@@ -450,20 +460,20 @@ CompilerStatus_t compilerElseIf (CompilerContextInf_t* inf,
     if (node_cond->amount_children != 2)
         COMPILER_ERROR (inf, CE_CHILDREN, CMP_ERROR);
 
-    // printAsm (inf, ":cond%d\n", inf->free_point++);
+    // printAsm (inf, "::sys%dtem\n", inf->free_point++);
     if (compilerExpresion (inf, node_cond->children[0]) != CMP_THIS_OK)
         COMPILER_ERROR (inf, CE_EXPRESION, CMP_ERROR);
 
     printAsm (inf, "PUSH 0\n");
 
     int number_else = inf->free_point++;
-    printAsm (inf, "JE :cond%d\n", number_else);
+    printAsm (inf, "JE ::sys%dtem\n", number_else);
 
     if (compilerBlock (inf, node_cond->children[1]) != CMP_THIS_OK)
         COMPILER_ERROR (inf, CE_BLOCK, CMP_ERROR);
 
-    printAsm (inf, "JMP :cond%d\n", number_end);
-    printAsm (inf, ":cond%d\n", number_else);
+    printAsm (inf, "JMP ::sys%dtem\n", number_end);
+    printAsm (inf, "::sys%dtem\n", number_else);
 
     return CMP_THIS_OK;
 }
@@ -492,7 +502,7 @@ CompilerStatus_t compilerElse (CompilerContextInf_t* inf,
     if (compilerBlock (inf, node_cond->children[0]) != CMP_THIS_OK)
         COMPILER_ERROR (inf, CE_BLOCK, CMP_ERROR);
 
-    printAsm (inf, ":cond%d\n", number_end);
+    printAsm (inf, "::sys%dtem\n", number_end);
     return CMP_THIS_OK;
 }
 // --------------------------------------------------------------------------------------------------
@@ -679,6 +689,51 @@ CompilerStatus_t compilerCompare (CompilerContextInf_t* inf,
     printAsm (inf, "JMP $1\n");
     printAsm (inf, "PUSH 1\n\n");
 
+    return CMP_THIS_OK;
+}
+// --------------------------------------------------------------------------------------------------
+
+// --------------------------------------------------------------------------------------------------
+/**
+ * \brief Функция ассемблирования ключевого слова PIXEL
+ * \param [in] inf Указатель на структуру контекста
+ * \param [in] oper Операция сравнения
+ * \return CMP_THIS_OK, Если было успешно ассемблировано
+           CMP_NOT_THIS, Если оказался не тот узел
+           CMP_ERROR, Если произошла ошибка в ходе выполнения ассемблирования
+ */
+CompilerStatus_t compilerPixel (CompilerContextInf_t* inf,
+                                Node_t* node)
+{
+    assert (inf);
+    assert (node);
+
+    for (int i = 0; i < node->amount_children; i++)
+    {
+        if (compilerExpresion (inf, node->children[i]) != CMP_THIS_OK)
+            COMPILER_ERROR (inf, CE_JUST_ERROR, CMP_ERROR);
+    }
+    printAsm (inf, "PAINT 0\n");
+    return CMP_THIS_OK;
+}
+// --------------------------------------------------------------------------------------------------
+
+// --------------------------------------------------------------------------------------------------
+/**
+ * \brief Функция ассемблирования ключевого слова DRAW
+ * \param [in] inf Указатель на структуру контекста
+ * \param [in] oper Операция сравнения
+ * \return CMP_THIS_OK, Если было успешно ассемблировано
+           CMP_NOT_THIS, Если оказался не тот узел
+           CMP_ERROR, Если произошла ошибка в ходе выполнения ассемблирования
+ */
+CompilerStatus_t compilerDraw (CompilerContextInf_t* inf,
+                               Node_t* node)
+{
+    assert (inf);
+    assert (node);
+
+    printAsm (inf, "DRAW\n");
     return CMP_THIS_OK;
 }
 // --------------------------------------------------------------------------------------------------

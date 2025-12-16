@@ -240,12 +240,13 @@ int vraw_func(cpu_t* proc, const int cmd)
     {
         int x = 0;
         int y = 0;
+        int color = /* proc->bin_code[++proc->C_E]*/ 0;
 
+        stack_pop(&(proc->stack), &color); /* Need ((( */ ++ proc->C_E;
         stack_pop(&(proc->stack), &y);
         stack_pop(&(proc->stack), &x);
 
         int address = y * proc->disp_set.len + x;
-        int color = proc->bin_code[++proc->C_E];
 
         (proc->VRAM)[address] = color;
         return P_OK;
