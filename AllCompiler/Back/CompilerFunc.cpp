@@ -796,9 +796,36 @@ CompilerStatus_t fillingTypeExpresion (CompilerContextInf_t* inf,
     if (node->type == NODE_TYPE_OPER)
     {
         if (node->val.oper.val == OPER_NAME)
-        {}
+        {
+            if (fillingTypeExpresion (inf, node->children[0]) != CMP_THIS_OK)
+                COMPILER_ERROR (inf, CE_JUST_ERROR, CMP_ERROR);
+
+            if (node->children[0]->type != NODE_TYPE_OPER &&
+                node->children[0]->type != NODE_TYPE_VAR)
+                COMPILER_ERROR (inf, CE_BAD_NAME, CMP_ERROR);
+
+            if (node->children[0]->type == NODE_TYPE_OPER &&
+                node->children[0]->val.oper.point_level == 0)
+                COMPILER_ERROR (inf, CE_BAD_NAME, CMP_ERROR);
+
+            node->val.oper.type = node->children[0]->val.oper.type;
+            node->val.oper.point_level = node->children[0]->val.oper.point_level + 1;
+        }
         else if (node->val.oper.val == OPER_UNNAME)
-        {}
+        {
+            if (fillingTypeExpresion (inf, node->children[0]) != CMP_THIS_OK)
+                COMPILER_ERROR (inf, CE_JUST_ERROR, CMP_ERROR);
+
+            if (node->children[0]->type != NODE_TYPE_OPER &&
+                node->children[0]->type != NODE_TYPE_VAR)
+                COMPILER_ERROR (inf, CE_BAD_NAME, CMP_ERROR);
+
+            if (node->children[0]->val.var.point_level == 0)
+                COMPILER_ERROR (inf, CE_BAD_UNNAME, CMP_ERROR);
+
+            node->val.oper.type = node->children[0]->val.oper.type;
+            node->val.oper.point_level = node->children[0]->val.oper.point_level - 1;
+        }
         else
         {
             if (fillingTypeExpresion (inf, node->children[0]) != CMP_THIS_OK)
@@ -807,10 +834,13 @@ CompilerStatus_t fillingTypeExpresion (CompilerContextInf_t* inf,
             if (fillingTypeExpresion (inf, node->children[1]) != CMP_THIS_OK)
                 COMPILER_ERROR (inf, CE_JUST_ERROR, CMP_ERROR);
 
-            char* type_1 = node.;
-            char* type_2 = NULL;
-            int point_level_1 = 0;
-            int point_level_2 = 0;
+            char* type_1 = node->children[0]->val.var.type;
+            char* type_2 = node->children[1]->val.var.type;
+            int point_level_1 = node->children[0]->val.var.point_level;
+            int point_level_2 = node->children[0]->val.var.point_level;
+
+            if (point_level_1 )
+
         }
     }
     else if (node->type == NODE_TYPE_FUNC)
