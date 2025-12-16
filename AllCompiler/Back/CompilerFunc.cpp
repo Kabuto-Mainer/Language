@@ -9,6 +9,7 @@
 #include "TypesOfType.h"
 #include "NameTableFunc.h"
 #include "SupportFunc.h"
+#include "StandartType.h"
 
 // ---------------------------------------------------------------------------------------------------
 /*
@@ -630,7 +631,7 @@ CompilerStatus_t compilerOper (CompilerContextInf_t* inf,
     assert (inf);
     assert (node);
 
-    switch (node->value.oper)
+    switch (node->val.oper)
     {
         case (OPER_ADD): { printAsm (inf,"ADD\n"); break; }
         case (OPER_SUB): { printAsm (inf,"SUB\n"); break; }
@@ -638,12 +639,12 @@ CompilerStatus_t compilerOper (CompilerContextInf_t* inf,
         case (OPER_DIV): { printAsm (inf,"DIV\n"); break; }
         // case (OPER_POW): { printAsm (inf,"POW\n"); break; }
 
-        case (OPER_COMP_BIG_EQUAL): { compilerCompare (inf, node->value.oper); break; }
-        case (OPER_COMP_ONLY_BIG):  { compilerCompare (inf, node->value.oper); break; }
-        case (OPER_COMP_LIT_EQUAL): { compilerCompare (inf, node->value.oper); break; }
-        case (OPER_COMP_ONLY_LIT):  { compilerCompare (inf, node->value.oper); break; }
-        case (OPER_COMP_EQUAL):     { compilerCompare (inf, node->value.oper); break; }
-        case (OPER_COMP_NOT_EQUAL): { compilerCompare (inf, node->value.oper); break; }
+        case (OPER_COMP_BIG_EQUAL): { compilerCompare (inf, node->val.oper); break; }
+        case (OPER_COMP_ONLY_BIG):  { compilerCompare (inf, node->val.oper); break; }
+        case (OPER_COMP_LIT_EQUAL): { compilerCompare (inf, node->val.oper); break; }
+        case (OPER_COMP_ONLY_LIT):  { compilerCompare (inf, node->val.oper); break; }
+        case (OPER_COMP_EQUAL):     { compilerCompare (inf, node->val.oper); break; }
+        case (OPER_COMP_NOT_EQUAL): { compilerCompare (inf, node->val.oper); break; }
 
         default: { COMPILER_ERROR (inf, CE_JUST_ERROR, CMP_ERROR); }
     }
@@ -782,6 +783,58 @@ CompilerStatus_t compilerInOut (CompilerContextInf_t* inf,
     }
 
     return CMP_THIS_OK;
+}
+// --------------------------------------------------------------------------------------------------
+
+// --------------------------------------------------------------------------------------------------
+CompilerStatus_t fillingTypeExpresion (CompilerContextInf_t* inf,
+                                       Node_t* node)
+{
+    assert (inf);
+    assert (node);
+
+    if (node->type == NODE_TYPE_OPER)
+    {
+        if (fillingTypeExpresion (inf, node->children[0]) != CMP_THIS_OK)
+            COMPILER_ERROR (inf, CE_JUST_ERROR, CMP_ERROR);
+
+        if (fillingTypeExpresion (inf, node->children[1]) != CMP_THIS_OK)
+            COMPILER_ERROR (inf, CE_JUST_ERROR, CMP_ERROR);
+
+        char* type_1 = node.;
+        char* type_2 = NULL;
+        int point_level_1 = 0;
+        int point_level_2 = 0;
+    }
+    else if (node->type == NODE_TYPE_FUNC)
+    {
+        NameTableVar_t* func = nameTableFind (inf->table_func, node->val.func.name);
+        if (func == NULL)
+            COMPILER_ERROR (inf, CE_UNKNOWN_FUNC, CMP_ERROR);
+
+        node->val.func.ret_type = func->val.func->ret_type;
+        node->val.func.ret_point_level = func->val.func->ret_point_level;
+    }
+    else if (node->type == NODE_TYPE_VAR)
+    {
+        NameTableVar_t* var = compilerFindVar (inf->stack, node->val.var.name);
+        if (var == NULL)
+            COMPILER_ERROR (inf, CE_UNKNOWN_VAR, CMP_ERROR);
+
+        node->val.var.type = var->val.type;
+        node->val.var.point_level = var->val.var->point_level;
+    }
+    else if (node->type == NODE_TYPE_KEY_WORD)
+    {}
+    else if (node->type == NODE_TYPE_NUM)
+    {
+        char* name_type = strdup ("int");
+        NameTableVar_t* type = nameTableFind (inf->table_type, name_type);
+        free (name_type);
+
+        node->val.var.point_level = type->val.type->point_level;
+        node->val.var.type = type->name;
+    }
 }
 // --------------------------------------------------------------------------------------------------
 
@@ -975,19 +1028,25 @@ int replaceStatusToPrev (CompilerContextInf_t* inf)
  * \param [in] root Коренной узел дерева
  */
 int fillingTableFunc (NameTable_t* table_func,
+                      NameTable_t* table_type,
                       Node_t* root)
 {
     assert (table_func);
+    assert (table_type);
     assert (root);
 
     Node_t** nodes = root->children;
     for (int i = 0; i < root->amount_children; i++)
     {
         if (nodes[i]->type != NODE_TYPE_KEY_WORD ||
-            nodes[i]->value.key != KEY_DEFINE_FUNC)
+            nodes[i]->val.key != KEY_DEFINE_FUNC)
             continue;
 
         Node_t* node_func = nodes[i]->children[0];
+        NameTableVar_t* type = nameTableFind (table_type, node_func->val.func.ret_type);
+        if (type == NULL)
+            COMPILER_ERROR (inf, PE_UNKNOWN_TYPE);
+
         int amount_args = 0;
         for (int ch = 1; ch < nodes[i]->amount_children; ch++)
         {
@@ -1002,16 +1061,39 @@ int fillingTableFunc (NameTable_t* table_func,
             COMPILER_ERROR (inf, CE_JUST_ERROR, CMP_ERROR);
         }
 
-        NameTableVar_t* var = nameTableFind (table_func, node_func->value.name);
-        if (var != NULL && var->val.agrc != amount_args)
+        NameTableVar_t* var = nameTableFind (table_func, node_func->val.func.name);
+        if (var != NULL && var->val.func->amount_arg != amount_args)
             COMPILER_ERROR (inf, CE_AMOUNT_ARGS, CMP_ERROR);
+
+        if (var->val.func->ret_point_level != node_func->val.func.ret_point_level ||
+            strcmp (var->val.func->ret_type, node_func->val.func.ret_type) != 0)
+            COMPILER_ERROR (inf, CE_REDECLAR_FUNC);
 
         if (var == NULL)
         {
-            var = nameTableAdd (table_func, node_func->value.name);
-            var->val.agrc = amount_args;
+            var = nameTableAdd (table_func, node_func->val.func.name);
+            var->val.func->amount_arg = amount_args;
+            var->val.func->ret_point_level = node_func->val.func.ret_point_level;
+            var->val.func->ret_type = node_func->val.func.ret_type;
         }
-        // printf ("FUNC: %s (%d)\n", var->name, var->val.agrc);
+    }
+    return 0;
+}
+// --------------------------------------------------------------------------------------------------
+
+// --------------------------------------------------------------------------------------------------
+int fillingTableType (NameTable_t* table_type,
+                      Node_t* root)
+{
+    assert (table_type);
+    assert (root);
+
+    for (size_t i = 0; i < sizeof (STANDARD_TYPE) / sizeof (STANDARD_TYPE[0]); i++)
+    {
+        char* name_type  = strdup (STANDARD_TYPE[i].name);
+        NameTableVar_t* type = nameTableAdd (table_type, name_type);
+        type->val.type->size = STANDARD_TYPE[i].size;
+        type->val.type->point_level = STANDARD_TYPE[i].point_level;
     }
     return 0;
 }

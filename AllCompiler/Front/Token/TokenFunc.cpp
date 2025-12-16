@@ -82,7 +82,7 @@ Status_t tokenPunct (TokenContextInf_t* inf,
     if (**inf->pose == '-' &&
         *(*inf->pose + 1) == '>')
     {
-        node.val.oper = OPER_SUB;
+        node.val.oper.val = OPER_SUB;
         node.type = NODE_TYPE_OPER;
         ++ *inf->pose;
         vectorAdd (vector, node);
@@ -132,7 +132,7 @@ Status_t tokenNum (TokenContextInf_t* inf,
         .children = NULL,
         .amount_children = 0
     };
-    node.val.num = value;
+    node.val.num.val = value;
     vectorAdd (vector, node);
 
     *(inf->pose) += len;
@@ -264,7 +264,7 @@ Status_t tokenMathOper (TokenContextInf_t* inf,
     {
         if (strcmp (ALL_OPER_WORD[i].name, buffer) == 0)
         {
-            node.val.oper = ALL_OPER_WORD[i].value;
+            node.val.oper.val = ALL_OPER_WORD[i].value;
             is_real = true;
         }
     }

@@ -63,10 +63,15 @@ union NodeValue_t
                 int ret_point_level;
                 char* ret_type; } func;
 
+    struct {    int val;
+                int point_level;
+                char* type; } oper;
+
+    struct {    int val;
+                int point_level;
+                char* type; } num;
     int key;
-    int oper;
     int punct;
-    int num;
     char* name;
 };
 // ---------------------------------------------------------------------------------------------------

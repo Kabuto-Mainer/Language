@@ -10,6 +10,7 @@ struct CompilerContextInf_t
 {
     NameTableStack_t* stack;
     NameTable_t* table_func;
+    NameTable_t* table_type;
     FILE* stream;
     int amount_word;
     int free_point;

@@ -513,7 +513,7 @@ Status_t parserDeclarationFunc (ParserContextInf_t* inf,
         А в токенизаторе строка -> разделится на OPER (-) и PUNCT (>)
     */
     if (inf->node->type != NODE_TYPE_OPER ||
-        inf->node->val.oper != OPER_SUB ||
+        inf->node->val.oper.val != OPER_SUB ||
         getNextNotEndNode (inf)->type != NODE_TYPE_PUNCT ||
         getNextNotEndNode (inf)->val.punct != PUNCT_RIGHT_TANG)
         SYNTAX_ERROR (inf, PE_NOT_RETURN_VALUE);
@@ -665,12 +665,12 @@ Status_t parserExpresion (ParserContextInf_t* inf,
     }
 
     if (inf->node->type != NODE_TYPE_OPER ||
-       (inf->node->val.oper != OPER_COMP_BIG_EQUAL &&
-        inf->node->val.oper != OPER_COMP_ONLY_BIG &&
-        inf->node->val.oper != OPER_COMP_LIT_EQUAL &&
-        inf->node->val.oper != OPER_COMP_ONLY_LIT &&
-        inf->node->val.oper != OPER_COMP_EQUAL &&
-        inf->node->val.oper != OPER_COMP_NOT_EQUAL))
+       (inf->node->val.oper.val != OPER_COMP_BIG_EQUAL &&
+        inf->node->val.oper.val != OPER_COMP_ONLY_BIG &&
+        inf->node->val.oper.val != OPER_COMP_LIT_EQUAL &&
+        inf->node->val.oper.val != OPER_COMP_ONLY_LIT &&
+        inf->node->val.oper.val != OPER_COMP_EQUAL &&
+        inf->node->val.oper.val != OPER_COMP_NOT_EQUAL))
     {
         addChildren (node, buffer_node);
         deleteOneNode (buffer_node);
@@ -713,8 +713,8 @@ Status_t parserAddSub (ParserContextInf_t* inf,
     }
 
     if (inf->node->type != NODE_TYPE_OPER ||
-       (inf->node->val.oper != OPER_ADD &&
-        inf->node->val.oper != OPER_SUB))
+       (inf->node->val.oper.val != OPER_ADD &&
+        inf->node->val.oper.val != OPER_SUB))
     {
         addChildren (node, buffer_node);
         deleteOneNode (buffer_node);
@@ -756,8 +756,8 @@ Status_t parserMulDiv (ParserContextInf_t* inf,
     }
 
     if (inf->node->type != NODE_TYPE_OPER ||
-       (inf->node->val.oper != OPER_MUL &&
-        inf->node->val.oper != OPER_DIV))
+       (inf->node->val.oper.val != OPER_MUL &&
+        inf->node->val.oper.val != OPER_DIV))
     {
         addChildren (node, buffer_node);
         deleteOneNode (buffer_node);
@@ -967,7 +967,7 @@ Status_t parserNameOper (ParserContextInf_t* inf,
     assert (parent);
 
     if ((inf->node->type != NODE_TYPE_OPER ||
-         inf->node->val.oper != OPER_MUL) &&
+         inf->node->val.oper.val != OPER_MUL) &&
         (inf->node->type != NODE_TYPE_PUNCT ||
          inf->node->val.punct != PUNCT_NAME))
         return PARSER_NOT_THIS;
