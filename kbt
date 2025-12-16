@@ -139,7 +139,7 @@ main() {
             TEMP_BIN="${BASENAME}_temp.bin"
 
             print_step "1. Компиляция в ассемблер..."
-            "$COMPILER" "$INPUT_FILE" -ca "$TEMP_ASM" # 2>/dev/null
+            "$COMPILER" "$INPUT_FILE" -ca "$TEMP_ASM" 2>/dev/null
 
             print_step "2. Ассемблирование в бинарник..."
             "$ASSEMBLER" -InpFile="$TEMP_ASM" -OutFile="$TEMP_BIN" 2>/dev/null
