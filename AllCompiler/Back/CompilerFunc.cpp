@@ -795,16 +795,23 @@ CompilerStatus_t fillingTypeExpresion (CompilerContextInf_t* inf,
 
     if (node->type == NODE_TYPE_OPER)
     {
-        if (fillingTypeExpresion (inf, node->children[0]) != CMP_THIS_OK)
-            COMPILER_ERROR (inf, CE_JUST_ERROR, CMP_ERROR);
+        if (node->val.oper.val == OPER_NAME)
+        {}
+        else if (node->val.oper.val == OPER_UNNAME)
+        {}
+        else
+        {
+            if (fillingTypeExpresion (inf, node->children[0]) != CMP_THIS_OK)
+                COMPILER_ERROR (inf, CE_JUST_ERROR, CMP_ERROR);
 
-        if (fillingTypeExpresion (inf, node->children[1]) != CMP_THIS_OK)
-            COMPILER_ERROR (inf, CE_JUST_ERROR, CMP_ERROR);
+            if (fillingTypeExpresion (inf, node->children[1]) != CMP_THIS_OK)
+                COMPILER_ERROR (inf, CE_JUST_ERROR, CMP_ERROR);
 
-        char* type_1 = node.;
-        char* type_2 = NULL;
-        int point_level_1 = 0;
-        int point_level_2 = 0;
+            char* type_1 = node.;
+            char* type_2 = NULL;
+            int point_level_1 = 0;
+            int point_level_2 = 0;
+        }
     }
     else if (node->type == NODE_TYPE_FUNC)
     {
@@ -826,14 +833,6 @@ CompilerStatus_t fillingTypeExpresion (CompilerContextInf_t* inf,
     }
     else if (node->type == NODE_TYPE_KEY_WORD)
     {}
-    else if (node->type == NODE_TYPE_NUM)
-    {
-        char* name_type = strdup ("int");
-        NameTableVar_t* type = nameTableFind (inf->table_type, name_type);
-        free (name_type);
-
-        node->val.var.point_level = type->val.type->point_level;
-        node->val.var.type = type->name;
     }
 }
 // --------------------------------------------------------------------------------------------------

@@ -973,13 +973,13 @@ Status_t parserNameOper (ParserContextInf_t* inf,
         return PARSER_NOT_THIS;
 
     Node_t* nameOper = inf->node;
-    nameOper->type = NODE_TYPE_KEY_WORD;
+    nameOper->type = NODE_TYPE_OPER;
     addNode (parent, nameOper);
 
     if (inf->node->type == NODE_TYPE_OPER)
-        nameOper->val.key = KEY_UNNAME;
+        nameOper->val.key = OPER_UNNAME;
     else
-        nameOper->val.key = KEY_NAME;
+        nameOper->val.key = OPER_NAME;
 
     nextNode (inf);
     skipVoid (inf);

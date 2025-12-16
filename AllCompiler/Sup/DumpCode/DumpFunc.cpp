@@ -284,7 +284,7 @@ int printFullBlock (Node_t* node,
         strcpy (color, "#e8802bff");
         for (size_t i = 0; i < sizeof (ALL_OPER_WORD) / sizeof (ALL_OPER_WORD[0]); i++)
         {
-            if (node->val.oper == ALL_OPER_WORD[i].value)
+            if (node->val.oper.val == ALL_OPER_WORD[i].value)
             {
                 sprintf (label, "\"%s\"", ALL_OPER_WORD[i].name);
                 break;

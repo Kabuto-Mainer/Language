@@ -23,8 +23,6 @@ const SystemSyntaxWord_t ALL_SYSTEM_WORD[] =
     {"break",       NODE_TYPE_KEY_WORD,     KEY_BREAK},
     {"in",          NODE_TYPE_KEY_WORD,     KEY_IN},
     {"out",         NODE_TYPE_KEY_WORD,     KEY_OUT},
-    {"bring adr",   NODE_TYPE_KEY_WORD,     KEY_NAME},
-    {"unname adr",  NODE_TYPE_KEY_WORD,     KEY_UNNAME},
 };
 // ---------------------------------------------------------------------------------------------------
 
@@ -67,6 +65,8 @@ const SystemSyntaxWord_t ALL_OPER_WORD[] =
     {"&gt;=",       NODE_TYPE_OPER,         OPER_COMP_BIG_EQUAL},
     {"==",          NODE_TYPE_OPER,         OPER_COMP_EQUAL},
     {"!=",          NODE_TYPE_OPER,         OPER_COMP_NOT_EQUAL},
+    {"bring adr",   NODE_TYPE_OPER,         OPER_NAME},
+    {"unname adr",  NODE_TYPE_OPER,         OPER_UNNAME},
     // {"sqrt",        NODE_TYPE_OPER,         OPER_SQRT}
 };
 // ---------------------------------------------------------------------------------------------------
