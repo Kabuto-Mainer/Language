@@ -50,28 +50,10 @@ union NodeValue_t
 // ---------------------------------------------------------------------------------------------------
 union NodeValue_t
 {
-// !!!!!!!!! Очень важно!! Пока необходимо, что бы в структурах всегда char* стояло первым
-// Перемена их местами может привести к багу
-
-    /* Структура для хранения переменных */
-    struct {    char* name;
-                int point_level;
-                char* type; } var;
-
-    /* Структура для хранения функций */
-    struct {    char* name;
-                int ret_point_level;
-                char* ret_type; } func;
-
-    struct {    int val;
-                int point_level;
-                char* type; } oper;
-
-    struct {    int val;
-                int point_level;
-                char* type; } num;
+    int oper;
     int key;
     int punct;
+    int
     char* name;
 };
 // ---------------------------------------------------------------------------------------------------
