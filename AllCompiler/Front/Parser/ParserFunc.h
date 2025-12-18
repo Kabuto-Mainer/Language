@@ -197,7 +197,7 @@ Status_t parserValue (ParserContextInf_t* inf,
          PARSER_NOT_THIS - если это не то место
          PARSER_ERROR - если произошла ошибка
 */
-Status_t parserIndent (ParserContextInf_t* inf,
+Status_t parserIdent (ParserContextInf_t* inf,
                        Node_t* parent);
 // ---------------------------------------------------------------------------------------------------
 

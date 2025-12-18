@@ -73,7 +73,7 @@ Status_t tokenPunct (TokenContextInf_t* inf,
     assert (vector);
 
     Node_t node = {
-        .type = NODE_TYPE_PUNCT,
+        .type_node = NODE_TYPE_PUNCT,
         .parent = NULL,
         .children = NULL,
         .amount_children = 0,
@@ -82,8 +82,8 @@ Status_t tokenPunct (TokenContextInf_t* inf,
     if (**inf->pose == '-' &&
         *(*inf->pose + 1) == '>')
     {
-        node.val.oper.val = OPER_SUB;
-        node.type = NODE_TYPE_OPER;
+        node.val.oper.code = OPER_SUB;
+        node.type_node = NODE_TYPE_OPER;
         ++ *inf->pose;
         vectorAdd (vector, node);
         return PARSER_THIS_OK;
@@ -100,7 +100,7 @@ Status_t tokenPunct (TokenContextInf_t* inf,
         case '>':  { node.val.punct = PUNCT_RIGHT_TANG; break; }
         case '@':  { node.val.punct = PUNCT_DOG; break; }
         case '\"': { node.val.punct = PUNCT_QUOT; break; }
-        case '*':  { node.val.oper = OPER_MUL; node.type = NODE_TYPE_OPER; break; }
+        case '*':  { node.val.oper.code = OPER_MUL; node.type_node = NODE_TYPE_OPER; break; }
         case '&':  { node.val.punct = PUNCT_NAME; break; }
         default: { return PARSER_NOT_THIS; }
     }
@@ -127,12 +127,12 @@ Status_t tokenNum (TokenContextInf_t* inf,
     sscanf (*(inf->pose), "%d%n", &value, &len);
 
     Node_t node = {
-        .type = NODE_TYPE_NUM,
+        .type_type = NODE_TYPE_NUM,
         .parent = NULL,
         .children = NULL,
         .amount_children = 0
     };
-    node.val.num.val = value;
+    node.val.num = value;
     vectorAdd (vector, node);
 
     *(inf->pose) += len;
@@ -164,12 +164,12 @@ Status_t tokenIndent (TokenContextInf_t* inf,
 
     char* name = strdup (buffer);
     Node_t node = {
-        .type = NODE_TYPE_INDENT,
+        .type_node = NODE_TYPE_INDENT,
         .parent = NULL,
         .children = NULL,
         .amount_children = 0,
     };
-    node.val.name = name;
+    node.val.ident.name = name;
     vectorAdd (vector, node);
 
     *str += len;
@@ -197,7 +197,7 @@ Status_t tokenKeyWord (TokenContextInf_t* inf,
     }
 
     Node_t node = {
-        .type = NODE_TYPE_KEY_WORD,
+        .type_node = NODE_TYPE_KEY_WORD,
         .parent = NULL,
         .children = NULL,
         .amount_children = 0,
@@ -253,7 +253,7 @@ Status_t tokenMathOper (TokenContextInf_t* inf,
     }
 
     Node_t node = {
-        .type = NODE_TYPE_OPER,
+        .type_node = NODE_TYPE_OPER,
         .parent = NULL,
         .children = NULL,
         .amount_children = 0,
@@ -264,7 +264,7 @@ Status_t tokenMathOper (TokenContextInf_t* inf,
     {
         if (strcmp (ALL_OPER_WORD[i].name, buffer) == 0)
         {
-            node.val.oper.val = ALL_OPER_WORD[i].value;
+            node.val.oper.code = ALL_OPER_WORD[i].value;
             is_real = true;
         }
     }
@@ -298,39 +298,67 @@ int tokenOneDump (Node_t* node)
 {
     assert (node);
 
-    printf ("[%d]<", node->type);
-    if (node->type == NODE_TYPE_INDENT || node->type == NODE_TYPE_VAR || node->type == NODE_TYPE_FUNC)
-        printf ("%s", node->val.func.name);
+    printf ("[%d]<", node->type_node);
+    switch (node->type_node)
+    {
+        case (NODE_TYPE_INDENT):
+            printf ("%s", node->val.ident.name);
+            break;
 
-    else if (node->type == NODE_TYPE_OPER)
-    {
-        for (size_t i = 0; i < sizeof (ALL_OPER_WORD) / sizeof (ALL_OPER_WORD[0]); i++)
-        {
-            if (node->val.oper == ALL_OPER_WORD[i].value)
-                printf ("%s", ALL_OPER_WORD[i].name);
-        }
-    }
-    else if (node->type == NODE_TYPE_KEY_WORD)
-    {
-        for (size_t i = 0; i < sizeof (ALL_SYSTEM_WORD) / sizeof (ALL_SYSTEM_WORD[0]); i++)
-        {
-            if (node->val.key == ALL_SYSTEM_WORD[i].value)
-                printf ("%s", ALL_SYSTEM_WORD[i].name);
-        }
-    }
-    else if (node->type == NODE_TYPE_PUNCT)
-    {
-        for (size_t i = 0; i < sizeof (ALL_PUNCT_WORD) / sizeof (ALL_PUNCT_WORD[0]); i++)
-        {
-            if (node->val.punct == ALL_PUNCT_WORD[i].value)
-                printf ("%s", ALL_PUNCT_WORD[i].name);
-        }
-    }
-    else if (node->type == NODE_TYPE_NUM)
-        printf ("%d", node->val.num);
-    else
-        printf ("block");
+        case (NODE_TYPE_VAR):
+            if (node->val.var.inf != NULL)
+                printf ("%s", node->val.var.inf->name);
+            else
+                printf ("Unknown");
+            break;
 
+        case (NODE_TYPE_FUNC):
+            if (node->val.func.inf != NULL)
+                printf ("%s", node->val.func.inf->name);
+            else
+                printf ("Unknown");
+            break;
+
+        case (NODE_TYPE_KEY_WORD):
+            for (size_t i = 0; i < sizeof (ALL_SYSTEM_WORD) / sizeof (ALL_SYSTEM_WORD[0]); i++)
+            {
+                if (node->val.key == ALL_SYSTEM_WORD[i].value)
+                {
+                    printf ("%s", ALL_SYSTEM_WORD[i].name);
+                    break;
+                }
+            }
+            break;
+
+        case (NODE_TYPE_OPER):
+            for (size_t i = 0; i < sizeof (ALL_OPER_WORD) / sizeof (ALL_OPER_WORD[0]); i++)
+            {
+                if (node->val.oper.code == ALL_OPER_WORD[i].value)
+                {
+                    printf ("%s", ALL_OPER_WORD[i].name);
+                    break;
+                }
+            }
+            break;
+
+        case (NODE_TYPE_PUNCT):
+            for (size_t i = 0; i < sizeof (ALL_PUNCT_WORD) / sizeof (ALL_PUNCT_WORD[0]); i++)
+            {
+                if (node->val.punct == ALL_PUNCT_WORD[i].value)
+                {
+                    printf ("%s", ALL_PUNCT_WORD[i].name);
+                    break;
+                }
+            }
+            break;
+
+        case (NODE_TYPE_NUM):
+            printf ("%d", node->val.num);
+            break;
+
+        default:
+            printf ("block");
+    }
     printf (">\n");
 
     return 0;
@@ -343,39 +371,67 @@ int tokenOneDump (Node_t* node, const char* reason)
     assert (node);
     assert (reason);
 
-    printf ("[%d]<", node->type);
-    if (node->type == NODE_TYPE_INDENT || node->type == NODE_TYPE_VAR || node->type == NODE_TYPE_FUNC)
-        printf ("%s", node->val.name);
+    printf ("[%d]<", node->type_node);
+    switch (node->type_node)
+    {
+        case (NODE_TYPE_INDENT):
+            printf ("%s", node->val.ident.name);
+            break;
 
-    else if (node->type == NODE_TYPE_OPER)
-    {
-        for (size_t i = 0; i < sizeof (ALL_OPER_WORD) / sizeof (ALL_OPER_WORD[0]); i++)
-        {
-            if (node->val.oper == ALL_OPER_WORD[i].value)
-                printf ("%s", ALL_OPER_WORD[i].name);
-        }
-    }
-    else if (node->type == NODE_TYPE_KEY_WORD)
-    {
-        for (size_t i = 0; i < sizeof (ALL_SYSTEM_WORD) / sizeof (ALL_SYSTEM_WORD[0]); i++)
-        {
-            if (node->val.key == ALL_SYSTEM_WORD[i].value)
-                printf ("%s", ALL_SYSTEM_WORD[i].name);
-        }
-    }
-    else if (node->type == NODE_TYPE_PUNCT)
-    {
-        for (size_t i = 0; i < sizeof (ALL_PUNCT_WORD) / sizeof (ALL_PUNCT_WORD[0]); i++)
-        {
-            if (node->val.punct == ALL_PUNCT_WORD[i].value)
-                printf ("%s", ALL_PUNCT_WORD[i].name);
-        }
-    }
-    else if (node->type == NODE_TYPE_NUM)
-        printf ("%d", node->val.num);
-    else
-        printf ("block");
+        case (NODE_TYPE_VAR):
+            if (node->val.var.inf != NULL)
+                printf ("%s", node->val.var.inf->name);
+            else
+                printf ("Unknown");
+            break;
 
+        case (NODE_TYPE_FUNC):
+            if (node->val.func.inf != NULL)
+                printf ("%s", node->val.func.inf->name);
+            else
+                printf ("Unknown");
+            break;
+
+        case (NODE_TYPE_KEY_WORD):
+            for (size_t i = 0; i < sizeof (ALL_SYSTEM_WORD) / sizeof (ALL_SYSTEM_WORD[0]); i++)
+            {
+                if (node->val.key == ALL_SYSTEM_WORD[i].value)
+                {
+                    printf ("%s", ALL_SYSTEM_WORD[i].name);
+                    break;
+                }
+            }
+            break;
+
+        case (NODE_TYPE_OPER):
+            for (size_t i = 0; i < sizeof (ALL_OPER_WORD) / sizeof (ALL_OPER_WORD[0]); i++)
+            {
+                if (node->val.oper.code == ALL_OPER_WORD[i].value)
+                {
+                    printf ("%s", ALL_OPER_WORD[i].name);
+                    break;
+                }
+            }
+            break;
+
+        case (NODE_TYPE_PUNCT):
+            for (size_t i = 0; i < sizeof (ALL_PUNCT_WORD) / sizeof (ALL_PUNCT_WORD[0]); i++)
+            {
+                if (node->val.punct == ALL_PUNCT_WORD[i].value)
+                {
+                    printf ("%s", ALL_PUNCT_WORD[i].name);
+                    break;
+                }
+            }
+            break;
+
+        case (NODE_TYPE_NUM):
+            printf ("%d", node->val.num);
+            break;
+
+        default:
+            printf ("block");
+    }
     printf (">%s\n", reason);
 
     return 0;
