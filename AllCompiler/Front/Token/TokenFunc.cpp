@@ -129,6 +129,7 @@ Status_t tokenIdent (TokenContextInf_t* inf,
     assert (inf);
     assert (vector);
 
+    // printf ("Ident\n");
     if (!isalpha (**inf->pose) && **inf->pose != '_')
         return PARSER_SYNTAX_ERROR;
 
@@ -196,11 +197,13 @@ Status_t tokenOper (TokenContextInf_t* inf,
     assert (vector);
 
     int len = 0;
-    Oper_t op_type;
+    Oper_t op_type = OPER_ADD;
 
     if (LexDB_FindOper (inf->lexeme_data, *inf->pose,
                         &len, &op_type) == 0)
     {
+        // printf ("OPER\n");
+        // printf ("%s\n", *inf->pose);
         Node_t token =
         {
             .type_node = NODE_OPER,
@@ -287,6 +290,9 @@ int tokenOneDump (Node_t* node)
     else if (node->type_node == NODE_KEY)
         printf ("%s", KEYWORDS[node->val.key].lexeme);
 
+    else if (node->type_node == NODE_NUM)
+        printf ("%d", node->val.num);
+
     else
         printf ("block");
 
@@ -314,6 +320,9 @@ int tokenOneDump (Node_t* node, const char* reason)
 
     else if (node->type_node == NODE_KEY)
         printf ("%s", KEYWORDS[node->val.key].lexeme);
+
+    else if (node->type_node == NODE_NUM)
+        printf ("%d", node->val.num);
 
     else
         printf ("block");

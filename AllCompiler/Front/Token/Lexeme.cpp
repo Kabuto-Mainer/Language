@@ -33,6 +33,7 @@ int LexDB_FindKeyword (LexemeDatabase_t* data_base, const char* lexeme)
     assert (data_base);
     assert (lexeme);
 
+    // printf ("KEY LEX: %s\n", lexeme);
     for (int i = 0; i < data_base->keywords_count; i++)
     {
         if (strcmp (data_base->keywords[i].lexeme, lexeme) == 0)
@@ -50,6 +51,7 @@ int LexDB_FindPunct (LexemeDatabase_t* data_base, const char* lexeme,
     assert (out_length);
     assert (out_type);
 
+    // printf ("PUNCT LEX: %s\n", lexeme);
     for (int i = 0; i < data_base->punct_count; i++)
     {
         if (strncmp (data_base->punct[i].lexeme, lexeme, (size_t) data_base->punct[i].length) == 0)
@@ -71,6 +73,7 @@ int LexDB_FindOper (LexemeDatabase_t* data_base, const char* lexeme,
     assert (out_length);
     assert (out_type);
 
+    // printf ("OPER LEX: %s\n", lexeme);
     for (int i = 0; i < data_base->operations_count; i++)
     {
         if (strncmp (data_base->operations[i].lexeme, lexeme, (size_t) data_base->operations[i].length) == 0)

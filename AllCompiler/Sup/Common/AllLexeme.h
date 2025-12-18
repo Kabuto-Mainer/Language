@@ -110,15 +110,15 @@ const OperEntry_t OPERATIONS[] =
     {"*",               OPER_MUL,        1},
     {"/",               OPER_DIV,        1},
 
-    {"equal",           OPER_E,          1},
-    {"notequal",        OPER_NE,         1},
-    {"less",            OPER_L,          1},
-    {"less equal",      OPER_LE,         2},
-    {"greater",         OPER_B,          1},
-    {"greater equal",   OPER_BE,         2},
+    {"equal",           OPER_E,          5},
+    {"notequal",        OPER_NE,         8},
+    {"less",            OPER_L,          4},
+    {"less equal",      OPER_LE,         10},
+    {"greater",         OPER_B,          7},
+    {"greater equal",   OPER_BE,         13},
 
-    {"&&",              OPER_AND,        1},
-    {"||",              OPER_OR,         1},
+    {"&&",              OPER_AND,        2},
+    {"||",              OPER_OR,         2},
     {"!",               OPER_NOT,        1},
 
     {"@",               OPER_DEREF,      1},

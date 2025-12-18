@@ -13,21 +13,21 @@ enum Oper_t
     OPER_DIV             = 3,
 
     // Сравнение
-    OPER_E               = 5,    // ==
-    OPER_NE              = 6,    // !=
-    OPER_L               = 7,    // <
-    OPER_LE              = 8,    // <=
-    OPER_B               = 9,    // >
-    OPER_BE              = 10,   // >=
+    OPER_E               = 4,    // ==
+    OPER_NE              = 5,    // !=
+    OPER_L               = 6,    // <
+    OPER_LE              = 7,    // <=
+    OPER_B               = 8,    // >
+    OPER_BE              = 9,    // >=
 
     // Логические операции
-    OPER_AND             = 11,   // &&
-    OPER_OR              = 12,   // ||
-    OPER_NOT             = 13,   // !
+    OPER_AND             = 10,   // &&
+    OPER_OR              = 11,   // ||
+    OPER_NOT             = 12,   // !
 
-    OPER_DEREF           = 14,
-    OPER_ADDR            = 15,
-    OPER_ASSIGN          = 16
+    OPER_DEREF           = 13,
+    OPER_ADDR            = 14,
+    OPER_ASSIGN          = 15,
 };
 // ---------------------------------------------------------------------------------------------------
 
