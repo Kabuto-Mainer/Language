@@ -27,7 +27,7 @@ StringTable_t* StrT_Create ()
     return table;
 }
 
-StringEntry_t* StrT_AddString (StringTable_t* table, char* name)
+StringEntry_t* StrT_AddString (StringTable_t* table, const char* name)
 {
     assert(table);
     assert(name);
@@ -44,7 +44,7 @@ StringEntry_t* StrT_AddString (StringTable_t* table, char* name)
         current = current->next;
     }
 
-    if (table->count * 0.75 >= table->size)
+    if (table->count * 3 / 4 >= table->size)
         StrT_Resize (table);
 
     StringEntry_t* new_entry = (StringEntry_t*) calloc (1, sizeof (StringEntry_t));

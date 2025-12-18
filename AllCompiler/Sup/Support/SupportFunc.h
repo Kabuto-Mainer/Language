@@ -1,6 +1,7 @@
 #ifndef SUPPORT_FUNC_H
 #define SUPPORT_FUNC_H
 
+#include <cstddef>
 
 // ---------------------------------------------------------------------------------------------------
 /// @brief

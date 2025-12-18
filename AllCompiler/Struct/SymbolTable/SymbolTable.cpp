@@ -53,7 +53,7 @@ SymbolEntry_t* SymT_FindLocal (SymbolTable_t* table, StringEntry_t* name)
     assert (table);
     assert (name);
 
-    size_t index = name->hash % table->capacity;
+    size_t index = name->hash % (size_t) table->capacity;
     SymbolEntry_t* current = table->entries[index];
 
     while (current != NULL)
@@ -87,11 +87,11 @@ SymbolEntry_t* SymT_AddEntry(SymbolTable_t* table, SymbolKind_t kind,
     new_entry->kind = kind;
     new_entry->type = type;
 
-    int size = type->size_bytes;
+    int size = type->size_units;
     new_entry->offset = table->current_offset;
     table->current_offset += size;
 
-    size_t index = name->hash % table->capacity;
+    size_t index = name->hash % (size_t) table->capacity;
     new_entry->next = table->entries[index];
     table->entries[index] = new_entry;
 
@@ -125,7 +125,7 @@ void SymT_Resize (SymbolTable_t* table)
     assert (table);
 
     int new_capacity = table->capacity * 2;
-    SymbolEntry_t** new_entries = (SymbolEntry_t**) calloc (new_capacity, sizeof (SymbolEntry_t*));
+    SymbolEntry_t** new_entries = (SymbolEntry_t**) calloc ((size_t) new_capacity, sizeof (SymbolEntry_t*));
 
     if (new_entries == NULL)
         EXIT_FUNC ("NULL calloc", );
@@ -136,7 +136,7 @@ void SymT_Resize (SymbolTable_t* table)
         while (current != NULL)
         {
             SymbolEntry_t* next = current->next;
-            size_t new_index = current->name->hash % new_capacity;
+            size_t new_index = current->name->hash % (size_t) new_capacity;
 
             current->next = new_entries[new_index];
             new_entries[new_index] = current;

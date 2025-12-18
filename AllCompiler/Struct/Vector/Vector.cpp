@@ -85,44 +85,46 @@ VectorVar_t* vectorGetToken (TokenVector_t* vector,
     return vector->data + index;
 }
 // ---------------------------------------------------------------------------------------------------
+//
+// // ---------------------------------------------------------------------------------------------------
+// /**
+//  * \brief Функция удаления памяти вектора
+//  * \param [in] vector Указатель на структуру вектора
+// */
+// int vectorDtr (TokenVector_t* vector)
+// {
+//     assert (vector);
+//
+//     for (size_t i = 0; i < vector->size; i++)
+//         vectorDtrToken (&(vector->data[i]));
+//
+//     free (vector->data);
+//     return 0;
+// }
+// // ---------------------------------------------------------------------------------------------------
 
-// ---------------------------------------------------------------------------------------------------
-/**
- * \brief Функция удаления памяти вектора
- * \param [in] vector Указатель на структуру вектора
-*/
-int vectorDtr (TokenVector_t* vector)
-{
-    assert (vector);
-
-    for (size_t i = 0; i < vector->size; i++)
-        vectorDtrToken (&(vector->data[i]));
-
-    free (vector->data);
-    return 0;
-}
-// ---------------------------------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------------------------------
-/**
- * \brief Функция удаления элемента вектора
- * \param [in] token Указатель на элемент
-*/
-int vectorDtrToken (VectorVar_t* token)
-{
-    assert (token);
-    if ((token->type == NODE_TYPE_INDENT ||
-         token->type == NODE_TYPE_VAR ||
-         token->type == NODE_TYPE_FUNC ||
-         token->type == NODE_TYPE_BLOCK) &
-         (token->val.name != NULL))
-    {
-        free (token->val.name);
-    }
-    // if ((token.))
-
-    if (token->children != NULL)
-        free (token->children);
-    return 0;
-}
-// ---------------------------------------------------------------------------------------------------
+//
+// // ---------------------------------------------------------------------------------------------------
+// /**
+//  * \brief Функция удаления элемента вектора
+//  * \param [in] token Указатель на элемент
+// */
+// int vectorDtrToken (VectorVar_t* token)
+// {
+//     assert (token);
+//     if ((token->type == NODE_TYPE_INDENT ||
+//          token->type == NODE_TYPE_VAR ||
+//          token->type == NODE_TYPE_FUNC ||
+//          token->type == NODE_TYPE_BLOCK) &
+//          (token->val.name != NULL))
+//     {
+//         free (token->val.name);
+//     }
+//     // if ((token.))
+//
+//     if (token->children != NULL)
+//         free (token->children);
+//     return 0;
+// }
+// // ---------------------------------------------------------------------------------------------------
+//

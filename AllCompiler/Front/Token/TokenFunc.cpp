@@ -7,10 +7,11 @@
 #include "TokenFunc.h"
 #include "VectorFunc.h"
 #include "SupportFunc.h"
+#include "AllLexeme.h"
+#include "NodeType.h"
 #include "TypesOfType.h"
-#include "TypesConst.h"
-#include "ConfigLangConst.h"
-
+#include "StringTable.h"
+#include "AllLexeme.h"
 
 // ---------------------------------------------------------------------------------------------------
 int skipVoid (TokenContextInf_t* inf)
@@ -28,15 +29,21 @@ int skipVoid (TokenContextInf_t* inf)
 
 // ---------------------------------------------------------------------------------------------------
 int tokenGlobal (char* buffer,
+                 StringTable_t* table_str,
                  TokenVector_t* vector)
 {
     assert (buffer);
+    assert (table_str);
     assert (vector);
 
     char** str = &buffer;
-    TokenContextInf_t inf = {
+    TokenContextInf_t inf =
+    {
         .pose = str,
-        .line = 0};
+        .line = 0,
+        .table_str = table_str,
+        .lexeme_data = LexDB_Create ()
+    };
 
     while (true)
     {
@@ -44,10 +51,13 @@ int tokenGlobal (char* buffer,
         if (**(inf.pose) == '\0' || **(inf.pose) == '$')
             break;
 
-        if (tokenNum (&inf, vector) == PARSER_THIS_OK)
+        if (tokenComment (&inf) == PARSER_THIS_OK)
             continue;
 
-        if (tokenMathOper (&inf, vector) == PARSER_THIS_OK)
+        if (tokenNumber (&inf, vector) == PARSER_THIS_OK)
+            continue;
+
+        if (tokenOper (&inf, vector) == PARSER_THIS_OK)
             continue;
 
         if (tokenPunct (&inf, vector) == PARSER_THIS_OK)
@@ -56,64 +66,36 @@ int tokenGlobal (char* buffer,
         if (tokenKeyWord (&inf, vector) == PARSER_THIS_OK)
             continue;
 
-        if (tokenIndent (&inf, vector) == PARSER_THIS_OK)
+        if (tokenIdent (&inf, vector) == PARSER_THIS_OK)
             continue;
 
         EXIT_FUNC ("UNKNOWN SYNTAX", 1);
     }
+
+    LexDB_Destroy (inf.lexeme_data);
     return 0;
 }
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-Status_t tokenPunct (TokenContextInf_t* inf,
-                     TokenVector_t* vector)
+Status_t tokenComment (TokenContextInf_t* inf)
 {
     assert (inf);
-    assert (vector);
+    if (**inf->pose != '#')
+        return PARSER_NOT_THIS;
 
-    Node_t node = {
-        .type_node = NODE_TYPE_PUNCT,
-        .parent = NULL,
-        .children = NULL,
-        .amount_children = 0,
-    };
-
-    if (**inf->pose == '-' &&
-        *(*inf->pose + 1) == '>')
-    {
-        node.val.oper.code = OPER_SUB;
-        node.type_node = NODE_TYPE_OPER;
+    while (**inf->pose != '\n' && **inf->pose != '\0')
         ++ *inf->pose;
-        vectorAdd (vector, node);
-        return PARSER_THIS_OK;
-    }
-    switch (**inf->pose)
-    {
-        case ',':  { node.val.punct = PUNCT_COMMA; break; }
-        case '\\': { node.val.punct = PUNCT_NEXT_STR; break; }
-        case '\n': { node.val.punct = PUNCT_END_STR; break; }
-        case '|':  { node.val.punct = PUNCT_END_STR; break; }
-        case '(':  { node.val.punct = PUNCT_LEFT_ROUND; break; }
-        case '<':  { node.val.punct = PUNCT_LEFT_TANG; break; }
-        case ')':  { node.val.punct = PUNCT_RIGHT_ROUND; break; }
-        case '>':  { node.val.punct = PUNCT_RIGHT_TANG; break; }
-        case '@':  { node.val.punct = PUNCT_DOG; break; }
-        case '\"': { node.val.punct = PUNCT_QUOT; break; }
-        case '*':  { node.val.oper.code = OPER_MUL; node.type_node = NODE_TYPE_OPER; break; }
-        case '&':  { node.val.punct = PUNCT_NAME; break; }
-        default: { return PARSER_NOT_THIS; }
-    }
 
-    ++ *inf->pose;
-    vectorAdd (vector, node);
+    if (**inf->pose == '\n')
+        ++ *inf->pose;
+
     return PARSER_THIS_OK;
 }
-// ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-Status_t tokenNum (TokenContextInf_t* inf,
-                   TokenVector_t* vector)
+Status_t tokenNumber (TokenContextInf_t* inf,
+                      TokenVector_t* vector)
 {
     assert (inf);
     assert (vector);
@@ -126,11 +108,12 @@ Status_t tokenNum (TokenContextInf_t* inf,
     int len = 0;
     sscanf (*(inf->pose), "%d%n", &value, &len);
 
-    Node_t node = {
-        .type_type = NODE_TYPE_NUM,
+    Node_t node =
+    {
+        .type_node = NODE_NUM,
         .parent = NULL,
         .children = NULL,
-        .amount_children = 0
+        .amount_children = 0,
     };
     node.val.num = value;
     vectorAdd (vector, node);
@@ -138,44 +121,99 @@ Status_t tokenNum (TokenContextInf_t* inf,
     *(inf->pose) += len;
     return PARSER_THIS_OK;
 }
-// ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-Status_t tokenIndent (TokenContextInf_t* inf,
-                      TokenVector_t* vector)
+Status_t tokenIdent (TokenContextInf_t* inf,
+                     TokenVector_t* vector)
 {
     assert (inf);
     assert (vector);
 
-    if (!isalpha (**inf->pose))
-        return PARSER_NOT_THIS;
+    if (!isalpha (**inf->pose) && **inf->pose != '_')
+        return PARSER_SYNTAX_ERROR;
 
-    size_t len = 0;
-    char** str = inf->pose;
-    char buffer[MAX_TOKEN_LEN] = "";
+    int len = 0;
+    char buffer[TOKEN_MAX_LEN] = "";
 
-    while (isalpha ((*str)[len]) ||
-           isdigit ((*str)[len]) ||
-           (*str)[len] == '_')
+    while ((isalpha ((*inf->pose)[len]) ||
+            isdigit ((*inf->pose)[len]) ||
+            (*inf->pose)[len] == '_') &&
+           len < TOKEN_MAX_LEN - 1)
     {
-        buffer[len] = (*str)[len];
+        buffer[len] = (*inf->pose)[len];
         len++;
     }
 
-    char* name = strdup (buffer);
-    Node_t node = {
-        .type_node = NODE_TYPE_INDENT,
+    buffer[len] = '\0';
+
+    Node_t token =
+    {
+        .type_node = NODE_ID_RAW,
         .parent = NULL,
         .children = NULL,
         .amount_children = 0,
     };
-    node.val.ident.name = name;
-    vectorAdd (vector, node);
+    token.val.id_raw.name = StrT_AddString (inf->table_str, buffer);
 
-    *str += len;
+    vectorAdd (vector, token);
+    *inf->pose += len;
+
     return PARSER_THIS_OK;
 }
+
 // ---------------------------------------------------------------------------------------------------
+Status_t tokenPunct (TokenContextInf_t* inf,
+                     TokenVector_t* vector)
+{
+    assert (inf);
+    assert (vector);
+
+    int len = 0;
+    Punct_t punct_type = PUNCT_ENDSTRING;
+
+    if (LexDB_FindPunct (inf->lexeme_data, *inf->pose,
+                         &len, &punct_type) == 0)
+    {
+        Node_t token =
+        {
+            .type_node = NODE_PUNCT,
+        };
+        token.val.punct = punct_type;
+
+        vectorAdd (vector, token);
+        *inf->pose += len;
+        return PARSER_THIS_OK;
+    }
+
+    return PARSER_NOT_THIS;
+}
+
+// ---------------------------------------------------------------------------------------------------
+Status_t tokenOper (TokenContextInf_t* inf,
+                    TokenVector_t* vector)
+{
+    assert (inf);
+    assert (vector);
+
+    int len = 0;
+    Oper_t op_type;
+
+    if (LexDB_FindOper (inf->lexeme_data, *inf->pose,
+                        &len, &op_type) == 0)
+    {
+        Node_t token =
+        {
+            .type_node = NODE_OPER,
+        };
+        token.val.oper.code = op_type;
+
+        vectorAdd (vector, token);
+        *inf->pose += len;
+        return PARSER_THIS_OK;
+    }
+
+    return PARSER_NOT_THIS;
+}
 
 // ---------------------------------------------------------------------------------------------------
 Status_t tokenKeyWord (TokenContextInf_t* inf,
@@ -184,99 +222,37 @@ Status_t tokenKeyWord (TokenContextInf_t* inf,
     assert (inf);
     assert (vector);
 
-    size_t len = 0;
-    char** str = inf->pose;
-    char buffer[MAX_TOKEN_LEN] = "";
 
-    while (isalpha((*str)[len]) ||
-           (*str)[len] == '_' ||
-           (*str)[len] == '=')
+    if (!isalpha (**inf->pose))
+        return PARSER_SYNTAX_ERROR;
+
+    int len = 0;
+    char buffer[TOKEN_MAX_LEN] = "";
+
+    while (isalpha ((*inf->pose)[len]) &&
+           len < TOKEN_MAX_LEN - 1)
     {
-        buffer[len] = (*str)[len];
+        buffer[len] = (*inf->pose)[len];
         len++;
     }
 
-    Node_t node = {
-        .type_node = NODE_TYPE_KEY_WORD,
-        .parent = NULL,
-        .children = NULL,
-        .amount_children = 0,
-    };
-
-    bool is_real = false;
-    for (size_t i = 0; i < sizeof (ALL_SYSTEM_WORD) / sizeof (ALL_SYSTEM_WORD[0]); i++)
-    {
-        if (strcmp (ALL_SYSTEM_WORD[i].name, buffer) == 0)
-        {
-            node.val.key = ALL_SYSTEM_WORD[i].value;
-            is_real = true;
-            break;
-        }
-    }
-    if (!is_real)
+    buffer[len] = '\0';
+    int key_id = LexDB_FindKeyword (inf->lexeme_data, buffer);
+    if (key_id == -1)
         return PARSER_NOT_THIS;
 
-    *str += len;
-    vectorAdd (vector, node);
+    Node_t token =
+    {
+        .type_node = NODE_KEY,
+    };
+    token.val.key = key_id;
+
+    vectorAdd (vector, token);
+    *inf->pose += len;
 
     return PARSER_THIS_OK;
 }
-// ---------------------------------------------------------------------------------------------------
 
-// ---------------------------------------------------------------------------------------------------
-Status_t tokenMathOper (TokenContextInf_t* inf,
-                        TokenVector_t* vector)
-{
-    assert (inf);
-    assert (vector);
-
-    // printf ("STR in math: %s\n", *inf->pose);
-    size_t len = 0;
-    char* str = *(inf->pose);
-    char buffer[MAX_TOKEN_LEN] = "";
-
-    while (true)
-    {
-        bool is_correct = false;
-        for (size_t i = 0; i < sizeof (OPER_SYMBOLS) / sizeof (OPER_SYMBOLS[0]); i++)
-        {
-            if (*str == OPER_SYMBOLS[i])
-            {
-                buffer[len++] = *str;
-                str++;
-                is_correct = true;
-                break;
-            }
-        }
-        if (is_correct == false)
-            break;
-    }
-
-    Node_t node = {
-        .type_node = NODE_TYPE_OPER,
-        .parent = NULL,
-        .children = NULL,
-        .amount_children = 0,
-    };
-
-    bool is_real = false;
-    for (size_t i = 0; i < sizeof (ALL_OPER_WORD) / sizeof (ALL_OPER_WORD[0]); i++)
-    {
-        if (strcmp (ALL_OPER_WORD[i].name, buffer) == 0)
-        {
-            node.val.oper.code = ALL_OPER_WORD[i].value;
-            is_real = true;
-        }
-    }
-
-    if (is_real == false)
-        return PARSER_NOT_THIS;
-
-    *inf->pose = str;
-    vectorAdd (vector, node);
-    return PARSER_THIS_OK;
-}
-// ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
 int tokenDump (TokenVector_t* vector)
@@ -299,66 +275,21 @@ int tokenOneDump (Node_t* node)
     assert (node);
 
     printf ("[%d]<", node->type_node);
-    switch (node->type_node)
-    {
-        case (NODE_TYPE_INDENT):
-            printf ("%s", node->val.ident.name);
-            break;
+    if (node->type_node == NODE_ID_RAW)
+        printf ("%s", node->val.id_raw.name->string);
 
-        case (NODE_TYPE_VAR):
-            if (node->val.var.inf != NULL)
-                printf ("%s", node->val.var.inf->name);
-            else
-                printf ("Unknown");
-            break;
+    else if (node->type_node == NODE_PUNCT)
+        printf ("%s", PUNCTUATION[node->val.punct].lexeme);
 
-        case (NODE_TYPE_FUNC):
-            if (node->val.func.inf != NULL)
-                printf ("%s", node->val.func.inf->name);
-            else
-                printf ("Unknown");
-            break;
+    else if (node->type_node == NODE_OPER)
+        printf ("%s", OPERATIONS[node->val.oper.code].lexeme);
 
-        case (NODE_TYPE_KEY_WORD):
-            for (size_t i = 0; i < sizeof (ALL_SYSTEM_WORD) / sizeof (ALL_SYSTEM_WORD[0]); i++)
-            {
-                if (node->val.key == ALL_SYSTEM_WORD[i].value)
-                {
-                    printf ("%s", ALL_SYSTEM_WORD[i].name);
-                    break;
-                }
-            }
-            break;
+    else if (node->type_node == NODE_KEY)
+        printf ("%s", KEYWORDS[node->val.key].lexeme);
 
-        case (NODE_TYPE_OPER):
-            for (size_t i = 0; i < sizeof (ALL_OPER_WORD) / sizeof (ALL_OPER_WORD[0]); i++)
-            {
-                if (node->val.oper.code == ALL_OPER_WORD[i].value)
-                {
-                    printf ("%s", ALL_OPER_WORD[i].name);
-                    break;
-                }
-            }
-            break;
+    else
+        printf ("block");
 
-        case (NODE_TYPE_PUNCT):
-            for (size_t i = 0; i < sizeof (ALL_PUNCT_WORD) / sizeof (ALL_PUNCT_WORD[0]); i++)
-            {
-                if (node->val.punct == ALL_PUNCT_WORD[i].value)
-                {
-                    printf ("%s", ALL_PUNCT_WORD[i].name);
-                    break;
-                }
-            }
-            break;
-
-        case (NODE_TYPE_NUM):
-            printf ("%d", node->val.num);
-            break;
-
-        default:
-            printf ("block");
-    }
     printf (">\n");
 
     return 0;
@@ -372,66 +303,21 @@ int tokenOneDump (Node_t* node, const char* reason)
     assert (reason);
 
     printf ("[%d]<", node->type_node);
-    switch (node->type_node)
-    {
-        case (NODE_TYPE_INDENT):
-            printf ("%s", node->val.ident.name);
-            break;
+    if (node->type_node == NODE_ID_RAW)
+        printf ("%s", node->val.id_raw.name->string);
 
-        case (NODE_TYPE_VAR):
-            if (node->val.var.inf != NULL)
-                printf ("%s", node->val.var.inf->name);
-            else
-                printf ("Unknown");
-            break;
+    else if (node->type_node == NODE_PUNCT)
+        printf ("%s", PUNCTUATION[node->val.punct].lexeme);
 
-        case (NODE_TYPE_FUNC):
-            if (node->val.func.inf != NULL)
-                printf ("%s", node->val.func.inf->name);
-            else
-                printf ("Unknown");
-            break;
+    else if (node->type_node == NODE_OPER)
+        printf ("%s", OPERATIONS[node->val.oper.code].lexeme);
 
-        case (NODE_TYPE_KEY_WORD):
-            for (size_t i = 0; i < sizeof (ALL_SYSTEM_WORD) / sizeof (ALL_SYSTEM_WORD[0]); i++)
-            {
-                if (node->val.key == ALL_SYSTEM_WORD[i].value)
-                {
-                    printf ("%s", ALL_SYSTEM_WORD[i].name);
-                    break;
-                }
-            }
-            break;
+    else if (node->type_node == NODE_KEY)
+        printf ("%s", KEYWORDS[node->val.key].lexeme);
 
-        case (NODE_TYPE_OPER):
-            for (size_t i = 0; i < sizeof (ALL_OPER_WORD) / sizeof (ALL_OPER_WORD[0]); i++)
-            {
-                if (node->val.oper.code == ALL_OPER_WORD[i].value)
-                {
-                    printf ("%s", ALL_OPER_WORD[i].name);
-                    break;
-                }
-            }
-            break;
+    else
+        printf ("block");
 
-        case (NODE_TYPE_PUNCT):
-            for (size_t i = 0; i < sizeof (ALL_PUNCT_WORD) / sizeof (ALL_PUNCT_WORD[0]); i++)
-            {
-                if (node->val.punct == ALL_PUNCT_WORD[i].value)
-                {
-                    printf ("%s", ALL_PUNCT_WORD[i].name);
-                    break;
-                }
-            }
-            break;
-
-        case (NODE_TYPE_NUM):
-            printf ("%d", node->val.num);
-            break;
-
-        default:
-            printf ("block");
-    }
     printf (">%s\n", reason);
 
     return 0;

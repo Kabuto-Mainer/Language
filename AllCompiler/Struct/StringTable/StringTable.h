@@ -9,7 +9,7 @@ struct StringEntry_t
     char* string;
     size_t hash;
 
-    struct StringEntry_t* next;
+    StringEntry_t* next;
 };
 // ---------------------------------------------------------------------------------------------------
 
@@ -29,7 +29,7 @@ const size_t StrT_START_SIZE = 10;
 // ---------------------------------------------------------------------------------------------------
 StringTable_t*  StrT_Create ();
 
-StringEntry_t*  StrT_AddString (StringTable_t* table, char* name);
+StringEntry_t*  StrT_AddString (StringTable_t* table, const char* name);
 
 void            StrT_Resize (StringTable_t* table);
 

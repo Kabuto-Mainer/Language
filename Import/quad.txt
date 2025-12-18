@@ -1,0 +1,74 @@
+ser Disc <a, b, c> (
+    ret b * b - 4*a*c
+)
+
+ser Sqrt_int < num > (
+    al cur = 0
+
+    loop < cur * cur << num > (
+        cur = cur + 1
+    )
+
+    tr < cur*cur == num> (
+        ret cur
+    )
+
+    ntr < num - (cur - 1)*(cur - 1) << num - cur*cur > (
+        ret cur - 1
+    )
+    ret cur
+)
+
+ser SolveEquation <a, b, c> (
+
+    tr <a == 0> (
+        tr <b == 0> (
+            tr <c == 0> (
+                out <888>
+                ret 0
+            )
+            def (
+                out <-1>
+                ret 0
+            )
+        )
+        def (
+            out <1>
+            out <-1 * c / b>
+            ret 0
+        )
+    )
+
+    al Disr = Disc <a, b, c>
+
+    tr <Disr << 0> (
+        out <0>
+        ret 0
+    )
+
+    ntr <Disr == 0> (
+        out <1>
+        out < -1 * b / (2 * a) >
+        ret 0
+    )
+
+    def (
+        out <2>
+        al srt = Sqrt_int <Disr>
+
+        al x_1 = (-1 * b + srt) / (2 * a)
+        al x_2 = (-1 * b - srt) / (2 * a)
+
+        out <x_1>
+        out <x_2>
+        ret 0
+    )
+    out <-1>
+)
+
+al a  ~ al b ~ al c
+in <a> ~ in <b> ~ in <c>
+
+SolveEquation <a, b, c>
+
+$

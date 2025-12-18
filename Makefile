@@ -73,30 +73,46 @@ PROC_ASM_DOP_CPP = Proc/PROCESSOR/processor.cpp Proc/PROCESSOR/proc-func.cpp \
 
 # Файлы компилятора (lang)
 DUMP_CPP = 		AllCompiler/Sup/DumpCode/DumpFunc.cpp
-TABLE_CPP = 	AllCompiler/Struct/NameTable/NameTableFunc.cpp
+
+TABLE_CPP = AllCompiler/Struct/StringTable/StringTable.cpp \
+			AllCompiler/Struct/SymbolTable/SymbolTable.cpp \
+			AllCompiler/Struct/TypeTable/TypeTable.cpp
+
 PARSER_CPP = 	AllCompiler/Front/Parser/ParserFunc.cpp \
 				AllCompiler/Front/Parser/WriteTreeFunc.cpp \
 				AllCompiler/Front/Parser/WriteCode.cpp
+
 SUPPORT_CPP = 	AllCompiler/Sup/Support/Support.cpp \
 				AllCompiler/Sup/Common/NodeFunc.cpp
-TOKEN_CPP = 	AllCompiler/Front/Token/TokenFunc.cpp
+
+TOKEN_CPP = 	AllCompiler/Front/Token/TokenFunc.cpp \
+				AllCompiler/Front/Token/Lexeme.cpp
+
 VECTOR_CPP = 	AllCompiler/Struct/Vector/Vector.cpp
+
 BACK_CPP = 		AllCompiler/Back/ParseTree.cpp \
 				AllCompiler/Back/CompilerFunc.cpp \
 				AllCompiler/Back/Stack.cpp
 
 # Инклюд-директории для компилятора
-INCLUDES_LANG = -IAllCompiler/Sup/Common/ -IAllCompiler/Struct/NameTable/ \
+INCLUDES_LANG = -IAllCompiler/Sup/Common/ \
 				-IAllCompiler/Front/Parser/ -IAllCompiler/Sup/Support/ \
 				-IAllCompiler/Front/Token/ -IAllCompiler/Struct/Vector/ \
                 -IAllCompiler/Sup/DumpCode/ -IAllCompiler/Sup/Configs/ \
-				-IAllCompiler/Back/
+				-IAllCompiler/Back/ -IAllCompiler/Struct/StringTable/ \
+				-IAllCompiler/Struct/SymbolTable/ -IAllCompiler/Struct/TypeTable/
 
 # ============================================================================
 # Цели сборки
 # ============================================================================
 
 all: hash-cmd assembler processor lang
+
+test-lang:
+	g++ $(INCLUDES_LANG) $(FLAGS) AllCompiler/test-main.cpp $(VECTOR_CPP) \
+		$(TOKEN_CPP) $(SUPPORT_CPP) $(TABLE_CPP) \
+		$(LDFLAGS) -o $(BIN_DIR)/lang
+
 
 # ----------------------------------------------------------------------------
 # Компилятор (исходный код → AST/asm)

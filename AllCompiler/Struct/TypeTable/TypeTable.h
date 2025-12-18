@@ -2,6 +2,7 @@
 #define TYPE_TABLE_H
 
 
+#include "StringTable.h"
 // ---------------------------------------------------------------------------------------------------
 struct SymbolTable_t;
 struct SymbolEntry_t;
@@ -75,6 +76,8 @@ void            TT_PrintType            (TypeEntry_t* type,         int depth);
 void            TT_InitStandardTypes    (TypeTable_t* t_table,      StringTable_t* s_table);
 
 void            TT_Delete               (TypeTable_t* table);
+
+void            TT_Resize               (TypeTable_t* table);
 // ---------------------------------------------------------------------------------------------------
 
 

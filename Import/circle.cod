@@ -1,0 +1,31 @@
+ser Circle <Rad> (
+	tr <Rad >> 50> (
+		out <-1>
+		ret 0
+	)
+	al x = 0
+	al y = 0
+	loop <y << 100> (
+		x = 0
+		loop <x << 100> (
+			al r = 0
+			tr <r << Rad * Rad> (
+pxl_C <xy1> 			)
+			def (
+pxl_C <xy0> 			)
+			x = x + 1
+		)
+		y = y + 1
+	)
+	ret 0
+)
+ser pxl_C <x, > y, > number> (
+	tr <number == 0> (
+	)
+	ntr <number == 1> (
+	)
+	ret 0
+)
+al Rad = 0
+in <Rad>
+Circle <Rad> in <Rad>

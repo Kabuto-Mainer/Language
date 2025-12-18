@@ -3,89 +3,63 @@
 
 
 // ---------------------------------------------------------------------------------------------------
-/// @brief Тип узла
-enum NodeType_t
+/// @brief Тип бинарной операции
+enum Oper_t
 {
-    NODE_TYPE_INDENT,
-    NODE_TYPE_FUNC,
-    NODE_TYPE_VAR,
-    NODE_TYPE_OPER,
-    NODE_TYPE_KEY_WORD,
-    NODE_TYPE_PUNCT,
-    NODE_TYPE_NUM,
-    NODE_TYPE_BLOCK
+    // Обычные операции арифметики
+    OPER_ADD             = 0,
+    OPER_SUB             = 1,
+    OPER_MUL             = 2,
+    OPER_DIV             = 3,
+
+    // Сравнение
+    OPER_E               = 5,    // ==
+    OPER_NE              = 6,    // !=
+    OPER_L               = 7,    // <
+    OPER_LE              = 8,    // <=
+    OPER_B               = 9,    // >
+    OPER_BE              = 10,   // >=
+
+    // Логические операции
+    OPER_AND             = 11,   // &&
+    OPER_OR              = 12,   // ||
+    OPER_NOT             = 13,   // !
+
+    OPER_DEREF           = 14,
+    OPER_ADDR            = 15,
+    OPER_ASSIGN          = 16
 };
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-/// @brief Тип операции
-enum OperType_t
-{
-    OPER_ADD                = 0,
-    OPER_SUB                = 1,
-    OPER_MUL                = 2,
-    OPER_DIV                = 3,
-    OPER_SQRT               = 4,
-
-    OPER_COMP_BIG_EQUAL     = 5,
-    OPER_COMP_ONLY_BIG      = 6,
-    OPER_COMP_LIT_EQUAL     = 7,
-    OPER_COMP_ONLY_LIT      = 8,
-    OPER_COMP_EQUAL         = 9,
-    OPER_COMP_NOT_EQUAL     = 10,
-
-    OPER_NAME               = 11,
-    OPER_UNNAME             = 12
-};
-// ---------------------------------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------------------------------
-/// @brief Тип ключевого слова
-enum KeyWord_t
-{
-    KEY_IF              = 0,
-    KEY_ELSE_IF         = 1,
-    KEY_ELSE            = 2,
-    KEY_WHILE           = 3,
-    KEY_DEFINE_VAR      = 4,
-    KEY_DEFINE_FUNC     = 5,
-    KEY_RETURN          = 6,
-    KEY_ASSIGN          = 7,
-    KEY_BREAK           = 8,
-    KEY_IN              = 9,
-    KEY_OUT             = 10,
-};
-// ---------------------------------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------------------------------
-/// @brief Тип пунктуационного символа
+/// @brief Тип пунктуации
 enum Punct_t
 {
-    PUNCT_COMMA,
-    PUNCT_LEFT_ROUND,
-    PUNCT_RIGHT_ROUND,
-    PUNCT_END_TREE_STR,
-    PUNCT_NEXT_STR,
-    PUNCT_DOG,
-    PUNCT_QUOT,
-    PUNCT_END_STR,
-    PUNCT_LEFT_TANG,
-    PUNCT_RIGHT_TANG,
-    PUNCT_UNNAME,
-    PUNCT_NAME
+    PUNCT_ENDSTRING     = 0,    // \n
+    PUNCT_COMMA         = 1,    // ,
+    PUNCT_LPAREN        = 2,    // (
+    PUNCT_RPAREN        = 3,    // )
+    PUNCT_LTANG         = 4,    // <
+    PUNCT_RTANG         = 5,    // >
+    PUNCT_LBRACKET      = 6,    // [
+    PUNCT_RBRACKET      = 7,    // ]
+    PUNCT_DOT           = 8,    // .
+    PUNCT_COMMENT       = 9,    // #
+    PUNCT_COLON         = 10,   // :
+    PUNCT_ARROW         = 11,   // ->
 };
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-/// \brief Тип блока в узлах
-enum Block_t
+/// @brief Тип блока кода
+enum BlockType_t
 {
-    BLOCK_FUNC,
-    BLOCK_IF,
-    BLOCK_ELSE_IF,
-    BLOCK_ELSE,
-    BLOCK_WHILE,
-    BLOCK_MAIN
+    BLOCK_FUNC          = 0,    // Тело функции
+    BLOCK_IF            = 1,    // Блок if
+    BLOCK_ELSE          = 2,    // Блок else
+    BLOCK_WHILE         = 3,    // Блок while
+    BLOCK_COMPOUND      = 5,    // Обычный блок { ... }
+    BLOCK_PROGRAM       = 6,    // Главный блок программы
 };
 // ---------------------------------------------------------------------------------------------------
 

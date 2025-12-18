@@ -266,13 +266,13 @@ void TT_Delete (TypeTable_t* table)
 }
 
 // ---------------------------------------------------------------------------------------------------
-void TT_Resize(TypeTable_t* table)
+void TT_Resize (TypeTable_t* table)
 {
-    assert(table);
+    assert (table);
 
     int new_capacity = table->capacity * 2;
     TypeEntry_t** new_types = (TypeEntry_t**) realloc (table->types,
-                                                        new_capacity * sizeof (TypeEntry_t*));
+                                                        (size_t) new_capacity * sizeof (TypeEntry_t*));
 
     if (new_types == NULL)
         EXIT_FUNC ("NULL realloc", );

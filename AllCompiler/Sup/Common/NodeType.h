@@ -2,80 +2,123 @@
 #define NODE_TYPE_H
 
 #include <stdio.h>
-#include "NameTableType.h"
-#include "TypesOfType.h"
-
+#include "TypeTable.h"
+#include "StringTable.h"
+#include "SymbolTable.h"
 
 // ---------------------------------------------------------------------------------------------------
-struct FullTypeInfo_t
+struct Node_t;
+// ---------------------------------------------------------------------------------------------------
+// Во время парсинга нам нужно только имя
+struct ID_Raw_t
 {
-    char* type_name;
-    int ptr_lvl;
-    int array_size;
+    StringEntry_t* name; // Только имя из StringTable
 };
-// ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-struct ResolveTypeInfo_t
+// Используется при построении дерева при объявлении переменных и функций
+struct ID_Tree_t
 {
-    NameTableVar_t* type;
-    int ptr_lvl;
-    int array_size;
+    StringEntry_t* name;
+    TypeEntry_t* base_type;   // Тип (в котором есть и количество элементов, и уровень вложенности)
 };
-// ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
+// Появляется на промежуточном этапе проверки всех типов и заполнения таблиц имен
+struct ID_Resolved_t
+{
+    SymbolEntry_t* symbol; // Указатель на элемент таблицы имен
+};
+
+// ---------------------------------------------------------------------------------------------------
+// Тип результата операции
+struct OperatorType_t
+{
+    TypeEntry_t* result_type;
+};
+
+// ---------------------------------------------------------------------------------------------------
+// Сам union
 union NodeValue_t
 {
+    // Обычные значения для простых узлов
     int key;
     int punct;
     int num;
 
-    // 1. Только для момента лексического анализа.
-    struct {
-        char* name;
-    } id_raw;
+    // Идентификаторы на разных этапах
+    struct ID_Raw_t id_raw;
+    struct ID_Tree_t id_tree;
+    struct ID_Resolved_t id_res;
 
-    // 2. Для построения дерева. Функции и переменные обладают одинаковой структурой.
-    struct {
-        char* name;
-        FullTypeInfo_t type;
-    } id_tree;
-
-    // 3. Для проверки всех типов и заполнения всех таблиц.
-    struct {
-        NameTableVar_t* var;
-    } id_res;
-
+    // Операторы и выражения
     struct {
         int code;
-        ResolveTypeInfo_t type;
+        TypeEntry_t* type;          // Тип результата операции
     } oper;
 
+    // Блоки кода
     struct {
-        Node_t* prev;
-        NameTable_t* table_var;
+        Node_t* prev;              // Ссылка на предыдущий блок кода для организации областей видимости
+        SymbolTable_t* scope;      // Таблица символов этого блока
     } block;
 
-    // Нужен для синтаксического анализа, в котором нет работы с таблицами имен
-    // Для этого есть отдельная стадия
-    int type_block;
+    // Функции
+    struct {
+        StringEntry_t* name;       // Имя функции
+        TypeEntry_t* return_type;  // Тип возвращаемого значения
+        SymbolTable_t* params;     // Таблица аргументов
+    } func;
+
+    // Структуры и типы
+    struct {
+        StringEntry_t* name;       // Имя структуры
+        TypeEntry_t* type_entry;   // Ссылка на запись в таблице типов
+    } struct_def;
 };
-// ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-/// @brief Структура узла дерева
+/// @brief Типы узлов дерева
+enum NodeType_t
+{
+    NODE_NUM,
+    NODE_ID_RAW,
+    NODE_ID_TREE,
+    NODE_ID_RESOLVED,
+
+    NODE_OPER,
+    NODE_KEY, // Только для токенизации
+    NODE_CALL,
+
+    NODE_IF,
+    NODE_WHILE,
+    NODE_RETURN,
+    NODE_BREAK,
+    NODE_CONTINUE,
+
+    NODE_VAR_DECL,
+    NODE_FUNC_DECL,
+    NODE_STRUCT_DECL,
+
+    NODE_BLOCK,
+    NODE_PROGRAM,
+
+    NODE_PUNCT
+};
+
+// ---------------------------------------------------------------------------------------------------
+/// @brief Основная структура узла дерева
 struct Node_t
 {
     NodeType_t type_node;
 
-    Node_t* parent;
-    Node_t** children;
+    struct Node_t* parent;
+    struct Node_t** children;
     int amount_children;
 
     NodeValue_t val;
 };
-// ---------------------------------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------------------------------
 
 #endif /* NODE_TYPE_H */
