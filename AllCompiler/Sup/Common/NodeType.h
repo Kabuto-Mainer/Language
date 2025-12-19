@@ -8,6 +8,18 @@
 
 // ---------------------------------------------------------------------------------------------------
 struct Node_t;
+
+/// \brief Предназначен для хранения типов в дереве для их использования до объявления
+union TreeType_t
+{
+    struct {
+        StringEntry_t* name;
+        int ptr_lvl;
+        int array_size;
+    } srt;
+
+    TypeEntry_t* base;
+};
 // ---------------------------------------------------------------------------------------------------
 // Во время парсинга нам нужно только имя
 struct ID_Raw_t
@@ -20,7 +32,7 @@ struct ID_Raw_t
 struct ID_Tree_t
 {
     StringEntry_t* name;
-    TypeEntry_t* base_type;   // Тип (в котором есть и количество элементов, и уровень вложенности)
+    TreeType_t type;   // Тип (в котором есть и количество элементов, и уровень вложенности)
 };
 
 // ---------------------------------------------------------------------------------------------------
@@ -90,6 +102,9 @@ enum NodeType_t
     NODE_KEY, // Только для токенизации
     NODE_CALL,
 
+    NODE_INDEX,
+    NODE_FIELD,
+
     NODE_IF,
     NODE_ELSE_IF,
     NODE_ELSE,
@@ -97,6 +112,7 @@ enum NodeType_t
     NODE_RETURN,
     NODE_BREAK,
     NODE_CONTINUE,
+    NODE_ASSIGN,
 
     NODE_VAR_DECL,
     NODE_FUNC_DECL,

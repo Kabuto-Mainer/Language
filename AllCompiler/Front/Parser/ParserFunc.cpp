@@ -26,58 +26,67 @@
  @param [in] global_node Корень всего дерева
  @param [in] name_file Файл с кодом
 */
-Status_t parserGlobal (Node_t* start_node, size_t amount,
-                       Node_t* global_node, const char* name_file)
+Status_t P_ParseGlobal (Node_t* start_node, size_t amount,
+                        Node_t* global_node, const char* name_file,
+                        StringTable_t* table_str, TypeTable_t* table_type)
 {
     assert (start_node);
     assert (global_node);
     assert (name_file);
+    assert (table_str);
+    assert (table_type);
 
-    ParserContextInf_t inf =
+    ParserInf_t inf =
     {
-        .node = start_node,
-        .line = 1,
-        .error = PE_NOT_ERROR,
-        .name_file = name_file,
-        .cur_index = 0,
-        .capacity = amount,
+        .str_table = table_str,
+        .type_table = table_type
     };
 
-    while (inf.cur_index < inf.capacity)
+    ParserContextInf_t ctx = {};
+    inf.ctx = &ctx;
+
+    inf.ctx->capacity = amount;
+    inf.ctx->cur_index = 0;
+    inf.ctx->name_file = name_file;
+    inf.ctx->error = PE_NOT_ERROR;
+    inf.ctx->line = 1;
+    inf.ctx->node = start_node;
+
+    global_node->type_node = NODE_PROGRAM;
+    while (inf.ctx->cur_index < inf.ctx->capacity)
     {
-        skipVoid (&inf);
-        if (parserDeclarationFunc (&inf, global_node) == PARSER_THIS_OK)
+        skipVoid (inf.ctx);
+        if (P_ParseDeclarationVar (&inf, global_node) == PARSER_THIS_OK)
             continue;
 
-        if (parserDeclarationVar (&inf, global_node) == PARSER_THIS_OK)
+        if (P_ParseConditional (&inf, global_node) == PARSER_THIS_OK)
             continue;
 
-        if (inf.node->type == NODE_TYPE_INDENT)
-        {
-            if (isLeftTang (getNextNotEndNode (&inf)))
-            {
-                if (parserCallFunc (&inf, global_node) != PARSER_THIS_OK)
-                    SYNTAX_ERROR (&inf, PE_INDENT_NO_END);
-            }
-            else
-            {
-                if (parserAssign (&inf, global_node) != PARSER_THIS_OK)
-                    SYNTAX_ERROR (&inf, PE_INDENT_NO_END);
-            }
-            continue;
-        }
-        if (parserCondOper (&inf, global_node) == PARSER_THIS_OK)
-            continue;
-        if (parserReturn (&inf, global_node) == PARSER_THIS_OK)
-            continue;
-        if (parserInOut (&inf, global_node) == PARSER_THIS_OK)
-            continue;
-        if (parserBreak (&inf, global_node) == PARSER_THIS_OK)
+        if (P_ParseBreak (&inf, global_node) == PARSER_THIS_OK)
             continue;
 
-        if (inf.cur_index == inf.capacity - 1)
+        if (P_ParseContinue (&inf, global_node) == PARSER_THIS_OK)
+            continue;
+
+        if (P_ParseWhile (&inf, global_node) == PARSER_THIS_OK)
+            continue;
+
+        if (P_ParseCallFunction (&inf, global_node) == PARSER_THIS_OK)
+            continue;
+
+        if (P_ParseCallFunction (&inf, global_node) == PARSER_THIS_OK)
+            continue;
+
+        if (P_ParseInOut (&inf, global_node) == PARSER_THIS_OK)
+            continue;
+
+        if (P_ParseAssign (&inf, global_node) == PARSER_THIS_OK)
+            continue;
+
+        if (inf.ctx->cur_index == inf.ctx->capacity - 1)
             break;
-        SYNTAX_ERROR (&inf, PE_UNKNOWN);
+
+        SYNTAX_ERROR (inf.ctx, PE_UNKNOWN, PARSER_SYNTAX_ERROR);
     }
     return PARSER_THIS_OK;
 }
@@ -95,171 +104,97 @@ Status_t parserGlobal (Node_t* start_node, size_t amount,
          PARSER_NOT_THIS - если это не то место
          PARSER_ERROR - если произошла ошибка
 */
-Status_t parserUnion (ParserContextInf_t* inf,
-                      Node_t* node)
+Status_t P_ParseUnion (ParserInf_t* inf,
+                       Node_t* node)
 {
     assert (inf);
     assert (node);
 
-    if (!isLeftRound (inf->node))
-        SYNTAX_ERROR (inf, PE_NOT_LEFT_ROUND);
+    if (!isLeftRound (inf->ctx->node))
+        SYNTAX_ERROR (inf, PE_NOT_LEFT_ROUND, PARSER_SYNTAX_ERROR);
 
-    Node_t* block = inf->node;
-    block->type = NODE_TYPE_BLOCK;
-    block->val.name = NULL;
+    Node_t* block = inf->ctx->node;
+    block->type_node = NODE_BLOCK;
+
     addNode (node, block);
-    nextNode (inf);
+    nextNode (inf->ctx);
 
     while (true)
     {
-        skipVoid (inf);
-        if (parserDeclarationVar (inf, block) == PARSER_THIS_OK)
+        skipVoid (inf->ctx);
+        if (P_ParseDeclarationVar (inf, block) == PARSER_THIS_OK)
             continue;
-        if (parserReturn (inf, block) == PARSER_THIS_OK)
+
+        if (P_ParseConditional (inf, block) == PARSER_THIS_OK)
             continue;
-        if (inf->node->type == NODE_TYPE_INDENT)
-        {
-            if (isLeftTang (getNextNotEndNode (inf)))
-            {
-                if (parserCallFunc (inf, block) != PARSER_THIS_OK)
-                    SYNTAX_ERROR (inf, PE_CALL_FUNC);
-            }
-            else
-            {
-                if (parserAssign (inf, block) != PARSER_THIS_OK)
-                    SYNTAX_ERROR (inf, PE_ASSIGN);
-            }
+
+        if (P_ParseBreak (inf, block) == PARSER_THIS_OK)
             continue;
-        }
-        if (parserCondOper (inf, block) == PARSER_THIS_OK)
+
+        if (P_ParseContinue (inf, block) == PARSER_THIS_OK)
             continue;
-        if (parserReturn (inf, block) == PARSER_THIS_OK)
+
+        if (P_ParseWhile (inf, block) == PARSER_THIS_OK)
             continue;
-        if (parserInOut (inf, block) == PARSER_THIS_OK)
+
+        if (P_ParseCallFunction (inf, block) == PARSER_THIS_OK)
             continue;
-        if (parserBreak (inf, block) == PARSER_THIS_OK)
+
+        if (P_ParseCallFunction (inf, block) == PARSER_THIS_OK)
+            continue;
+
+        if (P_ParseInOut (inf, block) == PARSER_THIS_OK)
+            continue;
+
+        if (P_ParseAssign (inf, block) == PARSER_THIS_OK)
             continue;
 
         break;
     }
-    if (!isRightRound (inf->node))
-        SYNTAX_ERROR (inf, PE_NOT_RIGHT_ROUND);
-    nextNode (inf);
-    skipVoid (inf);
+    if (!isRightRound (inf->ctx->node))
+        SYNTAX_ERROR (inf, PE_NOT_RIGHT_ROUND, PARSER_SYNTAX_ERROR);
+
+    nextNode (inf->ctx);
+    skipVoid (inf->ctx);
     return PARSER_THIS_OK;
 }
 // ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
-/**
- @brief Функция считывания операций in и out
- @param [in] inf Указатель на структуру с текущим положением
- @param [in] parent Указатель на родителя поддерева
- @return PARSER_THIS_OK - если все нормально и это нужное место
-         PARSER_NOT_THIS - если это не то место
-         PARSER_ERROR - если произошла ошибка
-*/
-Status_t parserInOut (ParserContextInf_t* inf,
-                      Node_t* parent)
+Status_t P_ParseInOut (ParserInf_t* inf,
+                       Node_t* parent)
 {
     assert (inf);
     assert (parent);
 
-    if (inf->node->type != NODE_TYPE_KEY_WORD ||
-        (inf->node->val.key != KEY_IN &&
-         inf->node->val.key != KEY_OUT))
+    if (inf->ctx->node->type_node != NODE_KEY ||
+        (inf->ctx->node->val.key != KW_INPUT &&
+         inf->ctx->node->val.key != KW_OUTPUT))
         return PARSER_NOT_THIS;
 
-    Node_t* node_key = inf->node;
-    nextNode (inf);
-    skipVoid (inf);
+    Node_t* node_key = inf->ctx->node;
+    nextNode (inf->ctx);
+    skipVoid (inf->ctx);
 
-    if (!isLeftTang (inf->node))
-        SYNTAX_ERROR (inf, PE_NOT_LEFT_TANG);
+    if (!isLeftTang (inf->ctx->node))
+        SYNTAX_ERROR (inf, PE_NOT_LEFT_TANG, PARSER_SYNTAX_ERROR);
 
-    nextNode (inf);
-    skipVoid (inf);
+    nextNode (inf->ctx);
+    skipVoid (inf->ctx);
 
-    if (node_key->val.key == KEY_IN)
-    {
-        if (inf->node->type != NODE_TYPE_INDENT)
-            SYNTAX_ERROR (inf, PE_NOT_INDENT);
-        addNode (node_key, inf->node);
-        inf->node->type = NODE_TYPE_VAR;
-        nextNode (inf);
-        skipVoid (inf);
-    }
-    else
-    {
-        if (parserExpresion (inf, node_key) != PARSER_THIS_OK)
-            SYNTAX_ERROR (inf, PE_NOT_EXPRESION);
-    }
-    addNode (parent, node_key);
-    if (!isRightTang (inf->node))
-        SYNTAX_ERROR (inf, PE_NOT_RIGHT_TANG);
+    if (P_ParseOrExpression (inf, node_key) != PARSER_THIS_OK)
+        SYNTAX_ERROR (inf->ctx, PE_ERROR, PARSER_SYNTAX_ERROR);
 
-    nextNode (inf);
-    skipCharNext (inf);
+    if (!isRightTang (inf->ctx))
+        SYNTAX_ERROR (inf, PE_NOT_RIGHT_TANG, PARSER_SYNTAX_ERROR);
 
-    if (!isEndChar (inf->node) && !isRightRound (inf->node))
-        SYNTAX_ERROR (inf, PE_NO_END_CHAR);
+    nextNode (inf->ctx);
+    if (!isEndChar (inf->ctx->node) && !isRightRound (inf->ctx->node))
+        SYNTAX_ERROR (inf, PE_NO_END_CHAR, PARSER_SYNTAX_ERROR);
 
-    skipVoid (inf);
+    skipVoid (inf->ctx);
     return PARSER_THIS_OK;
 }
-// ---------------------------------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------------------------------
-/**
- @brief Функция считывания оператора с условием (if elif else while)
- @param [in] inf Указатель на структуру с текущим положением
- @param [in] node Указатель на родителя поддерева
- @return PARSER_THIS_OK - если все нормально и это нужное место
-         PARSER_NOT_THIS - если это не то место
-         PARSER_ERROR - если произошла ошибка
-*/
-Status_t parserCondOper (ParserContextInf_t* inf,
-                         Node_t* node)
-{
-    assert (inf);
-    assert (node);
-
-    if (inf->node->type != NODE_TYPE_KEY_WORD ||
-       (inf->node->val.key != KEY_IF &&
-        inf->node->val.key != KEY_ELSE_IF &&
-        inf->node->val.key != KEY_ELSE &&
-        inf->node->val.key != KEY_WHILE))
-        return PARSER_NOT_THIS;
-
-    Node_t* cond_node = inf->node;
-    addNode (node, cond_node);
-    nextNode (inf);
-    skipVoid (inf);
-
-    if (cond_node->val.key != KEY_ELSE)
-    {
-        if (!isLeftTang (inf->node))
-            SYNTAX_ERROR (inf, PE_NOT_LEFT_TANG);
-
-        nextNode (inf);
-        skipVoid (inf);
-
-        if (parserExpresion (inf, cond_node) != PARSER_THIS_OK)
-            SYNTAX_ERROR (inf, PE_NOT_CONDITION);
-
-        if (!isRightTang (inf->node))
-            SYNTAX_ERROR (inf, PE_NOT_RIGHT_TANG);
-
-        nextNode (inf);
-        skipVoid (inf);
-    }
-
-    if (parserUnion (inf, cond_node) != PARSER_THIS_OK)
-        SYNTAX_ERROR (inf, PE_NOT_UNION);
-
-    return PARSER_THIS_OK;
-}
-// ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
 /**
@@ -270,76 +205,42 @@ Status_t parserCondOper (ParserContextInf_t* inf,
          PARSER_NOT_THIS - если это не то место
          PARSER_ERROR - если произошла ошибка
 */
-Status_t parserAssign (ParserContextInf_t* inf,
-                       Node_t* node)
+Status_t P_ParseAssign (ParserInf_t* inf,
+                        Node_t* parent)
 {
     assert (inf);
-    assert (node);
+    assert (parent);
 
-    Node_t* indet_node = inf->node;
-    indet_node->type = NODE_TYPE_VAR;
-    nextNode (inf);
-    skipVoid (inf);
-
-    if (inf->node->type == NODE_TYPE_KEY_WORD &&
-        inf->node->val.key == KEY_ASSIGN)
+    Node_t* buffer_node = newNode ();
+    if (P_ParseOrExpression (inf, buffer_node) != PARSER_THIS_OK)
     {
-        Node_t* assign = inf->node;
-        addNode (node, assign);
-        addNode (assign, indet_node);
-
-        nextNode (inf);
-        skipCharNext (inf);
-        if (parserExpresion (inf, assign) != PARSER_THIS_OK)
-            SYNTAX_ERROR (inf, PE_NOT_EXPRESION);
-
-        if (!isEndChar (inf->node) && !isRightRound (inf->node))
-            SYNTAX_ERROR (inf, PE_NO_END_CHAR);
-
-        return PARSER_THIS_OK;
+        deleteOneNode (buffer_node);
+        return PARSER_SYNTAX_ERROR;
     }
-    else if (isEndChar (inf->node) || isRightRound (inf->node))
+
+    if (inf->ctx->node->type_node != NODE_OPER ||
+        inf->ctx->node->val.oper.code != OPER_ASSIGN)
     {
-        skipVoid (inf);
-        return PARSER_THIS_OK;
+        deleteOneNode (buffer_node);
+        SYNTAX_ERROR (inf->ctx, PE_ASSIGN, PARSER_SYNTAX_ERROR);
     }
-    else
-        SYNTAX_ERROR (inf, PE_NOT_EXPRESION);
-}
-// ---------------------------------------------------------------------------------------------------
 
-// ---------------------------------------------------------------------------------------------------
-/**
- * \brief Функция считывания ключевого слова return
- * \param [in] inf Указатель на структуру с текущим положением
- * \param [in] parent Указатель на родителя поддерева
- * \return  PARSER_THIS_OK - если все нормально и это нужное место
-            PARSER_NOT_THIS - если это не то место
-            PARSER_ERROR - если произошла ошибка
-*/
-Status_t parserReturn (ParserContextInf_t* inf,
-                       Node_t* node)
-{
-    assert (inf);
-    assert (node);
+    Node_t* node_assign = inf->ctx->node;
+    node_assign->type_node = NODE_ASSIGN;
+    nextNode (inf->ctx);
 
-    if (inf->node->type != NODE_TYPE_KEY_WORD ||
-        inf->node->val.key != KEY_RETURN)
-        return PARSER_NOT_THIS;
+    addNode (parent, node_assign);
+    addChildren (node_assign, buffer_node);
+    deleteOneNode (buffer_node);
 
-    Node_t* ret_node = inf->node;
-    addNode (node, ret_node);
+    if (P_ParseOrExpression (inf, node_assign) != PARSER_THIS_OK)
+        SYNTAX_ERROR (inf->ctx, PE_ERROR, PARSER_SYNTAX_ERROR);
 
-    nextNode (inf);
-    skipCharNext (inf);
+    if (!isEndChar (inf->ctx->node) && !isRightRound (inf->ctx->node))
+        SYNTAX_ERROR (inf, PE_NO_END_CHAR, PARSER_SYNTAX_ERROR);
 
-    if (parserExpresion (inf, ret_node) != PARSER_THIS_OK)
-        SYNTAX_ERROR (inf, PE_NOT_EXPRESION);
-
-    skipVoid (inf);
     return PARSER_THIS_OK;
 }
-// ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
 /**
@@ -350,42 +251,42 @@ Status_t parserReturn (ParserContextInf_t* inf,
             PARSER_NOT_THIS - если это не то место
             PARSER_ERROR - если произошла ошибка
 */
-Status_t parserWhile (ParserContextInf_t* inf,
-                      Node_t* parent)
+Status_t P_ParseWhile (ParserInf_t* inf,
+                       Node_t* parent)
 {
     assert (inf);
     assert (parent);
 
-    if (inf->node->type != NODE_TYPE_KEY_WORD ||
-        inf->node->val.key != KEY_WHILE)
+    if (inf->ctx->node->type_node != NODE_KEY ||
+        inf->ctx->node->val.key != KW_WHILE)
         return PARSER_NOT_THIS;
 
-    Node_t* node_while = inf->node;
+    Node_t* node_while = inf->ctx->node;
+    node_while->type_node = NODE_WHILE;
     addNode (parent, node_while);
-    nextNode (inf);
-    skipVoid (inf);
+    nextNode (inf->ctx);
+    skipVoid (inf->ctx);
 
-    if (!isLeftTang (inf->node))
-        SYNTAX_ERROR (inf, PE_NOT_LEFT_TANG);
+    if (!isLeftTang (inf->ctx->node))
+        SYNTAX_ERROR (inf, PE_NOT_LEFT_TANG, PARSER_SYNTAX_ERROR);
 
-    nextNode (inf);
-    skipVoid (inf);
+    nextNode (inf->ctx);
+    skipVoid (inf->ctx);
 
-    if (parserExpresion (inf, node_while) != PARSER_THIS_OK)
-        SYNTAX_ERROR (inf, PE_NOT_CONDITION);
+    if (P_ParseOrExpression (inf, node_while) != PARSER_THIS_OK)
+        SYNTAX_ERROR (inf, PE_NOT_CONDITION, PARSER_SYNTAX_ERROR);
 
-    if (!isRightTang (inf->node))
-        SYNTAX_ERROR (inf, PE_NOT_RIGHT_TANG);
+    if (!isRightTang (inf->ctx->node))
+        SYNTAX_ERROR (inf, PE_NOT_RIGHT_TANG, PARSER_SYNTAX_ERROR);
 
-    nextNode (inf);
-    skipVoid (inf);
+    nextNode (inf->ctx);
+    skipVoid (inf->ctx);
 
-    if (parserUnion (inf, node_while) != PARSER_THIS_OK)
-        SYNTAX_ERROR (inf, PE_NOT_UNION);
+    if (P_ParseUnion (inf, node_while) != PARSER_THIS_OK)
+        SYNTAX_ERROR (inf, PE_NOT_UNION, PARSER_SYNTAX_ERROR);
 
     return PARSER_THIS_OK;
 }
-// ---------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------
 /**
@@ -419,6 +320,7 @@ Status_t P_ParseBreak (ParserInf_t* inf,
     return PARSER_THIS_OK;
 }
 
+// ---------------------------------------------------------------------------------------------------
 Status_t P_ParseContinue (ParserInf_t* inf,
                           Node_t* parent)
 {
@@ -442,6 +344,7 @@ Status_t P_ParseContinue (ParserInf_t* inf,
     return PARSER_THIS_OK;
 }
 
+// ---------------------------------------------------------------------------------------------------
 Status_t P_ParseReturn (ParserInf_t* inf,
                         Node_t* parent)
 {
@@ -515,13 +418,13 @@ Status_t P_ParseDeclarationFunc (ParserInf_t* inf,
             SYNTAX_ERROR (inf->ctx, PE_NOT_COLON, PARSER_SYNTAX_ERROR);
 
         nextNode (inf->ctx);
-        TypeEntry_t* type_param = P_ParseType (inf);
-        if (type_param == NULL)
+        TreeType_t type_param = P_ParseType (inf);
+        if (type_param.srt.name == NULL)
             SYNTAX_ERROR (inf->ctx, PE_ERROR, PARSER_SYNTAX_ERROR);
 
         param->type_node = NODE_ID_TREE;
         param->val.id_tree.name = param->val.id_raw.name;
-        param->val.id_tree.base_type = type_param;
+        param->val.id_tree.type = type_param;
         addNode (decl_node, param);
 
         if (isComma (inf->ctx->node))
@@ -535,6 +438,14 @@ Status_t P_ParseDeclarationFunc (ParserInf_t* inf,
 
     nextNode (inf->ctx);
     skipVoid (inf->ctx);
+
+    if (!isArrow (inf->ctx->node))
+        SYNTAX_ERROR (inf->ctx, PE_NOT_RETURN_TYPE, PARSER_SYNTAX_ERROR);
+
+    nextNode (inf->ctx);
+    TreeType_t type = P_ParseType (inf);
+    if (type.srt.name == NULL)
+        SYNTAX_ERROR (inf->ctx, PE_ERROR, PARSER_SYNTAX_ERROR);
 
     if (inf->ctx->node->type_node != NODE_PUNCT ||
         inf->ctx->node->val.punct != PUNCT_LPAREN)
@@ -572,8 +483,8 @@ Status_t P_ParseDeclarationVar (ParserInf_t* inf,
     nextNode (inf->ctx);
     // skipVoid (inf->ctx);
 
-    TypeEntry_t* type_var = P_ParseType (inf);
-    if (type_var == NULL)
+    TreeType_t type_var = P_ParseType (inf);
+    if (type_var.srt.name == NULL)
         SYNTAX_ERROR (inf->ctx, PE_ERROR, PARSER_SYNTAX_ERROR);
 
     while (true)
@@ -584,7 +495,7 @@ Status_t P_ParseDeclarationVar (ParserInf_t* inf,
 
         var_id->type_node = NODE_ID_TREE;
         var_id->val.id_tree.name = var_id->val.id_raw.name;
-        var_id->val.id_tree.base_type = type_var;
+        var_id->val.id_tree.type = type_var;
 
         nextNode (inf->ctx);
         // skipVoid (inf->ctx);
@@ -597,7 +508,7 @@ Status_t P_ParseDeclarationVar (ParserInf_t* inf,
             addNode (define_node, next_node);
 
             nextNode (inf->ctx);
-            if (P_ParseExpression (inf, next_node) != PARSER_THIS_OK)
+            if (P_ParseOrExpression (inf, next_node) != PARSER_THIS_OK)
                 SYNTAX_ERROR (inf->ctx, P_ERROR, PARSER_SYNTAX_ERROR);
         }
         else
@@ -621,15 +532,11 @@ Status_t P_ParseDeclarationVar (ParserInf_t* inf,
 }
 
 // ---------------------------------------------------------------------------------------------------
-/**
- * \brief Функция чтения типа
- * \param [in] inf Указатель на структуру парсера
- * \return Указатель на тип в таблице типов, и NULL в случае ошибки
- */
-TypeEntry_t* P_ParseType (ParserInf_t* inf)
+TreeType_t P_ParseType (ParserInf_t* inf)
 {
     assert (inf);
 
+    TreeType_t type = {};
     int ptr_lvl = 0;
     while (inf->ctx->node->type_node == NODE_OPER &&
            inf->ctx->node->val.oper.code == OPER_ADDR)
@@ -637,36 +544,33 @@ TypeEntry_t* P_ParseType (ParserInf_t* inf)
         ptr_lvl++;
         nextNode (inf->ctx);
     }
+    type.srt.ptr_lvl = ptr_lvl;
 
     if (inf->ctx->node->type_node != NODE_ID_RAW)
-        SYNTAX_ERROR (inf->ctx, PE_UNKNOWN_TYPE, NULL);
+        SYNTAX_ERROR (inf->ctx, PE_UNKNOWN_TYPE, {});
 
     StringEntry_t* name_type = inf->ctx->node->val.id_raw.name;
-    TypeEntry_t* type = TT_Find (inf->type_table, name_type);
-    if (type == NULL)
-        SYNTAX_ERROR (inf->ctx, PE_UNKNOWN_TYPE, NULL);
-
-    for (int i = 0; i < ptr_lvl; i++)
-        type = TT_GetPointerType (inf->type_table, type);
+    type.srt.name = name_type;
+    type.srt.array_size = 0;
 
     nextNode (inf->ctx);
     if (isLeftQuad (inf->ctx->node))
     {
         nextNode (inf->ctx);
         if (inf->ctx->node->type_node != NODE_NUM)
-            SYNTAX_ERROR (inf->ctx, PE_UNKNOWN_ARRAY_SIZE, NULL);
+            SYNTAX_ERROR (inf->ctx, PE_UNKNOWN_ARRAY_SIZE, {});
 
         int amount = inf->ctx->node->val.num;
         if (amount <= 0)
-            SYNTAX_ERROR (inf->ctx, PE_ARRAY_BAD_SIZE, NULL);
-
+            SYNTAX_ERROR (inf->ctx, PE_ARRAY_BAD_SIZE, {});
 
         nextNode (inf->ctx);
         if (!isRightQuad (inf->ctx->node))
-            SYNTAX_ERROR (inf->ctx, PE_NOT_RIGHT_QUAD, NULL);
+            SYNTAX_ERROR (inf->ctx, PE_NOT_RIGHT_QUAD, {});
 
-        type = TT_GetArrayType (inf->type_table, type, amount);
+        type.srt.array_size = amount;
     }
+
     return type;
 }
 
@@ -843,30 +747,6 @@ Status_t P_ParseCompareExpression (ParserInf_t* inf,
 }
 
 // ---------------------------------------------------------------------------------------------------
-Status_t P_ParseUnaryExpression (ParserInf_t* inf,
-                                 Node_t* parent)
-{
-    assert (inf);
-    assert (parent);
-
-    if (inf->ctx->node->type_node == NODE_OPER &&
-        (inf->ctx->node->val.oper.code == OPER_NOT ||
-         inf->ctx->node->val.oper.code == OPER_ADDR ||
-         inf->ctx->node->val.oper.code == OPER_DEREF))
-    {
-        Node_t* unary_node = inf->ctx->node;
-        nextNode (inf->ctx);
-        addNode (parent, unary_node);
-
-        if (P_ParseUnaryExpression (inf, unary_node) != PARSER_THIS_OK)
-            SYNTAX_ERROR (inf->ctx, PE_NOT_EXPRESION, PARSER_SYNTAX_ERROR);
-
-        return PARSER_THIS_OK;
-    }
-    return P_ParsePrimaryExpression (inf, parent);
-}
-
-// ---------------------------------------------------------------------------------------------------
 Status_t P_ParseAddSub (ParserInf_t* inf,
                         Node_t* parent)
 {
@@ -953,6 +833,30 @@ Status_t P_ParseMulDiv (ParserInf_t* inf,
 }
 
 // ---------------------------------------------------------------------------------------------------
+Status_t P_ParseUnaryExpression (ParserInf_t* inf,
+                                 Node_t* parent)
+{
+    assert (inf);
+    assert (parent);
+
+    if (inf->ctx->node->type_node == NODE_OPER &&
+        (inf->ctx->node->val.oper.code == OPER_NOT ||
+         inf->ctx->node->val.oper.code == OPER_ADDR ||
+         inf->ctx->node->val.oper.code == OPER_DEREF))
+    {
+        Node_t* unary_node = inf->ctx->node;
+        nextNode (inf->ctx);
+        addNode (parent, unary_node);
+
+        if (P_ParseUnaryExpression (inf, unary_node) != PARSER_THIS_OK)
+            SYNTAX_ERROR (inf->ctx, PE_NOT_EXPRESION, PARSER_SYNTAX_ERROR);
+
+        return PARSER_THIS_OK;
+    }
+    return P_ParsePrimaryExpression (inf, parent);
+}
+
+// ---------------------------------------------------------------------------------------------------
 Status_t P_ParsePrimaryExpression (ParserInf_t* inf,
                                    Node_t* parent)
 {
@@ -985,11 +889,7 @@ Status_t P_ParsePrimaryExpression (ParserInf_t* inf,
     }
     else if (inf->ctx->node->type_node == NODE_ID_RAW)
     {
-        addNode (parent, inf->ctx->node);
-        inf->ctx->node->val.id_tree.name = inf->ctx->node->val.id_raw.name;
-        inf->ctx->node->type_node = NODE_ID_TREE;
-        nextNode (inf->ctx);
-        return PARSER_THIS_OK;
+        return P_ParseVariable (inf, parent);
     }
 
     return PARSER_SYNTAX_ERROR;
@@ -1038,6 +938,68 @@ Status_t P_ParseCallFunction (ParserInf_t* inf,
         SYNTAX_ERROR (inf->ctx, PE_NOT_RIGHT_TANG, PARSER_SYNTAX_ERROR);
 
     nextNode (inf->ctx);
+    return PARSER_THIS_OK;
+}
+
+// ---------------------------------------------------------------------------------------------------
+Status_t P_ParseVariable (ParserInf_t* inf, Node_t* parent)
+{
+    assert (inf);
+    assert (parent);
+
+    if (inf->ctx->node->type_node != NODE_ID_RAW)
+        return PARSER_NOT_THIS;
+
+    Node_t* node_var = inf->ctx->node;
+    node_var->type_node = NODE_ID_TREE;
+    node_var->val.id_tree.name = node_var->val.id_raw.name;
+    nextNode (inf->ctx);
+
+    Node_t* current_node = node_var;
+
+    while (inf->ctx->node->type_node == NODE_PUNCT &&
+           (inf->ctx->node->val.punct == PUNCT_LBRACKET ||
+            inf->ctx->node->val.punct == PUNCT_DOT))
+    {
+        if (inf->ctx->node->val.punct == PUNCT_LBRACKET)
+        {
+            Node_t* node_index = inf->ctx->node;
+            node_index->type_node = NODE_INDEX;
+            addNode (node_index, current_node);
+            nextNode (inf->ctx);
+
+            if (P_ParseAddSub (inf, node_index) != PARSER_THIS_OK)
+                SYNTAX_ERROR (inf->ctx, PE_NOT_EXPRESION, PARSER_SYNTAX_ERROR);
+
+            if (inf->ctx->node->type_node != NODE_PUNCT ||
+                inf->ctx->node->val.punct != PUNCT_RBRACKET)
+                SYNTAX_ERROR (inf->ctx, PE_NOT_RIGHT_BRACKET, PARSER_SYNTAX_ERROR);
+
+            nextNode (inf->ctx);
+            current_node = node_index;
+        }
+        else if (inf->ctx->node->val.punct == PUNCT_DOT)
+        {
+            Node_t* node_field = inf->ctx->node;
+            node_field->type_node = NODE_FIELD;
+            nextNode (inf->ctx);
+
+            if (inf->ctx->node->type_node != NODE_ID_RAW)
+                SYNTAX_ERROR(inf->ctx, PE_NOT_IDENT, PARSER_SYNTAX_ERROR);
+
+            Node_t* field = inf->ctx->node;
+            field->type_node = NODE_ID_TREE;
+            field->val.id_tree.name = field->val.id_raw.name;
+            nextNode (inf->ctx);
+
+            addNode (node_field, current_node);
+            addNode (node_field, field);
+            current_node = node_field;
+        }
+    }
+
+    addNode (parent, current_node);
+
     return PARSER_THIS_OK;
 }
 

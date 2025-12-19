@@ -267,6 +267,8 @@ Status_t parserNameOper (ParserContextInf_t* inf,
 #define isLeftTang(__node__)    checkPunctNode (__node__, PUNCT_LTANG)
 #define isRightTang(__node__)   checkPunctNode (__node__, PUNCT_RTANG)
 
+#define isArrow(__node__) checkPunctNode (__node__, PUNCT_ARROW)
+
 #define isEndChar(__node__)     checkPunctNode (__node__, PUNCT_ENDSTRING)
 // ---------------------------------------------------------------------------------------------------
 
