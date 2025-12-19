@@ -7,298 +7,705 @@ digraph {
   node [shape=plaintext, style=filled, fontname="Helvetica"];
   edge [arrowhead=vee, arrowsize=0.6, penwidth=1.2];
 
-block_0x7e0ad0fe1538 [shape=box, label=<
+block_0x7dfa573e0170 [shape=box, label=<
 <TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#4fdc36ff" COLSPAN="2"><B>0x7e0ad0fe1538</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe1500</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">FUNC</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"Fact"</TD></TR>
-<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">TYPE RETURN VALUE</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">int</TD></TR>
-<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">POINT LEVEL </TD><TD BGCOLOR="#386de7ff" COLSPAN="1">0</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
-</TABLE> >];
-
-block_0x7e0ad0fe15e0 [shape=box, label=<
-<TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#c1f453ff" COLSPAN="2"><B>0x7e0ad0fe15e0</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe1500</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">VAR</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"n"</TD></TR>
-<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">TYPE VAR</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">int</TD></TR>
-<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">POINT LEVEL </TD><TD BGCOLOR="#386de7ff" COLSPAN="1">0</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
-</TABLE> >];
-
-block_0x7e0ad0fe17d8 [shape=box, label=<
-<TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#c1f453ff" COLSPAN="2"><B>0x7e0ad0fe17d8</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe1810</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">VAR</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"n"</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
-</TABLE> >];
-
-block_0x7e0ad0fe1848 [shape=box, label=<
-<TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#de3434ff" COLSPAN="2"><B>0x7e0ad0fe1848</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe1810</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">NUM</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">1</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
-</TABLE> >];
-
-block_0x7e0ad0fe1810 [shape=box, label=<
-<TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#e8802bff" COLSPAN="2"><B>0x7e0ad0fe1810</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe1768</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">OPER</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"&gt;&gt;"</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
-</TABLE> >];
-
-block_0x7e0ad0fe1960 [shape=box, label=<
-<TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#c1f453ff" COLSPAN="2"><B>0x7e0ad0fe1960</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe1998</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">VAR</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"n"</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
-</TABLE> >];
-
-block_0x7e0ad0fe1a40 [shape=box, label=<
-<TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#c1f453ff" COLSPAN="2"><B>0x7e0ad0fe1a40</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe1a78</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">VAR</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"n"</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
-</TABLE> >];
-
-block_0x7e0ad0fe1ab0 [shape=box, label=<
-<TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#de3434ff" COLSPAN="2"><B>0x7e0ad0fe1ab0</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe1a78</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">NUM</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">1</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
-</TABLE> >];
-
-block_0x7e0ad0fe1a78 [shape=box, label=<
-<TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#e8802bff" COLSPAN="2"><B>0x7e0ad0fe1a78</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe19d0</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">OPER</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"-"</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
-</TABLE> >];
-
-block_0x7e0ad0fe19d0 [shape=box, label=<
-<TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#4fdc36ff" COLSPAN="2"><B>0x7e0ad0fe19d0</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe1998</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">FUNC</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"Fact"</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [1]</TD></TR>
-</TABLE> >];
-
-block_0x7e0ad0fe1998 [shape=box, label=<
-<TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#e8802bff" COLSPAN="2"><B>0x7e0ad0fe1998</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe1928</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">OPER</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"*"</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
-</TABLE> >];
-
-block_0x7e0ad0fe1928 [shape=box, label=<
-<TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#0f32e0ff" COLSPAN="2"><B>0x7e0ad0fe1928</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe18b8</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">KEY</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"return"</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [1]</TD></TR>
-</TABLE> >];
-
-block_0x7e0ad0fe18b8 [shape=box, label=<
-<TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#d119ffff" COLSPAN="2"><B>0x7e0ad0fe18b8</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe1768</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">block</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">block</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [1]</TD></TR>
-</TABLE> >];
-
-block_0x7e0ad0fe1768 [shape=box, label=<
-<TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#0f32e0ff" COLSPAN="2"><B>0x7e0ad0fe1768</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe16f8</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">KEY</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"if"</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
-</TABLE> >];
-
-block_0x7e0ad0fe1c00 [shape=box, label=<
-<TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#c1f453ff" COLSPAN="2"><B>0x7e0ad0fe1c00</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe1bc8</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">VAR</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"n"</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
-</TABLE> >];
-
-block_0x7e0ad0fe1bc8 [shape=box, label=<
-<TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#0f32e0ff" COLSPAN="2"><B>0x7e0ad0fe1bc8</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe16f8</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">KEY</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"return"</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [1]</TD></TR>
-</TABLE> >];
-
-block_0x7e0ad0fe16f8 [shape=box, label=<
-<TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#d119ffff" COLSPAN="2"><B>0x7e0ad0fe16f8</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe1500</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">block</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">block</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
-</TABLE> >];
-
-block_0x7e0ad0fe1500 [shape=box, label=<
-<TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#0f32e0ff" COLSPAN="2"><B>0x7e0ad0fe1500</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7c5ad0fe00e0</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">KEY</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"extern func"</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [3]</TD></TR>
-</TABLE> >];
-
-block_0x7e0ad0fe1d88 [shape=box, label=<
-<TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#c1f453ff" COLSPAN="2"><B>0x7e0ad0fe1d88</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe1dc0</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">VAR</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"string"</TD></TR>
-<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">TYPE VAR</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">str</TD></TR>
-<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">POINT LEVEL </TD><TD BGCOLOR="#386de7ff" COLSPAN="1">1</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
-</TABLE> >];
-
-block_0x7e0ad0fe1e30 [shape=box, label=<
-<TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#c1f453ff" COLSPAN="2"><B>0x7e0ad0fe1e30</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe1df8</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">VAR</TD></TR>
+<TR><TD PORT="root" BGCOLOR="#4fdc36ff" COLSPAN="2"><B>0x7dfa573e0170</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e01a8</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">ID_TREE</TD></TR>
 <TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"num"</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">TYPE</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">int</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">PTR_LVL</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">0</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">AMOUNT</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">0</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
 </TABLE> >];
 
-block_0x7e0ad0fe1df8 [shape=box, label=<
+block_0x7dfa573e01e0 [shape=box, label=<
 <TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#0f32e0ff" COLSPAN="2"><B>0x7e0ad0fe1df8</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe1dc0</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">KEY</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"bring adr"</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [1]</TD></TR>
+<TR><TD PORT="root" BGCOLOR="#de3434ff" COLSPAN="2"><B>0x7dfa573e01e0</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e01a8</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">NUMBER</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">10</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
 </TABLE> >];
 
-block_0x7e0ad0fe1dc0 [shape=box, label=<
+block_0x7dfa573e01a8 [shape=box, label=<
 <TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#0f32e0ff" COLSPAN="2"><B>0x7e0ad0fe1dc0</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe1ce0</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">KEY</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"="</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+<TR><TD PORT="root" BGCOLOR="#e8802bff" COLSPAN="2"><B>0x7dfa573e01a8</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0100</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">OPERATOR</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">OP_15 (=)</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
 </TABLE> >];
 
-block_0x7e0ad0fe1ce0 [shape=box, label=<
+block_0x7dfa573e0100 [shape=box, label=<
 <TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#0f32e0ff" COLSPAN="2"><B>0x7e0ad0fe1ce0</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7c5ad0fe00e0</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">KEY</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"extern var"</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [1]</TD></TR>
+<TR><TD PORT="root" BGCOLOR="#c1f453ff" COLSPAN="2"><B>0x7dfa573e0100</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7c0a573e0080</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">VAR_DECL</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">variable</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [1]</TD></TR>
 </TABLE> >];
 
-block_0x7e0ad0fe1f10 [shape=box, label=<
+block_0x7dfa573e02c0 [shape=box, label=<
 <TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#c1f453ff" COLSPAN="2"><B>0x7e0ad0fe1f10</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7e0ad0fe1ea0</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">VAR</TD></TR>
+<TR><TD PORT="root" BGCOLOR="#4fdc36ff" COLSPAN="2"><B>0x7dfa573e02c0</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e02f8</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">ID_TREE</TD></TR>
 <TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"num"</TD></TR>
-<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">TYPE VAR</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">HuHuHu</TD></TR>
-<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">POINT LEVEL </TD><TD BGCOLOR="#386de7ff" COLSPAN="1">0</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">TYPE</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">alll</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">PTR_LVL</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">0</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">AMOUNT</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">0</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
 </TABLE> >];
 
-block_0x7e0ad0fe1ea0 [shape=box, label=<
+block_0x7dfa573e0330 [shape=box, label=<
 <TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#0f32e0ff" COLSPAN="2"><B>0x7e0ad0fe1ea0</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=0x7c5ad0fe00e0</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">KEY</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"extern var"</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [1]</TD></TR>
+<TR><TD PORT="root" BGCOLOR="#de3434ff" COLSPAN="2"><B>0x7dfa573e0330</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e02f8</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">NUMBER</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">10</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
 </TABLE> >];
 
-block_0x7c5ad0fe00e0 [shape=box, label=<
+block_0x7dfa573e02f8 [shape=box, label=<
 <TABLE CELLSPACING="0" CELLPADDING="4">
-<TR><TD PORT="root" BGCOLOR="#d119ffff" COLSPAN="2"><B>0x7c5ad0fe00e0</B></TD></TR>
-<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">ROOT=(nil)</TD></TR>
-<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">block</TD></TR>
-<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">block</TD></TR>
-<TR>
-<TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [3]</TD></TR>
+<TR><TD PORT="root" BGCOLOR="#e8802bff" COLSPAN="2"><B>0x7dfa573e02f8</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0250</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">OPERATOR</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">OP_15 (=)</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
 </TABLE> >];
 
-block_0x7e0ad0fe1810:child -> block_0x7e0ad0fe17d8:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe1810:child -> block_0x7e0ad0fe1848:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe1a78:child -> block_0x7e0ad0fe1a40:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe1a78:child -> block_0x7e0ad0fe1ab0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe19d0:child -> block_0x7e0ad0fe1a78:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe1998:child -> block_0x7e0ad0fe1960:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe1998:child -> block_0x7e0ad0fe19d0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe1928:child -> block_0x7e0ad0fe1998:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe18b8:child -> block_0x7e0ad0fe1928:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe1768:child -> block_0x7e0ad0fe1810:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe1768:child -> block_0x7e0ad0fe18b8:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe1bc8:child -> block_0x7e0ad0fe1c00:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe16f8:child -> block_0x7e0ad0fe1768:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe16f8:child -> block_0x7e0ad0fe1bc8:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe1500:child -> block_0x7e0ad0fe1538:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe1500:child -> block_0x7e0ad0fe15e0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe1500:child -> block_0x7e0ad0fe16f8:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe1df8:child -> block_0x7e0ad0fe1e30:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe1dc0:child -> block_0x7e0ad0fe1d88:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe1dc0:child -> block_0x7e0ad0fe1df8:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe1ce0:child -> block_0x7e0ad0fe1dc0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7e0ad0fe1ea0:child -> block_0x7e0ad0fe1f10:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7c5ad0fe00e0:child -> block_0x7e0ad0fe1500:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7c5ad0fe00e0:child -> block_0x7e0ad0fe1ce0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
-block_0x7c5ad0fe00e0:child -> block_0x7e0ad0fe1ea0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0250 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#c1f453ff" COLSPAN="2"><B>0x7dfa573e0250</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7c0a573e0080</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">VAR_DECL</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">variable</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [1]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0410 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#4fdc36ff" COLSPAN="2"><B>0x7dfa573e0410</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0448</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">ID_TREE</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"num"</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">TYPE</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">yyyy</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">PTR_LVL</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">0</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">AMOUNT</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">0</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0480 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#de3434ff" COLSPAN="2"><B>0x7dfa573e0480</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0448</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">NUMBER</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">10</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0448 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#e8802bff" COLSPAN="2"><B>0x7dfa573e0448</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e03a0</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">OPERATOR</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">OP_15 (=)</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e03a0 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#c1f453ff" COLSPAN="2"><B>0x7dfa573e03a0</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7c0a573e0080</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">VAR_DECL</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">variable</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [1]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0598 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#4fdc36ff" COLSPAN="2"><B>0x7dfa573e0598</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e05d0</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">ID_TREE</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"num"</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">TYPE</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">pppppp</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">PTR_LVL</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">0</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">AMOUNT</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">0</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0608 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#de3434ff" COLSPAN="2"><B>0x7dfa573e0608</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e05d0</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">NUMBER</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">10</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e05d0 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#e8802bff" COLSPAN="2"><B>0x7dfa573e05d0</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0528</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">OPERATOR</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">OP_15 (=)</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0528 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#c1f453ff" COLSPAN="2"><B>0x7dfa573e0528</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7c0a573e0080</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">VAR_DECL</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">variable</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [1]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0838 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#4fdc36ff" COLSPAN="2"><B>0x7dfa573e0838</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0870</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">ID_TREE</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"type"</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">TYPE</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">int</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">PTR_LVL</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">2</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">AMOUNT</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">10</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e08a8 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#de3434ff" COLSPAN="2"><B>0x7dfa573e08a8</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0870</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">NUMBER</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">15</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0870 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#e8802bff" COLSPAN="2"><B>0x7dfa573e0870</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e06b0</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">OPERATOR</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">OP_15 (=)</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e06b0 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#c1f453ff" COLSPAN="2"><B>0x7dfa573e06b0</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7c0a573e0080</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">VAR_DECL</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">variable</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [1]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0988 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#4fdc36ff" COLSPAN="2"><B>0x7dfa573e0988</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0950</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">ID_TREE</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"Fact"</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e09f8 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#4fdc36ff" COLSPAN="2"><B>0x7dfa573e09f8</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0950</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">ID_TREE</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"a"</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">TYPE</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">int</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">PTR_LVL</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">2</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">AMOUNT</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">0</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0950 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#32cd32ff" COLSPAN="2"><B>0x7dfa573e0950</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7c0a573e0080</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">FUNC_DECL</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">function</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0c60 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#4fdc36ff" COLSPAN="2"><B>0x7dfa573e0c60</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0c98</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">ID_TREE</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"all"</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0cd0 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#4fdc36ff" COLSPAN="2"><B>0x7dfa573e0cd0</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0c98</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">ID_TREE</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"type"</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0c98 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#00ced1ff" COLSPAN="2"><B>0x7dfa573e0c98</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0d08</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">FIELD</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">.</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0d40 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#de3434ff" COLSPAN="2"><B>0x7dfa573e0d40</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0d08</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">NUMBER</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">4</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0d08 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#ffa500ff" COLSPAN="2"><B>0x7dfa573e0d08</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0db0</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">INDEX</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">[ ]</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0de8 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#de3434ff" COLSPAN="2"><B>0x7dfa573e0de8</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0db0</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">NUMBER</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">7</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0db0 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#ff4500ff" COLSPAN="2"><B>0x7dfa573e0db0</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7c0a573e0080</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">ASSIGN</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">=</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0f00 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#4fdc36ff" COLSPAN="2"><B>0x7dfa573e0f00</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0f38</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">ID_TREE</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"a"</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0f70 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#de3434ff" COLSPAN="2"><B>0x7dfa573e0f70</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0f38</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">NUMBER</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">0</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0f38 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#e8802bff" COLSPAN="2"><B>0x7dfa573e0f38</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0e90</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">OPERATOR</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">OP_4 (==)</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e10c0 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#4fdc36ff" COLSPAN="2"><B>0x7dfa573e10c0</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e10f8</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">ID_TREE</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"value"</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">TYPE</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">int</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">PTR_LVL</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">0</TD></TR>
+<TR><TD BGCOLOR="#386de7ff" COLSPAN="1">AMOUNT</TD><TD BGCOLOR="#386de7ff" COLSPAN="1">0</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e1130 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#de3434ff" COLSPAN="2"><B>0x7dfa573e1130</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e10f8</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">NUMBER</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">10</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e10f8 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#e8802bff" COLSPAN="2"><B>0x7dfa573e10f8</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e1050</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">OPERATOR</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">OP_15 (=)</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e1050 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#c1f453ff" COLSPAN="2"><B>0x7dfa573e1050</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0fe0</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">VAR_DECL</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">variable</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [1]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0fe0 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#778899ff" COLSPAN="2"><B>0x7dfa573e0fe0</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0e90</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">BLOCK</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">{ }</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [1]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0e90 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#9370dbff" COLSPAN="2"><B>0x7dfa573e0e90</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e0ec8</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">IF</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">if</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e0ec8 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#6a5acdff" COLSPAN="2"><B>0x7dfa573e0ec8</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7c0a573e0080</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">COND_LIST</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">if-elif-else</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [1]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e12b8 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#4fdc36ff" COLSPAN="2"><B>0x7dfa573e12b8</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e12f0</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">ID_TREE</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"index"</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e1328 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#de3434ff" COLSPAN="2"><B>0x7dfa573e1328</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e12f0</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">NUMBER</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">0</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e12f0 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#e8802bff" COLSPAN="2"><B>0x7dfa573e12f0</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e1248</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">OPERATOR</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">OP_4 (==)</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e1478 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#4fdc36ff" COLSPAN="2"><B>0x7dfa573e1478</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e14b0</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">ID_TREE</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"index"</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e14e8 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#de3434ff" COLSPAN="2"><B>0x7dfa573e14e8</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e14b0</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">NUMBER</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">6</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e14b0 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#e8802bff" COLSPAN="2"><B>0x7dfa573e14b0</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e1408</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">OPERATOR</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">OP_6 (&lt;)</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e15c8 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#ff6347ff" COLSPAN="2"><B>0x7dfa573e15c8</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e1558</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">BREAK</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">break</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e1558 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#778899ff" COLSPAN="2"><B>0x7dfa573e1558</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e1408</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">BLOCK</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">{ }</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [1]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e1408 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#9370dbff" COLSPAN="2"><B>0x7dfa573e1408</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e1440</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">IF</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">if</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e1750 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#4fdc36ff" COLSPAN="2"><B>0x7dfa573e1750</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e1788</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">ID_TREE</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"index"</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e17c0 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#de3434ff" COLSPAN="2"><B>0x7dfa573e17c0</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e1788</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">NUMBER</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">16</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e1788 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#e8802bff" COLSPAN="2"><B>0x7dfa573e1788</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e16e0</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">OPERATOR</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">OP_8 (&gt;)</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e18a0 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#ff7f50ff" COLSPAN="2"><B>0x7dfa573e18a0</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e1830</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">CONTINUE</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">continue</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e1830 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#778899ff" COLSPAN="2"><B>0x7dfa573e1830</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e16e0</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">BLOCK</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">{ }</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [1]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e16e0 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#8a2be2ff" COLSPAN="2"><B>0x7dfa573e16e0</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e1440</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">ELSE_IF</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">elif</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e1440 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#6a5acdff" COLSPAN="2"><B>0x7dfa573e1440</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e1398</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">COND_LIST</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">if-elif-else</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e19f0 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#de3434ff" COLSPAN="2"><B>0x7dfa573e19f0</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e19b8</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">NUMBER</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">5</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e19b8 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#dc143cff" COLSPAN="2"><B>0x7dfa573e19b8</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e1398</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">RETURN</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">return</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [1]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e1398 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#778899ff" COLSPAN="2"><B>0x7dfa573e1398</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e1248</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">BLOCK</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">{ }</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e1248 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#20b2aaff" COLSPAN="2"><B>0x7dfa573e1248</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7c0a573e0080</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">WHILE</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">while</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e1b08 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#4fdc36ff" COLSPAN="2"><B>0x7dfa573e1b08</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e1b40</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">ID_TREE</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"node"</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e1b78 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#4fdc36ff" COLSPAN="2"><B>0x7dfa573e1b78</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e1b40</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">ID_TREE</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"left"</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e1b40 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#00ced1ff" COLSPAN="2"><B>0x7dfa573e1b40</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e1bb0</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">FIELD</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">.</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e1be8 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#4fdc36ff" COLSPAN="2"><B>0x7dfa573e1be8</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e1bb0</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">ID_TREE</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">"value"</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e1bb0 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#00ced1ff" COLSPAN="2"><B>0x7dfa573e1bb0</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e1c20</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">FIELD</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">.</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e1c58 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#de3434ff" COLSPAN="2"><B>0x7dfa573e1c58</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7dfa573e1c20</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">NUMBER</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">13</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [0]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e1c20 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#ff4500ff" COLSPAN="2"><B>0x7dfa573e1c20</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=0x7c0a573e0080</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">ASSIGN</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">=</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [2]</TD></TR>
+</TABLE> >];
+
+block_0x7c0a573e0080 [shape=box, label=<
+<TABLE CELLSPACING="0" CELLPADDING="4">
+<TR><TD PORT="root" BGCOLOR="#4169e1ff" COLSPAN="2"><B>0x7c0a573e0080</B></TD></TR>
+<TR><TD BGCOLOR="#b209ccff" COLSPAN="2">PARENT=(nil)</TD></TR>
+<TR><TD BGCOLOR="#6bd934ff" COLSPAN="2">PROGRAM</TD></TR>
+<TR><TD BGCOLOR="#46f2f5ff" COLSPAN="2">PROGRAM</TD></TR>
+<TR><TD PORT="child" BGCOLOR="#ff7301ff" COLSPAN="2">CHILDREN [10]</TD></TR>
+</TABLE> >];
+
+block_0x7dfa573e01a8:child -> block_0x7dfa573e0170:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e01a8:child -> block_0x7dfa573e01e0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0100:child -> block_0x7dfa573e01a8:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e02f8:child -> block_0x7dfa573e02c0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e02f8:child -> block_0x7dfa573e0330:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0250:child -> block_0x7dfa573e02f8:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0448:child -> block_0x7dfa573e0410:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0448:child -> block_0x7dfa573e0480:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e03a0:child -> block_0x7dfa573e0448:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e05d0:child -> block_0x7dfa573e0598:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e05d0:child -> block_0x7dfa573e0608:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0528:child -> block_0x7dfa573e05d0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0870:child -> block_0x7dfa573e0838:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0870:child -> block_0x7dfa573e08a8:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e06b0:child -> block_0x7dfa573e0870:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0950:child -> block_0x7dfa573e0988:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0950:child -> block_0x7dfa573e09f8:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0c98:child -> block_0x7dfa573e0c60:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0c98:child -> block_0x7dfa573e0cd0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0d08:child -> block_0x7dfa573e0c98:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0d08:child -> block_0x7dfa573e0d40:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0db0:child -> block_0x7dfa573e0d08:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0db0:child -> block_0x7dfa573e0de8:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0f38:child -> block_0x7dfa573e0f00:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0f38:child -> block_0x7dfa573e0f70:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e10f8:child -> block_0x7dfa573e10c0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e10f8:child -> block_0x7dfa573e1130:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e1050:child -> block_0x7dfa573e10f8:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0fe0:child -> block_0x7dfa573e1050:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0e90:child -> block_0x7dfa573e0f38:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0e90:child -> block_0x7dfa573e0fe0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e0ec8:child -> block_0x7dfa573e0e90:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e12f0:child -> block_0x7dfa573e12b8:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e12f0:child -> block_0x7dfa573e1328:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e14b0:child -> block_0x7dfa573e1478:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e14b0:child -> block_0x7dfa573e14e8:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e1558:child -> block_0x7dfa573e15c8:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e1408:child -> block_0x7dfa573e14b0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e1408:child -> block_0x7dfa573e1558:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e1788:child -> block_0x7dfa573e1750:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e1788:child -> block_0x7dfa573e17c0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e1830:child -> block_0x7dfa573e18a0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e16e0:child -> block_0x7dfa573e1788:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e16e0:child -> block_0x7dfa573e1830:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e1440:child -> block_0x7dfa573e1408:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e1440:child -> block_0x7dfa573e16e0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e19b8:child -> block_0x7dfa573e19f0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e1398:child -> block_0x7dfa573e1440:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e1398:child -> block_0x7dfa573e19b8:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e1248:child -> block_0x7dfa573e12f0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e1248:child -> block_0x7dfa573e1398:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e1b40:child -> block_0x7dfa573e1b08:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e1b40:child -> block_0x7dfa573e1b78:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e1bb0:child -> block_0x7dfa573e1b40:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e1bb0:child -> block_0x7dfa573e1be8:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e1c20:child -> block_0x7dfa573e1bb0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7dfa573e1c20:child -> block_0x7dfa573e1c58:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7c0a573e0080:child -> block_0x7dfa573e0100:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7c0a573e0080:child -> block_0x7dfa573e0250:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7c0a573e0080:child -> block_0x7dfa573e03a0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7c0a573e0080:child -> block_0x7dfa573e0528:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7c0a573e0080:child -> block_0x7dfa573e06b0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7c0a573e0080:child -> block_0x7dfa573e0950:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7c0a573e0080:child -> block_0x7dfa573e0db0:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7c0a573e0080:child -> block_0x7dfa573e0ec8:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7c0a573e0080:child -> block_0x7dfa573e1248:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
+block_0x7c0a573e0080:child -> block_0x7dfa573e1c20:root [color="#fefefeff", penwidth = 1.5, arrowsize = 0.6, constraint = true, dir = both];
 
 }

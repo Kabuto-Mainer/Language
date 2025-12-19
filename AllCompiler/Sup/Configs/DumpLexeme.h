@@ -9,11 +9,11 @@ const char DUMP_KEYWORDS[][20] =
     "continue",     "define func",      "return",       "call func",    "exit"
 };
 
-const char DUMP_OPER[][10] =
+const char DUMP_OPER[][12] =
 {
     "+",            "-",                "*",            "/",            "==",
-    "!=",           "<",                "<=",           ">",            ">=",
-    "&&",           "||",               "!",            "deref",        "adr",
+    "!=",           "&lt;",             "&lt;=",        "&gt;",         "&gt;=",
+    "&amp;&amp;",   "||",               "!",            "deref",        "adr",
     "="
 };
 

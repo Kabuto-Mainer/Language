@@ -5,13 +5,13 @@
 
 // ---------------------------------------------------------------------------------------------------
 /// @brief
-const char DUMP_ADDRESS_DOT[] = /*"AllCompiler/""*/"Sup/Dump/graph.dot";
+const char DUMP_ADDRESS_DOT[] = "AllCompiler/Sup/Dump/graph.dot";
 
 /// @brief
-const char DUMP_ADDRESS_IMG[] = /*"AllCompiler/""*/"Sup/Dump/Images/";
+const char DUMP_ADDRESS_IMG[] = "AllCompiler/Sup/Dump/Images/";
 
 /// @brief
-const char DUMP_ADDRESS_HTML[] = /*"AllCompiler/"*/"Sup/Dump/dump.html";
+const char DUMP_ADDRESS_HTML[] = "AllCompiler/Sup/Dump/dump.html";
 // ---------------------------------------------------------------------------------------------------
 
 
