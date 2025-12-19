@@ -59,7 +59,7 @@ enum KeywordID_t
     KW_RETURN       = 12,
     KW_CALL         = 13,
     KW_EXIT         = 14,
-    KW_INTEGER      = 15,
+    KW_STRUCT       = 15,
     KW_STRING       = 16,
 };
 
@@ -81,6 +81,7 @@ const KeywordEntry_t KEYWORDS[] =
     {"return",          KW_RETURN},
     {"call",            KW_CALL},
     {"exit",            KW_EXIT},
+    {"block",           KW_STRUCT},
     // {"int",             KW_INTEGER},
     // {"str",             KW_STRING}
 };

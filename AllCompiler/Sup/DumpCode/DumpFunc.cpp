@@ -334,7 +334,7 @@ int printFullBlock (Node_t* node,
         case NODE_STRUCT_DECL:
             strcpy (color, "#98fb98ff");
             strcpy (type, "STRUCT_DECL");
-            sprintf (label, "struct");
+            sprintf (label, "%s", node->val.struct_def.name->string);
             break;
 
         case NODE_BLOCK:

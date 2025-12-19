@@ -44,6 +44,9 @@ Status_t P_ParseDeclarationFunc (ParserInf_t* inf,
 Status_t P_ParseDeclarationVar (ParserInf_t* inf,
                                 Node_t* parent);
 
+Status_t P_ParseDeclarationStruct (ParserInf_t* inf,
+                                   Node_t* parent);
+
 TreeType_t P_ParseType (ParserInf_t* inf);
 
 Status_t P_ParseOrExpression (ParserInf_t* inf,

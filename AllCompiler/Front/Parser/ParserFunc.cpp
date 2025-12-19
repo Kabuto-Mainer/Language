@@ -51,6 +51,9 @@ Status_t P_ParseGlobal (Node_t* start_node, size_t amount,
         if (P_ParseDeclarationFunc (&inf, global_node) == PARSER_THIS_OK)
             continue;
 
+        if (P_ParseDeclarationStruct (&inf, global_node) == PARSER_THIS_OK)
+            continue;
+
         if (P_ParseDeclarationVar (&inf, global_node) == PARSER_THIS_OK)
             continue;
 
@@ -412,6 +415,7 @@ Status_t P_ParseDeclarationFunc (ParserInf_t* inf,
     if (type.srt.name == NULL)
         SYNTAX_ERROR (inf->ctx, PE_ERROR, PARSER_SYNTAX_ERROR);
 
+    func_id->val.id_tree.type = type;
     if (inf->ctx->node->type_node != NODE_PUNCT ||
         inf->ctx->node->val.punct != PUNCT_LPAREN)
         return PARSER_THIS_OK;
@@ -487,6 +491,77 @@ Status_t P_ParseDeclarationVar (ParserInf_t* inf,
         SYNTAX_ERROR (inf->ctx, PE_NO_END_CHAR, PARSER_SYNTAX_ERROR);
 
     skipVoid (inf->ctx);
+    return PARSER_THIS_OK;
+}
+
+// ---------------------------------------------------------------------------------------------------
+Status_t P_ParseDeclarationStruct (ParserInf_t* inf,
+                                   Node_t* parent)
+{
+    assert (inf);
+    assert (parent);
+
+    if (inf->ctx->node->type_node != NODE_KEY ||
+        inf->ctx->node->val.key != KW_STRUCT)
+        return PARSER_NOT_THIS;
+
+    Node_t* node_struct = inf->ctx->node;
+    node_struct->type_node = NODE_STRUCT_DECL;
+    nextNode (inf->ctx);
+
+    if (inf->ctx->node->type_node != NODE_ID_RAW)
+        SYNTAX_ERROR (inf->ctx, PE_INCORRECT_NAME, PARSER_SYNTAX_ERROR);
+
+    node_struct->val.struct_def.name = inf->ctx->node->val.id_raw.name;
+    nextNode (inf->ctx);
+    skipVoid (inf->ctx);
+
+    if (!isLeftTang (inf->ctx->node))
+        SYNTAX_ERROR (inf->ctx, PE_NOT_LEFT_TANG, PARSER_SYNTAX_ERROR);
+    nextNode (inf->ctx);
+    skipVoid (inf->ctx);
+
+    while (true)
+    {
+        Node_t* name_field = inf->ctx->node;
+        if (name_field->type_node != NODE_ID_RAW)
+            SYNTAX_ERROR (inf->ctx, PE_INCORRECT_NAME, PARSER_SYNTAX_ERROR);
+
+        nextNode (inf->ctx);
+        skipVoid (inf->ctx);
+
+        if (inf->ctx->node->type_node != NODE_PUNCT ||
+            inf->ctx->node->val.punct != PUNCT_COLON)
+            SYNTAX_ERROR (inf->ctx, PE_NO_COLON, PARSER_SYNTAX_ERROR);
+
+        nextNode (inf->ctx);
+        skipVoid (inf->ctx);
+
+        TreeType_t type_field = P_ParseType (inf);
+        if (type_field.srt.name == NULL)
+            SYNTAX_ERROR (inf->ctx, PE_INCORRECT_TYPE, PARSER_SYNTAX_ERROR);
+
+        name_field->type_node = NODE_ID_TREE;
+        name_field->val.id_tree.name = name_field->val.id_raw.name;
+        name_field->val.id_tree.type = type_field;
+        addNode (node_struct, name_field);
+
+        if (isComma (inf->ctx->node))
+        {
+            nextNode (inf->ctx);
+            skipVoid (inf->ctx);
+            continue;
+        }
+        skipVoid (inf->ctx);
+        break;
+    }
+    if (!isRightTang (inf->ctx->node))
+        SYNTAX_ERROR (inf->ctx, PE_NOT_RIGHT_TANG, PARSER_SYNTAX_ERROR);
+
+    nextNode (inf->ctx);
+    skipVoid (inf->ctx);
+
+    addNode (parent, node_struct);
     return PARSER_THIS_OK;
 }
 
