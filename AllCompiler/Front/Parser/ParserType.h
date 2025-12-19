@@ -23,9 +23,7 @@ struct ParserInf_t
 {
     ParserContextInf_t* ctx;
     StringTable_t* str_table;
-    TypeTable_t* type_table;
-    Node_t*
-}
+};
 // ---------------------------------------------------------------------------------------------------
 
 

@@ -57,10 +57,10 @@ int tokenGlobal (char* buffer,
         if (tokenNumber (&inf, vector) == PARSER_THIS_OK)
             continue;
 
-        if (tokenOper (&inf, vector) == PARSER_THIS_OK)
+        if (tokenPunct (&inf, vector) == PARSER_THIS_OK)
             continue;
 
-        if (tokenPunct (&inf, vector) == PARSER_THIS_OK)
+        if (tokenOper (&inf, vector) == PARSER_THIS_OK)
             continue;
 
         if (tokenKeyWord (&inf, vector) == PARSER_THIS_OK)

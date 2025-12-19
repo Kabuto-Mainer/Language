@@ -67,7 +67,7 @@ enum KeywordID_t
 const KeywordEntry_t KEYWORDS[] =
 {
     {"variable",        KW_VARIABLE},
-    // {"allocate",        KW_ALLOCATE},
+    {"allocate",        KW_ALLOCATE},
     {"input",           KW_INPUT},
     {"output",          KW_OUTPUT},
     {"print",           KW_PRINT},
@@ -81,8 +81,8 @@ const KeywordEntry_t KEYWORDS[] =
     {"return",          KW_RETURN},
     {"call",            KW_CALL},
     {"exit",            KW_EXIT},
-    {"int",             KW_INTEGER},
-    {"str",             KW_STRING}
+    // {"int",             KW_INTEGER},
+    // {"str",             KW_STRING}
 };
 
 const int KEYWORDS_COUNT = sizeof(KEYWORDS) / sizeof(KEYWORDS[0]);

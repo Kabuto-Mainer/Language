@@ -110,7 +110,7 @@ all: hash-cmd assembler processor lang
 
 test-lang:
 	g++ $(INCLUDES_LANG) $(FLAGS) AllCompiler/test-main.cpp $(VECTOR_CPP) \
-		$(TOKEN_CPP) $(SUPPORT_CPP) $(TABLE_CPP) \
+		$(TOKEN_CPP) $(SUPPORT_CPP) $(TABLE_CPP) AllCompiler/Front/Parser/ParserFunc.cpp \
 		$(LDFLAGS) -o $(BIN_DIR)/lang
 
 
