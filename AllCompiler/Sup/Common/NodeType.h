@@ -91,6 +91,8 @@ enum NodeType_t
     NODE_CALL,
 
     NODE_IF,
+    NODE_ELSE_IF,
+    NODE_ELSE,
     NODE_WHILE,
     NODE_RETURN,
     NODE_BREAK,
@@ -102,6 +104,7 @@ enum NodeType_t
 
     NODE_BLOCK,
     NODE_PROGRAM,
+    NODE_COND_LIST,
 
     NODE_PUNCT
 };

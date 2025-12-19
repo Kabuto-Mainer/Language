@@ -42,7 +42,8 @@ struct LexemeDatabase_t
 // ---------------------------------------------------------------------------------------------------
 
 /// \brief Все ключевые слова
-enum KeywordID_t {
+enum KeywordID_t
+{
     KW_VARIABLE     = 0,
     KW_ALLOCATE     = 1,
     KW_INPUT        = 2,
@@ -53,19 +54,20 @@ enum KeywordID_t {
     KW_ELSE         = 7,
     KW_WHILE        = 8,
     KW_BREAK        = 9,
-    KW_FUNCTION     = 10,
-    KW_RETURN       = 11,
-    KW_CALL         = 12,
-    KW_EXIT         = 13,
-    KW_INTEGER      = 14,
-    KW_STRING       = 15,
+    KW_CONTINUE     = 10,
+    KW_FUNCTION     = 11,
+    KW_RETURN       = 12,
+    KW_CALL         = 13,
+    KW_EXIT         = 14,
+    KW_INTEGER      = 15,
+    KW_STRING       = 16,
 };
 
 // ---------------------------------------------------------------------------------------------------
 const KeywordEntry_t KEYWORDS[] =
 {
     {"variable",        KW_VARIABLE},
-    {"allocate",        KW_ALLOCATE},
+    // {"allocate",        KW_ALLOCATE},
     {"input",           KW_INPUT},
     {"output",          KW_OUTPUT},
     {"print",           KW_PRINT},
@@ -74,6 +76,7 @@ const KeywordEntry_t KEYWORDS[] =
     {"else",            KW_ELSE},
     {"while",           KW_WHILE},
     {"break",           KW_BREAK},
+    {"continue",        KW_CONTINUE},
     {"function",        KW_FUNCTION},
     {"return",          KW_RETURN},
     {"call",            KW_CALL},
@@ -121,8 +124,8 @@ const OperEntry_t OPERATIONS[] =
     {"||",              OPER_OR,         2},
     {"!",               OPER_NOT,        1},
 
-    {"@",               OPER_DEREF,      1},
-    {"&",               OPER_ADDR,       1},
+    {"s:*",             OPER_DEREF,      3},
+    {"s:&",             OPER_ADDR,       3},
     {"=",               OPER_ASSIGN,     1}
 };
 

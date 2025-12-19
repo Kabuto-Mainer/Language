@@ -113,9 +113,9 @@ SymbolEntry_t* TT_FindStructField (TypeEntry_t* struct_type, StringEntry_t* fiel
 TypeEntry_t* TT_GetArrayType (TypeTable_t* table,
                               TypeEntry_t* elem_type, int amount)
 {
-    assert(table);
-    assert(elem_type);
-    assert(amount > 0);
+    assert (table);
+    assert (elem_type);
+    assert (amount > 0);
 
     for (int i = 0; i < table->count; i++)
     {

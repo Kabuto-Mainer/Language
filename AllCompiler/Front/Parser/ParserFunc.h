@@ -3,6 +3,7 @@
 
 #include "ParserType.h"
 #include "ErrorType.h"
+#include "TypesOfType.h"
 
 
 // ---------------------------------------------------------------------------------------------------
@@ -256,11 +257,17 @@ Status_t parserNameOper (ParserContextInf_t* inf,
 
 // ---------------------------------------------------------------------------------------------------
 #define isComma(__node__)       checkPunctNode (__node__, PUNCT_COMMA)
-#define isLeftRound(__node__)   checkPunctNode (__node__, PUNCT_LEFT_ROUND)
-#define isRightRound(__node__)  checkPunctNode (__node__, PUNCT_RIGHT_ROUND)
-#define isLeftTang(__node__)    checkPunctNode (__node__, PUNCT_LEFT_TANG)
-#define isRightTang(__node__)   checkPunctNode (__node__, PUNCT_RIGHT_TANG)
-#define isEndChar(__node__)     checkPunctNode (__node__, PUNCT_END_STR)
+
+#define isLeftRound(__node__)   checkPunctNode (__node__, PUNCT_LPAREN)
+#define isRightRound(__node__)  checkPunctNode (__node__, PUNCT_RPAREN)
+
+#define isLeftQuad(__node__)  checkPunctNode (__node__, PUNCT_LBRACKET)
+#define isRightQuad(__node__)  checkPunctNode (__node__, PUNCT_RBRACKET)
+
+#define isLeftTang(__node__)    checkPunctNode (__node__, PUNCT_LTANG)
+#define isRightTang(__node__)   checkPunctNode (__node__, PUNCT_RTANG)
+
+#define isEndChar(__node__)     checkPunctNode (__node__, PUNCT_ENDSTRING)
 // ---------------------------------------------------------------------------------------------------
 
 
