@@ -115,6 +115,7 @@ enum NodeType_t
     NODE_ASSIGN,
 
     NODE_VAR_DECL,
+    NODE_GLOBAL_DECL,
     NODE_FUNC_DECL,
     NODE_STRUCT_DECL,
 
@@ -138,6 +139,16 @@ struct Node_t
     NodeValue_t val;
 };
 
+struct CodeData_t
+{
+    Node_t* root;
+
+    TypeTable_t* type_table;
+    StringTable_t* str_table;
+
+    const char* input_file;
+    const char* output_file;
+};
 // ---------------------------------------------------------------------------------------------------
 
 #endif /* NODE_TYPE_H */

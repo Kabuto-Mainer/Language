@@ -19,7 +19,11 @@ struct SymbolEntry_t
     SymbolKind_t kind;
 
     TypeEntry_t* type;
-    int offset;
+
+    union {
+        int offset;
+        SymbolTable_t* params;
+    } value;
 
     SymbolEntry_t* next;
 };
@@ -49,6 +53,12 @@ SymbolEntry_t*  SymT_FindGlobal (SymbolTable_t* table, StringEntry_t* name);
 
 SymbolEntry_t*  SymT_AddEntry (SymbolTable_t* table, SymbolKind_t kind,
                                StringEntry_t* name, TypeEntry_t* type);
+
+SymbolEntry_t*  SymT_AddFunction (SymbolTable_t* table, StringEntry_t* func_name,
+                                  TypeEntry_t* return_type, SymbolTable_t* table_param_func);
+
+SymbolEntry_t*  SymT_AddFunctionParameter (SymbolEntry_t* func_entry,
+                                          StringEntry_t* param_name, TypeEntry_t* param_type);
 
 void            SymT_Delete (SymbolTable_t* table);
 

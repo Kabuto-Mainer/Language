@@ -66,12 +66,12 @@ SymbolEntry_t* SymT_FindLocal (SymbolTable_t* table, StringEntry_t* name)
     return NULL;
 }
 
-SymbolEntry_t* SymT_AddEntry(SymbolTable_t* table, SymbolKind_t kind,
-                             StringEntry_t* name, TypeEntry_t* type)
+SymbolEntry_t* SymT_AddEntry (SymbolTable_t* table, SymbolKind_t kind,
+                              StringEntry_t* name, TypeEntry_t* type)
 {
-    assert(table);
-    assert(name);
-    assert(type);
+    assert (table);
+    assert (name);
+    assert (type);
 
     if (SymT_FindLocal (table, name) != NULL)
         return NULL;
@@ -88,7 +88,7 @@ SymbolEntry_t* SymT_AddEntry(SymbolTable_t* table, SymbolKind_t kind,
     new_entry->type = type;
 
     int size = type->size_units;
-    new_entry->offset = table->current_offset;
+    new_entry->value.offset = table->current_offset;
     table->current_offset += size;
 
     size_t index = name->hash % (size_t) table->capacity;
@@ -98,6 +98,50 @@ SymbolEntry_t* SymT_AddEntry(SymbolTable_t* table, SymbolKind_t kind,
     table->count++;
     return new_entry;
 }
+
+SymbolEntry_t* SymT_AddFunction (SymbolTable_t* table, StringEntry_t* func_name,
+                                 TypeEntry_t* return_type, SymbolTable_t* table_param_func)
+{
+    assert (table);
+    assert (func_name);
+    assert (return_type);
+    assert (table_param_func);
+
+    if (SymT_FindLocal (table, func_name) != NULL)
+        return NULL;
+
+    if (table->count * 0.75 >= table->capacity)
+        SymT_Resize (table);
+
+    SymbolEntry_t* func_entry = (SymbolEntry_t*) calloc (1, sizeof (SymbolEntry_t));
+    if (func_entry == NULL)
+        EXIT_FUNC ("NULL calloc", NULL);
+
+    func_entry->name = func_name;
+    func_entry->kind = SK_FUNC;
+    func_entry->type = return_type;
+    func_entry->value.params = table_param_func;
+
+    size_t index = func_name->hash % (size_t) table->capacity;
+    func_entry->next = table->entries[index];
+    table->entries[index] = func_entry;
+
+    table->count++;
+    return func_entry;
+}
+
+SymbolEntry_t* SymT_AddFunctionParameter (SymbolEntry_t* func_entry,
+                                          StringEntry_t* param_name, TypeEntry_t* param_type)
+{
+    assert (func_entry);
+    assert (func_entry->kind == SK_FUNC);
+    assert (param_name);
+    assert (param_type);
+
+    SymbolEntry_t* param = SymT_AddEntry (func_entry->value.params, SK_PARAM, param_name, param_type);
+    return param;
+}
+
 
 void SymT_Delete (SymbolTable_t* table)
 {

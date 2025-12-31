@@ -57,6 +57,9 @@ Status_t P_ParseGlobal (Node_t* start_node, size_t amount,
         if (P_ParseDeclarationVar (&inf, global_node) == PARSER_THIS_OK)
             continue;
 
+        if (P_ParseGlobalVariable (&inf, global_node) == PARSER_THIS_OK)
+            continue;
+
         if (P_ParseConditional (&inf, global_node) == PARSER_THIS_OK)
             continue;
 
@@ -485,6 +488,63 @@ Status_t P_ParseDeclarationVar (ParserInf_t* inf,
             continue;
         }
         break;
+    }
+
+    if (!isEndChar (inf->ctx->node))
+        SYNTAX_ERROR (inf->ctx, PE_NO_END_CHAR, PARSER_SYNTAX_ERROR);
+
+    skipVoid (inf->ctx);
+    return PARSER_THIS_OK;
+}
+
+// ---------------------------------------------------------------------------------------------------
+Status_t P_ParseGlobalVariable (ParserInf_t* inf,
+                                Node_t* parent)
+{
+    assert (inf);
+    assert (parent);
+
+    if (inf->ctx->node->type_node != NODE_KEY ||
+        inf->ctx->node->val.key != KW_GLOBAL)
+        return PARSER_NOT_THIS;
+
+    Node_t* define_node = inf->ctx->node;
+    define_node->type_node = NODE_GLOBAL_DECL;
+
+    addNode (parent, define_node);
+    nextNode (inf->ctx);
+    skipVoid (inf->ctx);
+
+    TreeType_t type = P_ParseType (inf);
+    if (type.srt.name == NULL)
+        SYNTAX_ERROR (inf->ctx, PE_ERROR, PARSER_SYNTAX_ERROR);
+
+    Node_t* var_id = inf->ctx->node;
+    if (var_id->type_node != NODE_ID_RAW)
+        SYNTAX_ERROR (inf->ctx, PE_INCORRECT_NAME, PARSER_SYNTAX_ERROR);
+
+    var_id->type_node = NODE_ID_TREE;
+    var_id->val.id_tree.name = var_id->val.id_raw.name;
+    var_id->val.id_tree.type = type;
+
+    nextNode (inf->ctx);
+    // tokenOneDump (inf->ctx->node, "hhh");
+    // skipVoid (inf->ctx);
+
+    Node_t* next_node = inf->ctx->node;
+    if (next_node->type_node == NODE_OPER &&
+        next_node->val.oper.code == OPER_ASSIGN)
+    {
+        addNode (next_node, var_id);
+        addNode (define_node, next_node);
+
+        nextNode (inf->ctx);
+        if (P_ParseOrExpression (inf, next_node) != PARSER_THIS_OK)
+            SYNTAX_ERROR (inf->ctx, PE_ERROR, PARSER_SYNTAX_ERROR);
+    }
+    else
+    {
+        addNode (define_node, var_id);
     }
 
     if (!isEndChar (inf->ctx->node))
@@ -1256,7 +1316,7 @@ int parserError (ParserError_t error, ParserContextInf_t* inf)
 
         case PE_NO_COLON:
             printf ("Отсутствует ':' между именем параметра и его типом.");
-            printf ("\n  Подсказка: правильный синтаксис: param_name: int");
+            printf ("\n  Подсказка: правильный синтаксис: param_name: type");
             break;
 
         case PE_NO_TYPE:
@@ -1270,8 +1330,8 @@ int parserError (ParserError_t error, ParserContextInf_t* inf)
             break;
 
         case PE_NO_END_CHAR:
-            printf ("Отсутствует символ окончания оператора (';' или новая строка).");
-            printf ("\n  Подсказка: большинство операторов должны заканчиваться символом ';'");
+            printf ("Отсутствует символ окончания оператора ('\\n').");
+            printf ("\n  Подсказка: большинство операторов должны заканчиваться символом '\\n'");
             break;
 
         case PE_INCORRECT_NAME:
